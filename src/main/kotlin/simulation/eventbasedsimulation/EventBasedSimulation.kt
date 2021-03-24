@@ -3,7 +3,7 @@ package simulation.eventbasedsimulation
 import simulation.montecarlo.MonteCarlo
 import java.util.*
 
-abstract class EventBasedSimulation(replicationsCount: Int, val maxSimulationTime: Double) :
+abstract class EventBasedSimulation(replicationsCount: Int, private val maxSimulationTime: Double = Double.MAX_VALUE) :
     MonteCarlo(replicationsCount) {
 
     private val futureEvents: PriorityQueue<Event> = PriorityQueue()

@@ -8,7 +8,9 @@ import vaccinationcentresimulation.entities.registration.AdministrativeWorker
 class RegistrationEndEvent(simulation: VaccinationCentreSimulation, private val worker: AdministrativeWorker) :
     VaccinationCentreEvent(simulation) {
 
-    private val registrationDurationRandom = ContinuousUniformDistribution(140 / 60.0, 220 / 60.0)
+    companion object {
+        private val registrationDurationRandom = ContinuousUniformDistribution(140 / 60.0, 220 / 60.0)
+    }
 
     override fun execute() {
         worker.busy = false

@@ -10,8 +10,8 @@ import vaccinationcentresimulation.entities.examination.ExaminationRoom
 import vaccinationcentresimulation.entities.registration.RegistrationRoom
 import vaccinationcentresimulation.entities.vaccination.VaccinationRoom
 
-class VaccinationCentreSimulation(replicationsCount: Int, maxSimulationTime: Double) :
-    EventBasedSimulation(replicationsCount, maxSimulationTime) {
+class VaccinationCentreSimulation(replicationsCount: Int, private val numberOfPatientsPerReplication: Int) :
+    EventBasedSimulation(replicationsCount) {
 
     private val patientPool = Pool { Patient() }
 
@@ -36,7 +36,7 @@ class VaccinationCentreSimulation(replicationsCount: Int, maxSimulationTime: Dou
     }
 
     private fun scheduleInitEvent() {
-        PatientArrivalEvent(this)
+        PatientArrivalEvent(this, numberOfPatientsPerReplication)
             .run {
                 scheduleFirstEvent(acquirePatient(), actualSimulationTime)
             }

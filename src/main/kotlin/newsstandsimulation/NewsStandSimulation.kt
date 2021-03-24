@@ -34,8 +34,6 @@ class NewsStandSimulation(replicationsCount: Int, maxSimulationTime: Double) :
         scheduleInitEvent()
     }
 
-    // override fun afterReplication() -> Save replication specific statistics
-
     private fun scheduleInitEvent() {
         CustomerArrivalEvent(this)
             .run {

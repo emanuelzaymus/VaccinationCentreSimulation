@@ -21,7 +21,7 @@ fun main() {
 //    println("avg. waiting time: ${avgWaitingTimeStats.getAverage()}")
 //    println("avg. queue length: ${avgQueueLengthStats.getAverage()}")
 
-    val simulation = VaccinationCentreSimulation(1, 60.0)
+    val simulation = VaccinationCentreSimulation(1, 60)
 
     simulation.simulate()
 

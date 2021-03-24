@@ -8,7 +8,9 @@ import vaccinationcentresimulation.events.VaccinationCentreEvent
 class ExaminationEndEvent(simulation: VaccinationCentreSimulation, private val doctor: Doctor) :
     VaccinationCentreEvent(simulation) {
 
-    private val examinationDurationRandom = ExponentialDistribution(1 / (260 / 60.0))
+    companion object {
+        private val examinationDurationRandom = ExponentialDistribution(1 / (260 / 60.0))
+    }
 
     override fun execute() {
         doctor.busy = false

@@ -5,14 +5,16 @@ import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.events.VaccinationCentreEvent
 import vaccinationcentresimulation.entities.Patient
 
-class PatientArrivalEvent(simulation: VaccinationCentreSimulation) : VaccinationCentreEvent(simulation) {
+class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val numberOfPatients: Int) :
+    VaccinationCentreEvent(simulation) {
 
     companion object {
         private val notArrivingPatientsRandom = DiscreteUniformDistribution(5, 25)
     }
 
+    private val arrivingPatientNumbers = DiscreteUniformDistribution(until = numberOfPatients)
     private val numberOfNotArrivingPatients = notArrivingPatientsRandom.next()
-    private val arrivingPatientNumbers = DiscreteUniformDistribution(until = simulation.maxSimulationTime.toInt())
+    private var executedArrivals = 0
 
     fun scheduleFirstEvent(patient: Patient, lastEventTime: Double) {
         schedule(patient, lastEventTime - eventDuration())
@@ -21,9 +23,13 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation) : Vaccination
     override fun schedule(patient: Patient, lastEventTime: Double) {
         var eventTimeToBe = lastEventTime
         while (true) {
+            if (executedArrivals >= numberOfPatients) {
+                break
+            }
+            executedArrivals++
             if (numberOfNotArrivingPatients < arrivingPatientNumbers.next()) {
                 super.schedule(patient, eventTimeToBe)
-                return
+                break
             } else {
                 eventTimeToBe += eventDuration()
             }
