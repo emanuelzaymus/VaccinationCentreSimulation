@@ -1,5 +1,0 @@
-package vaccinationcentresimulation.entities
-
-import vaccinationcentresimulation.VaccinationCentreSimulation
-
-abstract class VaccinationCentrePlace(val simulation: VaccinationCentreSimulation)

@@ -1,15 +1,15 @@
 package vaccinationcentresimulation.entities.registration
 
-import utils.busylist.BusyObject
+import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.Patient
-import vaccinationcentresimulation.entities.VaccinationCentrePlace
+import vaccinationcentresimulation.entities.VaccinationCentreEmployee
 import vaccinationcentresimulation.events.registration.RegistrationEndEvent
 import vaccinationcentresimulation.events.registration.RegistrationStartEvent
 
-class AdministrativeWorker(place: VaccinationCentrePlace) : BusyObject() {
+class AdministrativeWorker(simulation: VaccinationCentreSimulation) : VaccinationCentreEmployee() {
 
-    private val startRegistrationEvent = RegistrationStartEvent(place.simulation, this)
-    private val endRegistrationEvent = RegistrationEndEvent(place.simulation, this)
+    private val startRegistrationEvent = RegistrationStartEvent(simulation, this)
+    private val endRegistrationEvent = RegistrationEndEvent(simulation, this)
 
     fun scheduleStartRegistration(patient: Patient, eventTime: Double) {
         startRegistrationEvent.schedule(patient, eventTime)
@@ -17,6 +17,10 @@ class AdministrativeWorker(place: VaccinationCentrePlace) : BusyObject() {
 
     fun scheduleEndRegistration(patient: Patient, eventTime: Double) {
         endRegistrationEvent.schedule(patient, eventTime)
+    }
+
+    override fun scheduleStart(patient: Patient, eventTime: Double) {
+        startRegistrationEvent.schedule(patient, eventTime)
     }
 
 }

@@ -29,8 +29,8 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation) : Vaccination
     override fun execute() {
         patient.startWaiting(eventTime)
 
-        if (simulation.registrationRoom.anyWorkerAvailable()) {
-            simulation.registrationRoom.scheduleStartRegistration(patient, eventTime)
+        if (simulation.registrationRoom.anyEmployeeAvailable()) {
+            simulation.registrationRoom.scheduleStart(patient, eventTime)
         } else {
             simulation.beforeRegistrationQueue.enqueue(patient, eventTime)
         }

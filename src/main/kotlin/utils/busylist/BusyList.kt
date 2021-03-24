@@ -5,7 +5,7 @@ import random.DiscreteUniformDistribution
 class BusyList<T : IBusyObject>(numberOfBusyObjects: Int, init: (Int) -> T) {
 
     private val randoms = List(numberOfBusyObjects - 1) { DiscreteUniformDistribution(0, it + 2) }
-    private val busyObjects = List<T>(numberOfBusyObjects, init)
+    private val busyObjects = List(numberOfBusyObjects, init)
 
     fun anyAvailable(): Boolean = busyObjects.any { !it.busy }
 

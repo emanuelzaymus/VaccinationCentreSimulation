@@ -1,14 +1,15 @@
 package vaccinationcentresimulation.entities.examination
 
-import utils.busylist.BusyObject
+import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.Patient
+import vaccinationcentresimulation.entities.VaccinationCentreEmployee
 import vaccinationcentresimulation.events.examination.ExaminationEndEvent
 import vaccinationcentresimulation.events.examination.ExaminationStartEvent
 
-class Doctor(place: ExaminationRoom) : BusyObject() {
+class Doctor(simulation: VaccinationCentreSimulation) : VaccinationCentreEmployee() {
 
-    private val startExaminationEvent = ExaminationStartEvent(place.simulation, this)
-    private val endExaminationEvent = ExaminationEndEvent(place.simulation, this)
+    private val startExaminationEvent = ExaminationStartEvent(simulation, this)
+    private val endExaminationEvent = ExaminationEndEvent(simulation, this)
 
     fun scheduleStartExamination(patient: Patient, eventTime: Double) {
         startExaminationEvent.schedule(patient, eventTime)
@@ -16,6 +17,10 @@ class Doctor(place: ExaminationRoom) : BusyObject() {
 
     fun scheduleEndExamination(patient: Patient, eventTime: Double) {
         endExaminationEvent.schedule(patient, eventTime)
+    }
+
+    override fun scheduleStart(patient: Patient, eventTime: Double) {
+        startExaminationEvent.schedule(patient, eventTime)
     }
 
 }
