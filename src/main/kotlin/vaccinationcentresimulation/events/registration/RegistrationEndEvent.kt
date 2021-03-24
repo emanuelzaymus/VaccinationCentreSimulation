@@ -1,0 +1,31 @@
+package vaccinationcentresimulation.events.registration
+
+import random.ContinuousUniformDistribution
+import vaccinationcentresimulation.VaccinationCentreSimulation
+import vaccinationcentresimulation.events.VaccinationCentreEvent
+import vaccinationcentresimulation.entities.registration.AdministrativeWorker
+
+class RegistrationEndEvent(simulation: VaccinationCentreSimulation, private val worker: AdministrativeWorker) :
+    VaccinationCentreEvent(simulation) {
+
+    private val registrationDurationRandom = ContinuousUniformDistribution(140 / 60.0, 220 / 60.0)
+
+    override fun execute() {
+        worker.busy = false
+
+        patient.startWaiting(eventTime)
+
+        if (simulation.examinationRoom.anyDoctorAvailable()) {
+            simulation.examinationRoom.scheduleStartExamination(patient, eventTime)
+        } else {
+            simulation.beforeExaminationQueue.enqueue(patient, eventTime)
+        }
+
+        if (!simulation.beforeRegistrationQueue.isEmpty()) {
+            worker.scheduleStartRegistration(simulation.beforeRegistrationQueue.dequeue(eventTime), eventTime)
+        }
+    }
+
+    override fun eventDuration(): Double = registrationDurationRandom.next()
+
+}
