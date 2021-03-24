@@ -28,4 +28,6 @@ class RegistrationEndEvent(simulation: VaccinationCentreSimulation, private val 
 
     override fun eventDuration(): Double = registrationDurationRandom.next()
 
+    override fun toString() = "RES_END - ${super.toString()}"
+
 }

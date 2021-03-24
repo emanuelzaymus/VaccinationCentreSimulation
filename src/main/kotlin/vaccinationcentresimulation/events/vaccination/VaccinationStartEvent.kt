@@ -13,4 +13,6 @@ class VaccinationStartEvent(simulation: VaccinationCentreSimulation, private val
         nurse.scheduleEnd(patient, eventTime)
     }
 
+    override fun toString() = "VAC_STA - ${super.toString()}"
+
 }

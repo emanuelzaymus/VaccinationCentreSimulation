@@ -21,4 +21,6 @@ class WaitingEndEvent(simulation: VaccinationCentreSimulation, private val waiti
 
     override fun eventDuration(): Double = if (waitingRandom.next() < 0.95) 15.0 else 30.0
 
+    override fun toString() = "WAIT_ST - ${super.toString()}"
+
 }

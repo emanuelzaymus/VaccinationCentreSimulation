@@ -39,4 +39,6 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation) : Vaccination
 
     public override fun eventDuration(): Double = 1.0
 
+    override fun toString() = "ARRIVAL - ${super.toString()}"
+
 }

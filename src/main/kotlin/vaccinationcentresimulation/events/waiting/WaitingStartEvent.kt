@@ -14,4 +14,6 @@ class WaitingStartEvent(simulation: VaccinationCentreSimulation, private val wai
         waitingRoom.releaseWaitingStartEvent(this)
     }
 
+    override fun toString() = "WAIT_EN - ${super.toString()}"
+
 }

@@ -13,4 +13,6 @@ class RegistrationStartEvent(simulation: VaccinationCentreSimulation, private va
         worker.scheduleEnd(patient, eventTime)
     }
 
+    override fun toString() = "RES_STA - ${super.toString()}"
+
 }

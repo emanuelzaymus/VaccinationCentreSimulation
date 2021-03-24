@@ -22,4 +22,6 @@ class VaccinationEndEvent(simulation: VaccinationCentreSimulation, private val n
 
     override fun eventDuration(): Double = vaccinationDurationRandom.next()
 
+    override fun toString() = "VAC_END - ${super.toString()}"
+
 }

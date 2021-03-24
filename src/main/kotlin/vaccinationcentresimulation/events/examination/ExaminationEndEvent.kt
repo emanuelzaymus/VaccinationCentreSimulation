@@ -28,4 +28,6 @@ class ExaminationEndEvent(simulation: VaccinationCentreSimulation, private val d
 
     override fun eventDuration(): Double = examinationDurationRandom.next()
 
+    override fun toString() = "EXA_END - ${super.toString()}"
+
 }
