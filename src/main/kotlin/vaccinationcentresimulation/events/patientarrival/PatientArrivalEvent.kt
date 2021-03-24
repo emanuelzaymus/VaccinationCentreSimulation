@@ -12,7 +12,11 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation) : Vaccination
     }
 
     private val numberOfNotArrivingPatients = notArrivingPatientsRandom.next()
-    private val arrivingPatientNumbers = DiscreteUniformDistribution(0, simulation.maxSimulationTime.toInt())
+    private val arrivingPatientNumbers = DiscreteUniformDistribution(until = simulation.maxSimulationTime.toInt())
+
+    fun scheduleFirstEvent(patient: Patient, lastEventTime: Double) {
+        schedule(patient, lastEventTime - eventDuration())
+    }
 
     override fun schedule(patient: Patient, lastEventTime: Double) {
         var eventTimeToBe = lastEventTime
@@ -34,10 +38,10 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation) : Vaccination
         } else {
             simulation.beforeRegistrationQueue.enqueue(patient, eventTime)
         }
-        schedule(simulation.getNewPatient(), eventTime)
+        schedule(simulation.acquirePatient(), eventTime)
     }
 
-    public override fun eventDuration(): Double = 1.0
+    override fun eventDuration(): Double = 1.0
 
     override fun toString() = "ARRIVAL - ${super.toString()}"
 

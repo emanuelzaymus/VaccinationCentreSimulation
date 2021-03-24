@@ -3,7 +3,7 @@ package random
 /**
  * Discrete random uniform distribution generator that generates numbers from (inclusive) to until (exclusive).
  */
-class DiscreteUniformDistribution(private val from: Int, private val until: Int) :
+class DiscreteUniformDistribution(private val from: Int = 0, private val until: Int) :
     RandomDistribution(), IDiscreteDistribution {
 
     init {

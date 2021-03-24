@@ -15,12 +15,12 @@ class WaitingEndEvent(simulation: VaccinationCentreSimulation, private val waiti
 
     override fun execute() {
         patient.stopWaiting(eventTime)
-        simulation.removePatient(patient)
+        simulation.releasePatient(patient)
         waitingRoom.releaseWaitingEndEvent(this)
     }
 
     override fun eventDuration(): Double = if (waitingRandom.next() < 0.95) 15.0 else 30.0
 
-    override fun toString() = "WAIT_ST - ${super.toString()}"
+    override fun toString() = "WAIT_EN - ${super.toString()}"
 
 }

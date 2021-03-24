@@ -13,7 +13,7 @@ import vaccinationcentresimulation.entities.vaccination.VaccinationRoom
 class VaccinationCentreSimulation(replicationsCount: Int, maxSimulationTime: Double) :
     EventBasedSimulation(replicationsCount, maxSimulationTime) {
 
-    private val patientPool = Pool({ Patient() })
+    private val patientPool = Pool { Patient() }
 
     val beforeRegistrationQueue = StatisticsQueue<Patient>()
     val registrationRoom = RegistrationRoom(5, this)
@@ -26,18 +26,19 @@ class VaccinationCentreSimulation(replicationsCount: Int, maxSimulationTime: Dou
 
     val waitingRoom = WaitingRoom(this)
 
-    init {
+    fun acquirePatient(): Patient = patientPool.acquire()
+
+    fun releasePatient(patient: Patient) = patientPool.release(patient)
+
+    override fun beforeReplication() {
+        super.beforeReplication()
         scheduleInitEvent()
     }
-
-    fun getNewPatient(): Patient = patientPool.acquire()
-
-    fun removePatient(patient: Patient) = patientPool.release(patient)
 
     private fun scheduleInitEvent() {
         PatientArrivalEvent(this)
             .run {
-                schedule(getNewPatient(), actualSimulationTime - eventDuration())
+                scheduleFirstEvent(acquirePatient(), actualSimulationTime)
             }
     }
 
