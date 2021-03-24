@@ -1,4 +1,4 @@
-package newsstandsimulation.statistics.queuelength
+package utils.statisticsqueue
 
 interface IQueueLengthChangedActionListener {
 

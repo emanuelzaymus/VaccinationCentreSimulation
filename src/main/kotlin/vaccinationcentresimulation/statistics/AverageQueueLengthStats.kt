@@ -1,6 +1,7 @@
-package newsstandsimulation.statistics.queuelength
+package vaccinationcentresimulation.statistics
 
 import simulation.statistics.ContinuousStatistics
+import utils.statisticsqueue.IQueueLengthChangedActionListener
 
 class AverageQueueLengthStats : ContinuousStatistics(), IQueueLengthChangedActionListener {
 

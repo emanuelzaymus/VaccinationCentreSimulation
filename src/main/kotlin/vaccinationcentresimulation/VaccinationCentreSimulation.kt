@@ -2,7 +2,7 @@ package vaccinationcentresimulation
 
 import simulation.eventbasedsimulation.EventBasedSimulation
 import utils.pool.Pool
-import utils.StatisticsQueue
+import utils.statisticsqueue.StatisticsQueue
 import vaccinationcentresimulation.events.patientarrival.PatientArrivalEvent
 import vaccinationcentresimulation.entities.Patient
 import vaccinationcentresimulation.entities.waiting.WaitingRoom

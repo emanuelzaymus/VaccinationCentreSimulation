@@ -5,7 +5,7 @@ import newsstandsimulation.events.EndServiceEvent
 import newsstandsimulation.events.StartServiceEvent
 import simulation.eventbasedsimulation.EventBasedSimulation
 import utils.pool.Pool
-import utils.StatisticsQueue
+import utils.statisticsqueue.StatisticsQueue
 
 class NewsStandSimulation(replicationsCount: Int, maxSimulationTime: Double) :
     EventBasedSimulation(replicationsCount, maxSimulationTime) {

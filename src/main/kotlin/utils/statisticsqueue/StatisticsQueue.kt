@@ -1,10 +1,8 @@
-package utils
+package utils.statisticsqueue
 
-import newsstandsimulation.statistics.queuelength.IQueueLengthChangedActionListener
-import newsstandsimulation.statistics.queuelength.IQueueLengthChangedActionSource
 import java.util.*
 
-class StatisticsQueue<T> : IQueueLengthChangedActionSource {
+class StatisticsQueue<T> {
 
     private val queue: Queue<T> = LinkedList()
     private var queueLengthChangedActionListener = IQueueLengthChangedActionListener.getEmptyImplementation()
@@ -27,7 +25,10 @@ class StatisticsQueue<T> : IQueueLengthChangedActionSource {
         lastChange = .0
     }
 
-    override fun setQueueLengthChangedActionListener(listener: IQueueLengthChangedActionListener) {
+    fun setQueueLengthChangedActionListener(listener: IQueueLengthChangedActionListener) {
+        if (queueLengthChangedActionListener !is IQueueLengthChangedActionListener.EmptyQueueLengthChangedActionListener) {
+            throw IllegalStateException("Action listener already set.")
+        }
         queueLengthChangedActionListener = listener
     }
 

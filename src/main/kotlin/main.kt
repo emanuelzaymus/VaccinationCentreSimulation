@@ -1,7 +1,5 @@
-import newsstandsimulation.NewsStandSimulation
-import newsstandsimulation.statistics.queuelength.AverageQueueLengthStats
-import newsstandsimulation.statistics.waitingtime.AverageWaitingTimeStats
 import vaccinationcentresimulation.VaccinationCentreSimulation
+import vaccinationcentresimulation.statistics.AverageQueueLengthStats
 
 fun main() {
 
@@ -23,6 +21,17 @@ fun main() {
 
     val simulation = VaccinationCentreSimulation(1, 60)
 
+    val avgBeforeRegistrationQueueLen = AverageQueueLengthStats()
+    simulation.beforeRegistrationQueue.setQueueLengthChangedActionListener(avgBeforeRegistrationQueueLen)
+    val avgBeforeExaminationQueueLen = AverageQueueLengthStats()
+    simulation.beforeExaminationQueue.setQueueLengthChangedActionListener(avgBeforeExaminationQueueLen)
+    val avgBeforeVaccinationQueueLen = AverageQueueLengthStats()
+    simulation.beforeVaccinationQueue.setQueueLengthChangedActionListener(avgBeforeVaccinationQueueLen)
+
     simulation.simulate()
+
+    println("avg. before registration queue length: ${avgBeforeRegistrationQueueLen.getAverage()}")
+    println("avg. before examination queue length: ${avgBeforeExaminationQueueLen.getAverage()}")
+    println("avg. before vaccination queue length: ${avgBeforeVaccinationQueueLen.getAverage()}")
 
 }
