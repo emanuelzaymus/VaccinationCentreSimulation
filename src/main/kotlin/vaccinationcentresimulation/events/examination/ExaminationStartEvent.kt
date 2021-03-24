@@ -10,7 +10,7 @@ class ExaminationStartEvent(simulation: VaccinationCentreSimulation, private val
     override fun execute() {
         doctor.busy = true
         patient.stopWaiting(eventTime)
-        doctor.scheduleEndExamination(patient, eventTime)
+        doctor.scheduleEnd(patient, eventTime)
     }
 
     override fun eventDuration(): Double = .0

@@ -22,7 +22,7 @@ class ExaminationEndEvent(simulation: VaccinationCentreSimulation, private val d
         }
 
         if (!simulation.beforeRegistrationQueue.isEmpty()) {
-            doctor.scheduleStartExamination(simulation.beforeExaminationQueue.dequeue(eventTime), eventTime)
+            doctor.scheduleStart(simulation.beforeExaminationQueue.dequeue(eventTime), eventTime)
         }
     }
 

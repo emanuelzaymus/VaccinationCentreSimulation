@@ -16,7 +16,7 @@ class VaccinationEndEvent(simulation: VaccinationCentreSimulation, private val n
         simulation.waitingRoom.scheduleStartWaiting(patient, eventTime)
 
         if (!simulation.beforeVaccinationQueue.isEmpty()) {
-            nurse.scheduleStartVaccination(simulation.beforeVaccinationQueue.dequeue(eventTime), eventTime)
+            nurse.scheduleStart(simulation.beforeVaccinationQueue.dequeue(eventTime), eventTime)
         }
     }
 

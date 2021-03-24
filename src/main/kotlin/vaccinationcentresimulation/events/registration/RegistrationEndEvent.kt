@@ -22,7 +22,7 @@ class RegistrationEndEvent(simulation: VaccinationCentreSimulation, private val 
         }
 
         if (!simulation.beforeRegistrationQueue.isEmpty()) {
-            worker.scheduleStartRegistration(simulation.beforeRegistrationQueue.dequeue(eventTime), eventTime)
+            worker.scheduleStart(simulation.beforeRegistrationQueue.dequeue(eventTime), eventTime)
         }
     }
 

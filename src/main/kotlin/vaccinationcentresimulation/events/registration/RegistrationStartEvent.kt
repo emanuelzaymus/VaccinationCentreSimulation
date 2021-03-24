@@ -10,9 +10,10 @@ class RegistrationStartEvent(simulation: VaccinationCentreSimulation, private va
     override fun execute() {
         worker.busy = true
         patient.stopWaiting(eventTime)
-        worker.scheduleEndRegistration(patient, eventTime)
+        worker.scheduleEnd(patient, eventTime)
     }
 
+    // TODO: make open fun eventDuration() -> default method
     override fun eventDuration(): Double = .0
 
 }
