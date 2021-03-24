@@ -14,6 +14,4 @@ class WaitingStartEvent(simulation: VaccinationCentreSimulation, private val wai
         waitingRoom.releaseWaitingStartEvent(this)
     }
 
-    override fun eventDuration(): Double = .0
-
 }

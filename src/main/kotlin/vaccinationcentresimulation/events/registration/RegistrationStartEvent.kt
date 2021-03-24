@@ -13,7 +13,4 @@ class RegistrationStartEvent(simulation: VaccinationCentreSimulation, private va
         worker.scheduleEnd(patient, eventTime)
     }
 
-    // TODO: make open fun eventDuration() -> default method
-    override fun eventDuration(): Double = .0
-
 }

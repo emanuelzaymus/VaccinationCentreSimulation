@@ -13,6 +13,4 @@ class ExaminationStartEvent(simulation: VaccinationCentreSimulation, private val
         doctor.scheduleEnd(patient, eventTime)
     }
 
-    override fun eventDuration(): Double = .0
-
 }

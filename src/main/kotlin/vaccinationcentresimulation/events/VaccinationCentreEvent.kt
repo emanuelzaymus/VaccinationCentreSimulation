@@ -13,7 +13,7 @@ abstract class VaccinationCentreEvent(protected val simulation: VaccinationCentr
         simulation.scheduleEvent(this)
     }
 
-    protected abstract fun eventDuration(): Double
+    protected open fun eventDuration(): Double = .0
 
     override fun toString() = "Patient: $patient, ${super.toString()}"
 
