@@ -39,7 +39,7 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val n
     override fun execute() {
         patient.startWaiting(eventTime)
 
-        if (simulation.registrationRoom.anyEmployeeAvailable()) {
+        if (simulation.registrationRoom.anyWorkerAvailable()) {
             simulation.registrationRoom.scheduleStart(patient, eventTime)
         } else {
             simulation.beforeRegistrationQueue.enqueue(patient, eventTime)

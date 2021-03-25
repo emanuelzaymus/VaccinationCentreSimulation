@@ -17,7 +17,7 @@ class ExaminationEndEvent(simulation: VaccinationCentreSimulation, private val d
 
         patient.startWaiting(eventTime)
 
-        if (simulation.vaccinationRoom.anyEmployeeAvailable()) {
+        if (simulation.vaccinationRoom.anyWorkerAvailable()) {
             simulation.vaccinationRoom.scheduleStart(patient, eventTime)
         } else {
             simulation.beforeVaccinationQueue.enqueue(patient, eventTime)
