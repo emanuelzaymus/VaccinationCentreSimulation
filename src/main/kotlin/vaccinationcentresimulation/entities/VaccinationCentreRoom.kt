@@ -2,6 +2,7 @@ package vaccinationcentresimulation.entities
 
 import utils.busylist.BusyList
 import vaccinationcentresimulation.VaccinationCentreSimulation
+import vaccinationcentresimulation.events.IOnWaitingStoppedActionListener
 
 abstract class VaccinationCentreRoom<T : VaccinationCentreWorker>(
     val simulation: VaccinationCentreSimulation,
@@ -15,6 +16,10 @@ abstract class VaccinationCentreRoom<T : VaccinationCentreWorker>(
     fun scheduleStart(patient: Patient, eventTime: Double) {
         val worker = workers.getRandomAvailable()
         worker.scheduleStart(patient, eventTime)
+    }
+
+    fun setOnWaitingStoppedActionListener(listener: IOnWaitingStoppedActionListener) {
+        workers.forEach { it.setOnWaitingStoppedActionListener(listener) }
     }
 
 }

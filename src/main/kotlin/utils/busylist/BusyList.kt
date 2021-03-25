@@ -2,7 +2,7 @@ package utils.busylist
 
 import random.DiscreteUniformDistribution
 
-class BusyList<T : IBusyObject>(numberOfBusyObjects: Int, init: (Int) -> T) {
+class BusyList<T : IBusyObject>(numberOfBusyObjects: Int, init: (Int) -> T) : Iterable<T> {
 
     private val randoms = List(numberOfBusyObjects - 1) { DiscreteUniformDistribution(until = it + 2) }
     private val busyObjects = List(numberOfBusyObjects, init)
@@ -23,5 +23,7 @@ class BusyList<T : IBusyObject>(numberOfBusyObjects: Int, init: (Int) -> T) {
     }
 
     private fun getRandomForSize(size: Int) = randoms[size - 2]
+
+    override fun iterator(): Iterator<T> = busyObjects.iterator()
 
 }

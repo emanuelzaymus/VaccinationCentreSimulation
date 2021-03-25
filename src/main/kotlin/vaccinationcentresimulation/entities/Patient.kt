@@ -18,7 +18,7 @@ class Patient : IPooledObject {
     fun getWaitingTime(): Double {
         if (beginningOfWaiting < 0)
             throw IllegalStateException("Waiting was not started yet.")
-        if (endOfWaiting < 0)
+        if (endOfWaiting < 0 || endOfWaiting < beginningOfWaiting)
             throw IllegalStateException("Waiting was not stopped yet.")
 
         return endOfWaiting - beginningOfWaiting

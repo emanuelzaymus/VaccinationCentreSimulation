@@ -2,17 +2,11 @@ package vaccinationcentresimulation.events.examination
 
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.examination.Doctor
-import vaccinationcentresimulation.events.VaccinationCentreEvent
+import vaccinationcentresimulation.events.VaccinationCentreActivityStartEvent
 
-class ExaminationStartEvent(simulation: VaccinationCentreSimulation, private val doctor: Doctor) :
-    VaccinationCentreEvent(simulation) {
+class ExaminationStartEvent(simulation: VaccinationCentreSimulation, doctor: Doctor) :
+    VaccinationCentreActivityStartEvent(simulation, doctor) {
 
-    override fun execute() {
-        doctor.busy = true
-        patient.stopWaiting(eventTime)
-        doctor.scheduleEnd(patient, eventTime)
-    }
-
-    override fun toString() = "EXA_STA - ${super.toString()}"
+    override val toStringTitle = "EXA_STA"
 
 }

@@ -1,4 +1,4 @@
-package vaccinationcentresimulation.statistics
+package vaccinationcentresimulation.events
 
 interface IOnWaitingStoppedActionListener {
 

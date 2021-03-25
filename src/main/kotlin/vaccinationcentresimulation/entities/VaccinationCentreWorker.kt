@@ -1,6 +1,8 @@
 package vaccinationcentresimulation.entities
 
 import utils.busylist.IBusyObject
+import vaccinationcentresimulation.events.IOnWaitingStoppedActionListener
+import vaccinationcentresimulation.events.VaccinationCentreActivityStartEvent
 import vaccinationcentresimulation.events.VaccinationCentreEvent
 
 abstract class VaccinationCentreWorker : IBusyObject {
@@ -12,7 +14,7 @@ abstract class VaccinationCentreWorker : IBusyObject {
             field = value
         }
 
-    protected abstract val startEvent: VaccinationCentreEvent
+    protected abstract val startEvent: VaccinationCentreActivityStartEvent
     protected abstract val endEvent: VaccinationCentreEvent
 
     fun scheduleStart(patient: Patient, eventTime: Double) {
@@ -21,6 +23,10 @@ abstract class VaccinationCentreWorker : IBusyObject {
 
     fun scheduleEnd(patient: Patient, eventTime: Double) {
         endEvent.schedule(patient, eventTime)
+    }
+
+    fun setOnWaitingStoppedActionListener(listener: IOnWaitingStoppedActionListener) {
+        startEvent.setOnWaitingStoppedActionListener(listener)
     }
 
 }

@@ -10,7 +10,7 @@ import utils.statisticsqueue.StatisticsQueue
 class NewsStandSimulation(replicationsCount: Int, maxSimulationTime: Double) :
     EventBasedSimulation(replicationsCount, maxSimulationTime) {
 
-    private val customerPool = Pool({ Customer() })
+    private val customerPool = Pool { Customer() }
     val customerQueue = StatisticsQueue<Customer>()
 
     val trader = Trader()

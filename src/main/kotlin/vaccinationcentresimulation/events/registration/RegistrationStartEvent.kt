@@ -1,25 +1,12 @@
 package vaccinationcentresimulation.events.registration
 
 import vaccinationcentresimulation.VaccinationCentreSimulation
-import vaccinationcentresimulation.events.VaccinationCentreEvent
 import vaccinationcentresimulation.entities.registration.AdministrativeWorker
-import vaccinationcentresimulation.statistics.IOnWaitingStoppedActionListener
+import vaccinationcentresimulation.events.VaccinationCentreActivityStartEvent
 
-class RegistrationStartEvent(simulation: VaccinationCentreSimulation, private val worker: AdministrativeWorker) :
-    VaccinationCentreEvent(simulation) {
+class RegistrationStartEvent(simulation: VaccinationCentreSimulation, worker: AdministrativeWorker) :
+    VaccinationCentreActivityStartEvent(simulation, worker) {
 
-    private var waitingStoppedActionListener = IOnWaitingStoppedActionListener.getEmptyImplementation()
-
-    override fun execute() {
-        worker.busy = true
-        patient.stopWaiting(eventTime)
-        worker.scheduleEnd(patient, eventTime)
-    }
-
-    fun setOnWaitingStoppedActionListener(listener: IOnWaitingStoppedActionListener) {
-        waitingStoppedActionListener = listener
-    }
-
-    override fun toString() = "REG_STA - ${super.toString()}"
+    override val toStringTitle = "REG_STA"
 
 }
