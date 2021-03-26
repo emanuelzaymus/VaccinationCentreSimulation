@@ -1,32 +1,18 @@
 package vaccinationcentresimulation.entities
 
 import utils.pool.IPooledObject
+import utils.stopwatch.Stopwatch
 
 class Patient : IPooledObject {
 
-    private var beginningOfWaiting: Double = -1.0
-    private var endOfWaiting: Double = -1.0
+    private val waitingStopwatch = Stopwatch()
 
-    fun startWaiting(actualSimulationTime: Double) {
-        beginningOfWaiting = actualSimulationTime
-    }
+    fun startWaiting(actualSimulationTime: Double) = waitingStopwatch.start(actualSimulationTime)
 
-    fun stopWaiting(actualSimulationTime: Double) {
-        endOfWaiting = actualSimulationTime
-    }
+    fun stopWaiting(actualSimulationTime: Double) = waitingStopwatch.stop(actualSimulationTime)
 
-    fun getWaitingTime(): Double {
-        if (beginningOfWaiting < 0)
-            throw IllegalStateException("Waiting was not started yet.")
-        if (endOfWaiting < 0 || endOfWaiting < beginningOfWaiting)
-            throw IllegalStateException("Waiting was not stopped yet.")
+    fun getWaitingTime(): Double = waitingStopwatch.getElapsedTime()
 
-        return endOfWaiting - beginningOfWaiting
-    }
-
-    override fun restart() {
-        beginningOfWaiting = -1.0
-        endOfWaiting = -1.0
-    }
+    override fun restart() = waitingStopwatch.restart()
 
 }

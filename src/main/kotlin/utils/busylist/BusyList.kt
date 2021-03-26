@@ -7,10 +7,10 @@ class BusyList<T : IBusyObject>(numberOfBusyObjects: Int, init: (Int) -> T) : It
     private val randoms = List(numberOfBusyObjects - 1) { DiscreteUniformDistribution(until = it + 2) }
     private val busyObjects = List(numberOfBusyObjects, init)
 
-    fun anyAvailable(): Boolean = busyObjects.any { !it.busy }
+    fun anyAvailable(): Boolean = busyObjects.any { !it.isBusy() }
 
     fun getRandomAvailable(): T {
-        val freeObjects = busyObjects.filter { !it.busy }
+        val freeObjects = busyObjects.filter { !it.isBusy() }
 
         if (freeObjects.isEmpty())
             throw IllegalStateException("Non of the objects is free.")

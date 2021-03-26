@@ -1,5 +1,7 @@
 package utils.busylist
 
 interface IBusyObject {
-    var busy: Boolean
+    //    val busy: Boolean
+    fun isBusy(): Boolean
+    fun setBusy(busy: Boolean, eventTime: Double)
 }

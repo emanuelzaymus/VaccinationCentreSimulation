@@ -13,7 +13,7 @@ class RegistrationEndEvent(simulation: VaccinationCentreSimulation, private val 
     }
 
     override fun execute() {
-        worker.busy = false
+        worker.setBusy(false, eventTime)
 
         patient.startWaiting(eventTime)
 

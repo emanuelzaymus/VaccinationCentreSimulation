@@ -13,7 +13,7 @@ abstract class VaccinationCentreActivityStartEvent(
     protected abstract val toStringTitle: String
 
     override fun execute() {
-        worker.busy = true
+        worker.setBusy(true, eventTime)
         stopPatientWaiting()
         worker.scheduleEnd(patient, eventTime)
     }
