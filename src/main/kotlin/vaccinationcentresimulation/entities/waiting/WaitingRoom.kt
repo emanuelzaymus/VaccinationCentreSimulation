@@ -11,7 +11,7 @@ class WaitingRoom(private val simulation: VaccinationCentreSimulation) {
     private val waitingStartEventPool = Pool { WaitingStartEvent(simulation, this) }
     private val waitingEndEventPool = Pool { WaitingEndEvent(simulation, this) }
 
-    private var beforeWaitingPatientsCountChangedActionListener: IBeforeWaitingPatientCountChangedActionListener? = null
+    private var beforePatientsCountChangedActionListener: IBeforePatientsCountChangedActionListener? = null
     private var lastChange = .0
     private var waitingPatientsCount = 0
         set(value) {
@@ -37,21 +37,21 @@ class WaitingRoom(private val simulation: VaccinationCentreSimulation) {
     }
 
     fun incrementWaitingPatientsCount(eventTime: Double) {
-        beforeWaitingPatientsCountChanged(eventTime)
+        beforePatientsCountChanged(eventTime)
         waitingPatientsCount++
     }
 
     fun decrementWaitingPatientsCount(eventTime: Double) {
-        beforeWaitingPatientsCountChanged(eventTime)
+        beforePatientsCountChanged(eventTime)
         waitingPatientsCount--
     }
 
-    fun setBeforeWaitingPatientsCountChangedActionListener(listener: IBeforeWaitingPatientCountChangedActionListener) {
-        beforeWaitingPatientsCountChangedActionListener = listener
+    fun setBeforePatientsCountChangedActionListener(listener: IBeforePatientsCountChangedActionListener) {
+        beforePatientsCountChangedActionListener = listener
     }
 
-    private fun beforeWaitingPatientsCountChanged(eventTime: Double) {
-        beforeWaitingPatientsCountChangedActionListener?.handleBeforeWaitingPatientsCountChanged(
+    private fun beforePatientsCountChanged(eventTime: Double) {
+        beforePatientsCountChangedActionListener?.handleBeforePatientsCountChanged(
             waitingPatientsCount,
             eventTime - lastChange
         )

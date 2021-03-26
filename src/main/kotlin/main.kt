@@ -25,11 +25,11 @@ fun main() {
     val simulation = VaccinationCentreSimulation(1, 60)
 
     val avgBeforeRegistrationQueueLen = AverageQueueLengthStats()
-    simulation.beforeRegistrationQueue.setQueueLengthChangedActionListener(avgBeforeRegistrationQueueLen)
+    simulation.beforeRegistrationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeRegistrationQueueLen)
     val avgBeforeExaminationQueueLen = AverageQueueLengthStats()
-    simulation.beforeExaminationQueue.setQueueLengthChangedActionListener(avgBeforeExaminationQueueLen)
+    simulation.beforeExaminationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeExaminationQueueLen)
     val avgBeforeVaccinationQueueLen = AverageQueueLengthStats()
-    simulation.beforeVaccinationQueue.setQueueLengthChangedActionListener(avgBeforeVaccinationQueueLen)
+    simulation.beforeVaccinationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeVaccinationQueueLen)
 
     val avgWaitingTimeRegistrationQueue = AverageWaitingTimeStats()
     simulation.registrationRoom.setOnWaitingStoppedActionListener(avgWaitingTimeRegistrationQueue)
@@ -39,14 +39,14 @@ fun main() {
     simulation.vaccinationRoom.setOnWaitingStoppedActionListener(avgWaitingTimeVaccinationQueue)
 
     val averageWorkloadAdministrativeWorkerStats = AverageWorkloadStats()
-    simulation.registrationRoom.setOnWorkersStateChangedActionListener(averageWorkloadAdministrativeWorkerStats)
+    simulation.registrationRoom.setBeforeWorkersStateChangedActionListener(averageWorkloadAdministrativeWorkerStats)
     val averageWorkloadDoctorStats = AverageWorkloadStats()
-    simulation.examinationRoom.setOnWorkersStateChangedActionListener(averageWorkloadDoctorStats)
+    simulation.examinationRoom.setBeforeWorkersStateChangedActionListener(averageWorkloadDoctorStats)
     val averageWorkloadNurseStats = AverageWorkloadStats()
-    simulation.vaccinationRoom.setOnWorkersStateChangedActionListener(averageWorkloadNurseStats)
+    simulation.vaccinationRoom.setBeforeWorkersStateChangedActionListener(averageWorkloadNurseStats)
 
     val averageWaitingPatientsCountStats = AverageWaitingPatientsCountStats()
-    simulation.waitingRoom.setBeforeWaitingPatientsCountChangedActionListener(averageWaitingPatientsCountStats)
+    simulation.waitingRoom.setBeforePatientsCountChangedActionListener(averageWaitingPatientsCountStats)
 
     simulation.simulate()
 

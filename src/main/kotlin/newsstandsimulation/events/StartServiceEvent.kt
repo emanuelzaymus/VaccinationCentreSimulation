@@ -5,11 +5,11 @@ import newsstandsimulation.NewsStandSimulation
 
 class StartServiceEvent(simulation: NewsStandSimulation) : NewsStandEvent(simulation), IOnStartServiceActionSource {
 
-    private var onStartServiceActionListener = IOnStartServiceActionListener.getEmptyImplementation()
+    private var onStartServiceActionListener: IOnStartServiceActionListener? = null
 
     override fun execute() {
         customer.stopWaiting(eventTime)
-        onStartServiceActionListener.handleOnStartService(this)
+        onStartServiceActionListener?.handleOnStartService(this)
 
         simulation.trader.busy = true
         simulation.endServiceEvent.schedule(customer, eventTime)

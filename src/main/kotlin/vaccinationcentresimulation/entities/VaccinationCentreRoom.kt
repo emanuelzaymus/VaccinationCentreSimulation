@@ -3,7 +3,7 @@ package vaccinationcentresimulation.entities
 import utils.busylist.BusyList
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.events.IOnWaitingStoppedActionListener
-import vaccinationcentresimulation.events.IOnWorkersStateChangedActionListener
+import vaccinationcentresimulation.events.IBeforeWorkersStateChangedActionListener
 
 abstract class VaccinationCentreRoom<T : VaccinationCentreWorker>(
     val simulation: VaccinationCentreSimulation,
@@ -23,8 +23,8 @@ abstract class VaccinationCentreRoom<T : VaccinationCentreWorker>(
         workers.forEach { it.setOnWaitingStoppedActionListener(listener) }
     }
 
-    fun setOnWorkersStateChangedActionListener(listener: IOnWorkersStateChangedActionListener) {
-        workers.forEach { it.setOnWorkersStateChangedActionListener(listener) }
+    fun setBeforeWorkersStateChangedActionListener(listener: IBeforeWorkersStateChangedActionListener) {
+        workers.forEach { it.setBeforeWorkersStateChangedActionListener(listener) }
     }
 
 }

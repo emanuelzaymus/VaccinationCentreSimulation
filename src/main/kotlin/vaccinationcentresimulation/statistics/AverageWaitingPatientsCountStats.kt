@@ -1,11 +1,11 @@
 package vaccinationcentresimulation.statistics
 
 import simulation.statistics.ContinuousStatistics
-import vaccinationcentresimulation.entities.waiting.IBeforeWaitingPatientCountChangedActionListener
+import vaccinationcentresimulation.entities.waiting.IBeforePatientsCountChangedActionListener
 
-class AverageWaitingPatientsCountStats : ContinuousStatistics(), IBeforeWaitingPatientCountChangedActionListener {
+class AverageWaitingPatientsCountStats : ContinuousStatistics(), IBeforePatientsCountChangedActionListener {
 
-    override fun handleBeforeWaitingPatientsCountChanged(lastCount: Int, timeElapsed: Double) {
+    override fun handleBeforePatientsCountChanged(lastCount: Int, timeElapsed: Double) {
         addSample(lastCount, timeElapsed)
     }
 

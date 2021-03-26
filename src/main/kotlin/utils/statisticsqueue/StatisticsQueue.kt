@@ -5,16 +5,16 @@ import java.util.*
 class StatisticsQueue<T> {
 
     private val queue: Queue<T> = LinkedList()
-    private var queueLengthChangedActionListener = IQueueLengthChangedActionListener.getEmptyImplementation()
+    private var beforeQueueLengthChangedActionListener: IBeforeQueueLengthChangedActionListener? = null
     private var lastChange: Double = .0
 
     fun enqueue(element: T, eventTime: Double) {
-        queueLengthChanged(eventTime)
+        beforeQueueLengthChanged(eventTime)
         queue.add(element)
     }
 
     fun dequeue(eventTime: Double): T {
-        queueLengthChanged(eventTime)
+        beforeQueueLengthChanged(eventTime)
         return queue.remove()
     }
 
@@ -25,15 +25,12 @@ class StatisticsQueue<T> {
         lastChange = .0
     }
 
-    fun setQueueLengthChangedActionListener(listener: IQueueLengthChangedActionListener) {
-        if (queueLengthChangedActionListener !is IQueueLengthChangedActionListener.EmptyQueueLengthChangedActionListener) {
-            throw IllegalStateException("Action listener already set.")
-        }
-        queueLengthChangedActionListener = listener
+    fun setBeforeQueueLengthChangedActionListener(listener: IBeforeQueueLengthChangedActionListener) {
+        beforeQueueLengthChangedActionListener = listener
     }
 
-    private fun queueLengthChanged(eventTime: Double) {
-        queueLengthChangedActionListener.handleQueueLengthChanged(queue.size, eventTime - lastChange)
+    private fun beforeQueueLengthChanged(eventTime: Double) {
+        beforeQueueLengthChangedActionListener?.handleBeforeQueueLengthChanged(queue.size, eventTime - lastChange)
         lastChange = eventTime
     }
 

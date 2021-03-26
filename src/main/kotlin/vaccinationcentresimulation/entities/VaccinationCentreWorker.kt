@@ -3,14 +3,14 @@ package vaccinationcentresimulation.entities
 import utils.busylist.IBusyObject
 import utils.stopwatch.Stopwatch
 import vaccinationcentresimulation.events.IOnWaitingStoppedActionListener
-import vaccinationcentresimulation.events.IOnWorkersStateChangedActionListener
+import vaccinationcentresimulation.events.IBeforeWorkersStateChangedActionListener
 import vaccinationcentresimulation.events.VaccinationCentreActivityStartEvent
 import vaccinationcentresimulation.events.VaccinationCentreEvent
 
 abstract class VaccinationCentreWorker : IBusyObject {
 
     private val workingStopwatch = Stopwatch()
-    private var onWorkersStateChangedActionListener: IOnWorkersStateChangedActionListener? = null
+    private var beforeWorkersStateChangedActionListener: IBeforeWorkersStateChangedActionListener? = null
 
     protected abstract val startEvent: VaccinationCentreActivityStartEvent
     protected abstract val endEvent: VaccinationCentreEvent
@@ -34,7 +34,10 @@ abstract class VaccinationCentreWorker : IBusyObject {
 
     override fun setBusy(busy: Boolean, eventTime: Double) {
         workingStopwatch.stop(eventTime)
-        onWorkersStateChangedActionListener?.handleOnWorkersStateChanged(this.busy, workingStopwatch.getElapsedTime())
+        beforeWorkersStateChangedActionListener?.handleBeforeWorkersStateChanged(
+            this.busy,
+            workingStopwatch.getElapsedTime()
+        )
         this.busy = busy
         workingStopwatch.start(eventTime)
     }
@@ -43,8 +46,8 @@ abstract class VaccinationCentreWorker : IBusyObject {
         startEvent.setOnWaitingStoppedActionListener(listener)
     }
 
-    fun setOnWorkersStateChangedActionListener(listener: IOnWorkersStateChangedActionListener) {
-        onWorkersStateChangedActionListener = listener
+    fun setBeforeWorkersStateChangedActionListener(listener: IBeforeWorkersStateChangedActionListener) {
+        beforeWorkersStateChangedActionListener = listener
     }
 
 }

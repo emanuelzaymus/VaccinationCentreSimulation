@@ -1,11 +1,11 @@
 package vaccinationcentresimulation.statistics
 
 import simulation.statistics.ContinuousStatistics
-import utils.statisticsqueue.IQueueLengthChangedActionListener
+import utils.statisticsqueue.IBeforeQueueLengthChangedActionListener
 
-class AverageQueueLengthStats : ContinuousStatistics(), IQueueLengthChangedActionListener {
+class AverageQueueLengthStats : ContinuousStatistics(), IBeforeQueueLengthChangedActionListener {
 
-    override fun handleQueueLengthChanged(newLength: Int, newElapsedTime: Double) {
+    override fun handleBeforeQueueLengthChanged(newLength: Int, newElapsedTime: Double) {
         addSample(newLength, newElapsedTime)
     }
 
