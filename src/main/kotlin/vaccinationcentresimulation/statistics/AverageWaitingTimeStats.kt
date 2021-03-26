@@ -6,7 +6,10 @@ import vaccinationcentresimulation.events.IOnWaitingStoppedActionListener
 class AverageWaitingTimeStats : DiscreteStatistics(), IOnWaitingStoppedActionListener {
 
     override fun handleOnWaitingStopped(newWaitingElapsed: Double) {
-        addSample(newWaitingElapsed)
+        if (newWaitingElapsed >= 0)
+            addSample(newWaitingElapsed)
+        else
+            throw IllegalArgumentException("Elapsed waiting time cannot be negative.")
     }
 
 }

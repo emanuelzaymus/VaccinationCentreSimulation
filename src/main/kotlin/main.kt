@@ -22,7 +22,7 @@ fun main() {
 //    println("avg. waiting time: ${avgWaitingTimeStats.getAverage()}")
 //    println("avg. queue length: ${avgQueueLengthStats.getAverage()}")
 
-    val simulation = VaccinationCentreSimulation(1, 60)
+    val simulation = VaccinationCentreSimulation(100, 60 * 9)
 
     val avgBeforeRegistrationQueueLen = AverageQueueLengthStats()
     simulation.beforeRegistrationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeRegistrationQueueLen)
