@@ -14,7 +14,7 @@ class WaitingEndEvent(simulation: VaccinationCentreSimulation, private val waiti
     }
 
     override fun execute() {
-        patient.stopWaiting(eventTime)
+        waitingRoom.decrementWaitingPatientsCount(eventTime)
         simulation.releasePatient(patient)
         waitingRoom.releaseWaitingEndEvent(this)
     }

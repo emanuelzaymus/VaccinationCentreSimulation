@@ -1,5 +1,7 @@
 package simulation.statistics
 
+import kotlin.IllegalArgumentException
+
 open class ContinuousStatistics : IStatistics {
 
     private var average: Double = .0
@@ -9,7 +11,8 @@ open class ContinuousStatistics : IStatistics {
         if (newElapsedTime > 0) {
             average = (average * totalTime + newValue * newElapsedTime) / (totalTime + newElapsedTime)
             totalTime += newElapsedTime
-        }
+        } else if (newElapsedTime < 0)
+            throw IllegalArgumentException("Elapsed time cannot be negative.")
     }
 
     override fun getAverage(): Double = average

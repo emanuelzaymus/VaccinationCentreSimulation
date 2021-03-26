@@ -9,7 +9,7 @@ class WaitingStartEvent(simulation: VaccinationCentreSimulation, private val wai
     VaccinationCentreEvent(simulation), IPooledObject {
 
     override fun execute() {
-        patient.startWaiting(eventTime)
+        waitingRoom.incrementWaitingPatientsCount(eventTime)
         waitingRoom.scheduleEndWaiting(patient, eventTime)
         waitingRoom.releaseWaitingStartEvent(this)
     }

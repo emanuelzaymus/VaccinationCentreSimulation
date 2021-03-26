@@ -1,5 +1,6 @@
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.statistics.AverageQueueLengthStats
+import vaccinationcentresimulation.statistics.AverageWaitingPatientsCountStats
 import vaccinationcentresimulation.statistics.AverageWaitingTimeStats
 import vaccinationcentresimulation.statistics.AverageWorkloadStats
 
@@ -44,6 +45,9 @@ fun main() {
     val averageWorkloadNurseStats = AverageWorkloadStats()
     simulation.vaccinationRoom.setOnWorkersStateChangedActionListener(averageWorkloadNurseStats)
 
+    val averageWaitingPatientsCountStats = AverageWaitingPatientsCountStats()
+    simulation.waitingRoom.setBeforeWaitingPatientsCountChangedActionListener(averageWaitingPatientsCountStats)
+
     simulation.simulate()
 
     println()
@@ -58,5 +62,7 @@ fun main() {
     println("avg. workload administrative workers: ${averageWorkloadAdministrativeWorkerStats.getAverage()}")
     println("avg. workload doctors: ${averageWorkloadDoctorStats.getAverage()}")
     println("avg. workload nurses: ${averageWorkloadNurseStats.getAverage()}")
+    println()
+    println("avg. waiting patients count: ${averageWaitingPatientsCountStats.getAverage()}")
 
 }
