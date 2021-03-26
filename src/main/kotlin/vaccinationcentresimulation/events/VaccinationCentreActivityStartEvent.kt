@@ -9,7 +9,7 @@ abstract class VaccinationCentreActivityStartEvent(
 ) :
     VaccinationCentreEvent(simulation) {
 
-    private var waitingStoppedActionListener = IOnWaitingStoppedActionListener.getEmptyImplementation()
+    private var waitingStoppedActionListener: IOnWaitingStoppedActionListener? = null
     protected abstract val toStringTitle: String
 
     override fun execute() {
@@ -24,7 +24,7 @@ abstract class VaccinationCentreActivityStartEvent(
 
     private fun stopPatientWaiting() {
         patient.stopWaiting(eventTime)
-        waitingStoppedActionListener.handleOnWaitingStopped(patient.getWaitingTime())
+        waitingStoppedActionListener?.handleOnWaitingStopped(patient.getWaitingTime())
     }
 
     override fun toString() = "$toStringTitle - ${super.toString()}"

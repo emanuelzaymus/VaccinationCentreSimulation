@@ -12,6 +12,7 @@ class ExaminationEndEvent(simulation: VaccinationCentreSimulation, private val d
         private val examinationDurationRandom = ExponentialDistribution(1 / (260 / 60.0))
     }
 
+    // TODO: duplicity
     override fun execute() {
         doctor.setBusy(false, eventTime)
 
