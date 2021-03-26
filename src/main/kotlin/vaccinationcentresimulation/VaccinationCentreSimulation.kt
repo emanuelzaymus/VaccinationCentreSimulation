@@ -32,7 +32,25 @@ class VaccinationCentreSimulation(replicationsCount: Int, private val numberOfPa
 
     override fun beforeReplication() {
         super.beforeReplication()
+        beforeRegistrationQueue.restart()
+        registrationRoom.restart()
+        beforeExaminationQueue.restart()
+        examinationRoom.restart()
+        beforeVaccinationQueue.restart()
+        vaccinationRoom.restart()
+        waitingRoom.restart()
         scheduleInitEvent()
+    }
+
+    override fun afterReplication() {
+        super.afterReplication()
+        beforeRegistrationQueue.checkFinalState()
+        registrationRoom.checkFinalState()
+        beforeExaminationQueue.checkFinalState()
+        examinationRoom.checkFinalState()
+        beforeVaccinationQueue.checkFinalState()
+        vaccinationRoom.checkFinalState()
+        waitingRoom.checkFinalState()
     }
 
     private fun scheduleInitEvent() {

@@ -50,6 +50,14 @@ class WaitingRoom(private val simulation: VaccinationCentreSimulation) {
         beforePatientsCountChangedActionListener = listener
     }
 
+    fun restart() {
+        lastChange = .0
+    }
+
+    fun checkFinalState() {
+        if (waitingPatientsCount != 0) throw IllegalStateException("Some patients are still waiting in the waiting room.")
+    }
+
     private fun beforePatientsCountChanged(eventTime: Double) {
         beforePatientsCountChangedActionListener?.handleBeforePatientsCountChanged(
             waitingPatientsCount,

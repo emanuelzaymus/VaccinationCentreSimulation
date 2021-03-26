@@ -20,9 +20,12 @@ class StatisticsQueue<T> {
 
     fun isEmpty(): Boolean = queue.isEmpty()
 
-    fun clear() {
-        queue.clear()
+    fun restart() {
         lastChange = .0
+    }
+
+    fun checkFinalState() {
+        if (!queue.isEmpty()) throw IllegalStateException("Queue is not empty.")
     }
 
     fun setBeforeQueueLengthChangedActionListener(listener: IBeforeQueueLengthChangedActionListener) {

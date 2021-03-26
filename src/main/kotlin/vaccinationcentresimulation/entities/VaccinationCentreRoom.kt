@@ -27,4 +27,8 @@ abstract class VaccinationCentreRoom<T : VaccinationCentreWorker>(
         workers.forEach { it.setBeforeWorkersStateChangedActionListener(listener) }
     }
 
+    fun restart() = workers.restart()
+
+    fun checkFinalState() = workers.checkFinalState()
+
 }

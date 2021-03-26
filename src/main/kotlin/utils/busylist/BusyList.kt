@@ -22,6 +22,10 @@ class BusyList<T : IBusyObject>(numberOfBusyObjects: Int, init: (Int) -> T) : It
         return freeObjects[sizeRandom.next()]
     }
 
+    fun restart() = busyObjects.forEach { it.restart() }
+
+    fun checkFinalState() = busyObjects.forEach { it.checkFinalState() }
+
     private fun getRandomForSize(size: Int) = randoms[size - 2]
 
     override fun iterator(): Iterator<T> = busyObjects.iterator()

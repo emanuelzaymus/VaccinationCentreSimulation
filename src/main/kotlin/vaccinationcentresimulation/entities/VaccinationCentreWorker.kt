@@ -1,9 +1,8 @@
 package vaccinationcentresimulation.entities
 
 import utils.busylist.IBusyObject
-import utils.stopwatch.Stopwatch
-import vaccinationcentresimulation.events.IOnWaitingStoppedActionListener
 import vaccinationcentresimulation.events.IBeforeWorkersStateChangedActionListener
+import vaccinationcentresimulation.events.IOnWaitingStoppedActionListener
 import vaccinationcentresimulation.events.VaccinationCentreActivityStartEvent
 import vaccinationcentresimulation.events.VaccinationCentreEvent
 
@@ -36,6 +35,14 @@ abstract class VaccinationCentreWorker : IBusyObject {
         beforeWorkersStateChangedActionListener?.handleBeforeWorkersStateChanged(this.busy, eventTime - lastChange)
         this.busy = busy
         lastChange = eventTime
+    }
+
+    override fun restart() {
+        lastChange = .0
+    }
+
+    override fun checkFinalState() {
+        if (busy) throw IllegalStateException("The worker is still busy.")
     }
 
     fun setOnWaitingStoppedActionListener(listener: IOnWaitingStoppedActionListener) {
