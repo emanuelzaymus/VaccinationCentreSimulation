@@ -20,20 +20,4 @@ class ExaminationEndEvent(simulation: VaccinationCentreSimulation, doctor: Docto
 
     override fun eventDuration(): Double = examinationDurationRandom.next()
 
-//    override fun execute() {
-//        worker.setBusy(false, eventTime)
-//
-//        patient.startWaiting(eventTime)
-//
-//        if (simulation.vaccinationRoom.anyWorkerAvailable()) {
-//            simulation.vaccinationRoom.scheduleStart(patient, eventTime)
-//        } else {
-//            simulation.beforeVaccinationQueue.enqueue(patient, eventTime)
-//        }
-//
-//        if (!simulation.beforeExaminationQueue.isEmpty()) {
-//            worker.scheduleStart(simulation.beforeExaminationQueue.dequeue(eventTime), eventTime)
-//        }
-//    }
-
 }

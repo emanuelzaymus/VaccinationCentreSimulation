@@ -8,12 +8,12 @@ import vaccinationcentresimulation.events.VaccinationCentreEvent
 class WaitingStartEvent(simulation: VaccinationCentreSimulation, private val waitingRoom: WaitingRoom) :
     VaccinationCentreEvent(simulation), IPooledObject {
 
+    override val toStringTitle = "WAIT_ST"
+
     override fun execute() {
         waitingRoom.incrementWaitingPatientsCount(eventTime)
         waitingRoom.scheduleEndWaiting(patient, eventTime)
         waitingRoom.releaseWaitingStartEvent(this)
     }
-
-    override val toStringTitle = "WAIT_ST"
 
 }
