@@ -12,6 +12,8 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val n
         private val notArrivingPatientsRandom = DiscreteUniformDistribution(5, 25)
     }
 
+    override val toStringTitle = "ARRIVAL"
+
     private val arrivingPatientNumbers = DiscreteUniformDistribution(until = numberOfPatients)
     private val numberOfNotArrivingPatients = notArrivingPatientsRandom.next()
     private var executedArrivals = 0
@@ -48,7 +50,5 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val n
     }
 
     override fun eventDuration(): Double = 1.0
-
-    override fun toString() = "ARRIVAL - ${super.toString()}"
 
 }

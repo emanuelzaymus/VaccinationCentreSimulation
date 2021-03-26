@@ -12,6 +12,8 @@ class VaccinationEndEvent(simulation: VaccinationCentreSimulation, private val n
         private val vaccinationDurationRandom = TriangularDistribution(20.0, 75.0, 100.0)
     }
 
+    override val toStringTitle = "VAC_END"
+
     override fun execute() {
         nurse.setBusy(false, eventTime)
 
@@ -23,7 +25,5 @@ class VaccinationEndEvent(simulation: VaccinationCentreSimulation, private val n
     }
 
     override fun eventDuration(): Double = vaccinationDurationRandom.next()
-
-    override fun toString() = "VAC_END - ${super.toString()}"
 
 }

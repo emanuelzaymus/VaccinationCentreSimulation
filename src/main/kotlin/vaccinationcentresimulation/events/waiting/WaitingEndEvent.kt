@@ -13,6 +13,8 @@ class WaitingEndEvent(simulation: VaccinationCentreSimulation, private val waiti
         private val waitingRandom = ContinuousUniformDistribution()
     }
 
+    override val toStringTitle = "WAIT_EN"
+
     override fun execute() {
         waitingRoom.decrementWaitingPatientsCount(eventTime)
         simulation.releasePatient(patient)
@@ -20,7 +22,5 @@ class WaitingEndEvent(simulation: VaccinationCentreSimulation, private val waiti
     }
 
     override fun eventDuration(): Double = if (waitingRandom.next() < 0.95) 15.0 else 30.0
-
-    override fun toString() = "WAIT_EN - ${super.toString()}"
 
 }

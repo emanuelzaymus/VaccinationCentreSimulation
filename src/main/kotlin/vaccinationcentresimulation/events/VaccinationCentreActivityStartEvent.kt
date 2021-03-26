@@ -10,7 +10,6 @@ abstract class VaccinationCentreActivityStartEvent(
     VaccinationCentreEvent(simulation) {
 
     private var waitingStoppedActionListener: IOnWaitingStoppedActionListener? = null
-    protected abstract val toStringTitle: String
 
     override fun execute() {
         worker.setBusy(true, eventTime)
@@ -26,7 +25,5 @@ abstract class VaccinationCentreActivityStartEvent(
         patient.stopWaiting(eventTime)
         waitingStoppedActionListener?.handleOnWaitingStopped(patient.getWaitingTime())
     }
-
-    override fun toString() = "$toStringTitle - ${super.toString()}"
 
 }
