@@ -5,6 +5,11 @@ import utils.stopwatch.Stopwatch
 
 class Patient : IPooledObject {
 
+    companion object {
+        private var nextId = 1
+    }
+
+    private var id = nextId++
     private val waitingStopwatch = Stopwatch()
 
     fun startWaiting(actualSimulationTime: Double) = waitingStopwatch.start(actualSimulationTime)
@@ -13,6 +18,11 @@ class Patient : IPooledObject {
 
     fun getWaitingTime(): Double = waitingStopwatch.getElapsedTime()
 
-    override fun restart() = waitingStopwatch.restart()
+    override fun restart() {
+        id = nextId++
+        waitingStopwatch.restart()
+    }
+
+    override fun toString() = id.toString()
 
 }

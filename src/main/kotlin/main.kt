@@ -11,10 +11,10 @@ fun main() {
 
     val elapsed = measureTimeMillis {
 
-        val replicationsCount = 10000
+        val replicationsCount = 1
         println("Replications: $replicationsCount")
 
-        val simulation = VaccinationCentreSimulation(replicationsCount, 60 * 9)
+        val simulation = VaccinationCentreSimulation(replicationsCount, 60)
 
         val avgBeforeRegistrationQueueLen = AverageQueueLengthStats()
         simulation.beforeRegistrationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeRegistrationQueueLen)

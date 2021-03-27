@@ -28,7 +28,7 @@ abstract class EventBasedSimulation(replicationsCount: Int, private val maxSimul
         while (actualSimulationTime <= maxSimulationTime && !isStopped() && futureEvents.isNotEmpty()) {
             val currentEvent = futureEvents.remove()
             actualSimulationTime = checkEventTime(currentEvent.eventTime)
-//            println(currentEvent)
+            println(currentEvent)
             currentEvent.execute()
         }
     }
