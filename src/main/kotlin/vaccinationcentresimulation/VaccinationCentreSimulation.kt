@@ -9,6 +9,7 @@ import vaccinationcentresimulation.entities.waiting.WaitingRoom
 import vaccinationcentresimulation.entities.examination.ExaminationRoom
 import vaccinationcentresimulation.entities.registration.RegistrationRoom
 import vaccinationcentresimulation.entities.vaccination.VaccinationRoom
+import vaccinationcentresimulation.events.DelayEvent
 
 class VaccinationCentreSimulation(replicationsCount: Int, private val numberOfPatientsPerReplication: Int) :
     EventBasedSimulation(replicationsCount) {
@@ -55,9 +56,9 @@ class VaccinationCentreSimulation(replicationsCount: Int, private val numberOfPa
 
     private fun scheduleInitEvent() {
         PatientArrivalEvent(this, numberOfPatientsPerReplication)
-            .run {
-                scheduleFirstEvent(acquirePatient(), actualSimulationTime)
-            }
+            .scheduleFirstEvent(acquirePatient(), actualSimulationTime)
+
+        DelayEvent(this).schedule(actualSimulationTime)
     }
 
 }
