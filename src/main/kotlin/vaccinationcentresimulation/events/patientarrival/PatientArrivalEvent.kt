@@ -9,6 +9,8 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val n
     VaccinationCentreEvent(simulation) {
 
     companion object {
+        /** Maximal simulation tim in minutes. (Working time is 9 hours = 540 minutes) */
+        private const val MAX_TIME = 540.0
         private val notArrivingPatientsRandom = DiscreteUniformDistribution(5, 25)
     }
 
@@ -16,6 +18,7 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val n
 
     private val arrivingPatientNumbers = DiscreteUniformDistribution(until = numberOfPatients)
     private val numberOfNotArrivingPatients = notArrivingPatientsRandom.next()
+    private val eventDuration = MAX_TIME / numberOfPatients
     private var executedArrivals = 0
 
     fun scheduleFirstEvent(patient: Patient, lastEventTime: Double) {
@@ -49,6 +52,6 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val n
         schedule(simulation.acquirePatient(), eventTime)
     }
 
-    override fun eventDuration(): Double = 1.0
+    override fun eventDuration(): Double = eventDuration
 
 }

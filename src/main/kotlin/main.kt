@@ -14,7 +14,7 @@ fun main() {
         val replicationsCount = 1
         println("Replications: $replicationsCount")
 
-        val simulation = VaccinationCentreSimulation(replicationsCount, 60)
+        val simulation = VaccinationCentreSimulation(replicationsCount, 1080)
 
         val avgBeforeRegistrationQueueLen = AverageQueueLengthStats()
         simulation.beforeRegistrationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeRegistrationQueueLen)
