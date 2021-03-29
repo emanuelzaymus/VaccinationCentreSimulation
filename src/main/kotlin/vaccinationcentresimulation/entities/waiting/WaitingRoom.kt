@@ -13,8 +13,8 @@ class WaitingRoom(private val simulation: VaccinationCentreSimulation) {
 
     private var beforePatientsCountChangedActionListener: IBeforePatientsCountChangedActionListener? = null
     private var lastChange = .0
-    private var waitingPatientsCount = 0
-        set(value) {
+    var waitingPatientsCount = 0
+        private set(value) {
             if (value < 0)
                 throw IllegalArgumentException("Waiting patients count cannot be negative.")
             field = value

@@ -20,6 +20,8 @@ class StatisticsQueue<T> {
 
     fun isEmpty(): Boolean = queue.isEmpty()
 
+    fun count(): Int = queue.count()
+
     fun restart() {
         lastChange = .0
     }

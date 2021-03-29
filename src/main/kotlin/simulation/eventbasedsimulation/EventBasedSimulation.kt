@@ -2,9 +2,17 @@ package simulation.eventbasedsimulation
 
 import simulation.montecarlo.MonteCarlo
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 
-abstract class EventBasedSimulation(replicationsCount: Int, private val maxSimulationTime: Double = Double.MAX_VALUE) :
+abstract class EventBasedSimulation(
+    replicationsCount: Int,
+    private val maxSimulationTime: Double = Double.MAX_VALUE,
+    withAnimation: Boolean = true
+) :
     MonteCarlo(replicationsCount) {
+
+    private val paused = AtomicBoolean(false)
+    private val withAnimation = AtomicBoolean(withAnimation)
 
     private val futureEvents: PriorityQueue<Event> = PriorityQueue()
     protected var actualSimulationTime: Double = .0
@@ -31,15 +39,41 @@ abstract class EventBasedSimulation(replicationsCount: Int, private val maxSimul
             println(currentEvent)
             currentEvent.execute()
 
+            if (isWithAnimation()) {
+                animate()
+            }
 
-
+            while (isPaused() && !isStopped()) {
+                Thread.sleep(300)
+            }
         }
     }
+
+    protected abstract fun animate()
 
     private fun checkEventTime(eventTime: Double): Double {
         if (eventTime < actualSimulationTime)
             throw IllegalStateException("You cannot execute past event.")
         return eventTime
     }
+
+    fun pauseSimulation() {
+        paused.set(true)
+        animate()
+    }
+
+    fun restoreSimulation() = paused.set(false)
+
+    fun isPaused(): Boolean = paused.get()
+
+    protected open fun startAnimation() = withAnimation.set(true)
+
+    protected open fun stopAnimation() = withAnimation.set(false)
+
+    fun isWithAnimation(): Boolean = withAnimation.get()
+
+    fun containsEvent(event: Event) = futureEvents.contains(event)
+
+    protected fun removeEvent(event: Event) = futureEvents.remove(event)
 
 }

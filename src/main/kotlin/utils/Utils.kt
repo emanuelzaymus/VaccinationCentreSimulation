@@ -1,3 +1,5 @@
 package utils
 
-fun secToMin(seconds: Int): Double = seconds / 60.0
+fun secToMin(seconds: Int): Double = secToMin(seconds.toDouble())
+
+fun secToMin(seconds: Double): Double = seconds / 60.0

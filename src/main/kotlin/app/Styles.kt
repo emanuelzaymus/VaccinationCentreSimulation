@@ -9,6 +9,9 @@ import tornadofx.px
 class Styles : Stylesheet() {
     companion object {
         val heading by cssclass()
+        val biggerPadding by cssclass()
+        val smallPadding by cssclass()
+        val smallHeading by cssclass()
     }
 
     init {
@@ -17,5 +20,18 @@ class Styles : Stylesheet() {
             fontSize = 20.px
             fontWeight = FontWeight.BOLD
         }
+
+        biggerPadding {
+            padding = box(20.px)
+        }
+
+        smallPadding {
+            padding = box(10.px, 20.px)
+        }
+
+        smallHeading {
+            fontWeight = FontWeight.BOLD
+        }
+
     }
 }

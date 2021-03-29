@@ -7,6 +7,10 @@ class Patient : IPooledObject {
 
     companion object {
         private var nextId = 1
+
+        fun restartPatientIds() {
+            nextId = 1
+        }
     }
 
     private var id = nextId++

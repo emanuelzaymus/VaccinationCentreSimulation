@@ -1,23 +1,37 @@
 package vaccinationcentresimulation.events
 
 import simulation.eventbasedsimulation.Event
+import utils.secToMin
 import vaccinationcentresimulation.VaccinationCentreSimulation
 
 class DelayEvent(private val simulation: VaccinationCentreSimulation) : Event() {
 
-    companion object {
-        private const val delayEverySimMin: Double = 1.0
-        private const val delayForMillis: Long = 2000
+    private var delayEverySimMin: Double = 1.0
+    private var delayForMillis: Long = 1000
+
+    @Synchronized
+    fun setDelayEverySimMin(seconds: Int) {
+        delayEverySimMin = secToMin(seconds)
+    }
+
+    @Synchronized
+    fun setDelayForMillis(milliseconds: Long) {
+        delayForMillis = milliseconds
     }
 
     override fun execute() {
         Thread.sleep(delayForMillis)
-        schedule()
+
+        if (simulation.isWithAnimation()) {
+            schedule()
+        }
     }
 
     fun schedule(eventTime: Double) {
-        this.eventTime = eventTime
-        simulation.scheduleEvent(this)
+        if (!simulation.containsEvent(this)) {
+            this.eventTime = eventTime
+            simulation.scheduleEvent(this)
+        }
     }
 
     private fun schedule() = schedule(eventTime + delayEverySimMin)
