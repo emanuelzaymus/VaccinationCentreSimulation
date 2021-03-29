@@ -1,6 +1,7 @@
 package vaccinationcentresimulation.events.registration
 
 import random.ContinuousUniformDistribution
+import utils.secToMin
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.registration.AdministrativeWorker
 import vaccinationcentresimulation.events.VaccinationCentreActivityEndEvent
@@ -9,7 +10,7 @@ class RegistrationEndEvent(simulation: VaccinationCentreSimulation, worker: Admi
     VaccinationCentreActivityEndEvent(simulation, worker) {
 
     companion object {
-        private val registrationDurationRandom = ContinuousUniformDistribution(140 / 60.0, 220 / 60.0)
+        private val registrationDurationRandom = ContinuousUniformDistribution(secToMin(140), secToMin(220))
     }
 
     override val toStringTitle = "REG_END"

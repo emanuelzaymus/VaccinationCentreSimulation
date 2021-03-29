@@ -1,6 +1,7 @@
 package vaccinationcentresimulation.events.vaccination
 
 import random.TriangularDistribution
+import utils.secToMin
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.vaccination.Nurse
 import vaccinationcentresimulation.events.VaccinationCentreEvent
@@ -9,7 +10,7 @@ class VaccinationEndEvent(simulation: VaccinationCentreSimulation, private val n
     VaccinationCentreEvent(simulation) {
 
     companion object {
-        private val vaccinationDurationRandom = TriangularDistribution(20.0, 75.0, 100.0)
+        private val vaccinationDurationRandom = TriangularDistribution(secToMin(20), secToMin(75), secToMin(100))
     }
 
     override val toStringTitle = "VAC_END"

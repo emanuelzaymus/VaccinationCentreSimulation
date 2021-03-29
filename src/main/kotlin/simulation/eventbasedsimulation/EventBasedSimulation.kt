@@ -30,6 +30,9 @@ abstract class EventBasedSimulation(replicationsCount: Int, private val maxSimul
             actualSimulationTime = checkEventTime(currentEvent.eventTime)
             println(currentEvent)
             currentEvent.execute()
+
+
+
         }
     }
 

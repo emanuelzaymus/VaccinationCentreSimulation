@@ -58,7 +58,7 @@ class VaccinationCentreSimulation(replicationsCount: Int, private val numberOfPa
         PatientArrivalEvent(this, numberOfPatientsPerReplication)
             .scheduleFirstEvent(acquirePatient(), actualSimulationTime)
 
-        DelayEvent(this).schedule(actualSimulationTime)
+//        DelayEvent(this).schedule(actualSimulationTime)
     }
 
 }

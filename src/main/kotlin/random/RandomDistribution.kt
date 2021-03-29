@@ -1,6 +1,6 @@
 package random
 
-import kotlin.random.Random
+import java.util.*
 
 /**
  * Random distribution generator.
