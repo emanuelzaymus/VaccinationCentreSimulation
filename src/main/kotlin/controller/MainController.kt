@@ -48,52 +48,58 @@ class MainController : Controller(), IAnimationActionListener {
     val delayEvery =
         SimpleIntegerProperty(60).apply { onChange { seconds -> simulation.setDelayEverySimMin(seconds) } }
     val delayFor = SimpleIntegerProperty(1000).apply { onChange { millis -> simulation.setDelayForMillis(millis) } }
-    val appState = SimpleStringProperty(AppState.READY.name)
+
+    private var appState = AppState.READY
+        set(value) {
+            Platform.runLater { state.value = value.name }
+            field = value
+        }
+    val state = SimpleStringProperty(appState.name)
 
     val actualSimTime = SimpleStringProperty("---")
 
+    private val initVal = 0.0.roundToString()
     val regQueueActualLength = SimpleIntegerProperty()
-    val regQueueAvgLength = SimpleStringProperty()
-    val regQueueAvgWaitingTime = SimpleStringProperty()
+    val regQueueAvgLength = SimpleStringProperty(initVal)
+    val regQueueAvgWaitingTime = SimpleStringProperty(initVal)
     val regRoomBusyWorkers = SimpleIntegerProperty()
-    val regRoomWorkload = SimpleStringProperty()
+    val regRoomWorkload = SimpleStringProperty(initVal)
 
     val examQueueActualLength = SimpleIntegerProperty()
-    val examQueueAvgLength = SimpleStringProperty()
-    val examQueueAvgWaitingTime = SimpleStringProperty()
+    val examQueueAvgLength = SimpleStringProperty(initVal)
+    val examQueueAvgWaitingTime = SimpleStringProperty(initVal)
     val examRoomBusyWorkers = SimpleIntegerProperty()
-    val examRoomWorkload = SimpleStringProperty()
+    val examRoomWorkload = SimpleStringProperty(initVal)
 
     val vacQueueActualLength = SimpleIntegerProperty()
-    val vacQueueAvgLength = SimpleStringProperty()
-    val vacQueueAvgWaitingTime = SimpleStringProperty()
+    val vacQueueAvgLength = SimpleStringProperty(initVal)
+    val vacQueueAvgWaitingTime = SimpleStringProperty(initVal)
     val vacRoomBusyWorkers = SimpleIntegerProperty()
-    val vacRoomWorkload = SimpleStringProperty()
+    val vacRoomWorkload = SimpleStringProperty(initVal)
 
     val waitRoomPatientsCount = SimpleIntegerProperty()
-    val waitRoomAvgLength = SimpleStringProperty()
+    val waitRoomAvgLength = SimpleStringProperty(initVal)
 
     fun startPause() {
         if (!isRunning.get()) {
             start()
+        } else if (!simulation.isPaused()) {
+            simulation.pauseSimulation()
+            appState = AppState.PAUSED
         } else {
-            if (!simulation.isPaused()) {
-                simulation.pauseSimulation()
-                appState.value = AppState.PAUSED.name
-            } else {
-                simulation.restoreSimulation()
-                appState.value = AppState.RESTORED.name
-            }
+            simulation.restoreSimulation()
+            appState = AppState.RESTORED
         }
     }
 
     private fun start() {
         if (restart()) {
             isRunning.set(true)
-            appState.value = AppState.STARTED.name
-            thread(isDaemon = true, name = "SimThread") {
+            appState = AppState.STARTED
+            thread(isDaemon = true, name = "SIM_THREAD") {
                 simulation.simulate()
                 isRunning.set(false)
+                appState = AppState.READY
             }
         }
     }
@@ -101,11 +107,13 @@ class MainController : Controller(), IAnimationActionListener {
     fun stop() {
         simulation.stop()
         isRunning.set(false)
-        appState.value = AppState.STOPPED.name
+        appState = AppState.STOPPED
     }
 
     override fun handleOnTimeChanged(actualSimulationTime: Double) {
-        Platform.runLater { actualSimTime.value = actualSimulationTime.toString() }
+        Platform.runLater {
+            actualSimTime.value = "${actualSimulationTime.minutesToTime()} | (Minutes: $actualSimulationTime)"
+        }
     }
 
     override fun updateRegistrationQueueLength(length: Int) {

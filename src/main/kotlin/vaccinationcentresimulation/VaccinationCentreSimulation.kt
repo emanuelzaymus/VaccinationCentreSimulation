@@ -2,15 +2,14 @@ package vaccinationcentresimulation
 
 import simulation.eventbasedsimulation.EventBasedSimulation
 import utils.pool.Pool
-import utils.secToMin
 import utils.statisticsqueue.StatisticsQueue
-import vaccinationcentresimulation.events.patientarrival.PatientArrivalEvent
 import vaccinationcentresimulation.entities.Patient
-import vaccinationcentresimulation.entities.waiting.WaitingRoom
 import vaccinationcentresimulation.entities.examination.ExaminationRoom
 import vaccinationcentresimulation.entities.registration.RegistrationRoom
 import vaccinationcentresimulation.entities.vaccination.VaccinationRoom
+import vaccinationcentresimulation.entities.waiting.WaitingRoom
 import vaccinationcentresimulation.events.DelayEvent
+import vaccinationcentresimulation.events.patientarrival.PatientArrivalEvent
 
 class VaccinationCentreSimulation(
     replicationsCount: Int = 1,
@@ -102,6 +101,14 @@ class VaccinationCentreSimulation(
         animationActionListener?.updateWaitingRoomPatientsCount(waitingRoom.waitingPatientsCount)
 
         animationActionListener?.updateStatistics()
+    }
+
+    override fun afterAnimation() {
+        super.afterAnimation()
+
+        if (containsEvent(delayEvent) && eventsCount() == 1) {
+            removeEvent(delayEvent)
+        }
     }
 
     fun setAnimation(animate: Boolean) {

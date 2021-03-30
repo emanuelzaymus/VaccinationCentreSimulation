@@ -36,11 +36,12 @@ abstract class EventBasedSimulation(
         while (actualSimulationTime <= maxSimulationTime && !isStopped() && futureEvents.isNotEmpty()) {
             val currentEvent = futureEvents.remove()
             actualSimulationTime = checkEventTime(currentEvent.eventTime)
-            println(currentEvent)
             currentEvent.execute()
 
             if (isWithAnimation()) {
+                println(currentEvent)
                 animate()
+                afterAnimation()
             }
 
             while (isPaused() && !isStopped()) {
@@ -50,6 +51,8 @@ abstract class EventBasedSimulation(
     }
 
     protected abstract fun animate()
+
+    protected open fun afterAnimation() {}
 
     private fun checkEventTime(eventTime: Double): Double {
         if (eventTime < actualSimulationTime)
@@ -75,5 +78,7 @@ abstract class EventBasedSimulation(
     fun containsEvent(event: Event) = futureEvents.contains(event)
 
     protected fun removeEvent(event: Event) = futureEvents.remove(event)
+
+    protected fun eventsCount() = futureEvents.count()
 
 }

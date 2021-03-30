@@ -69,7 +69,7 @@ class MainView : View("Vaccination Centre Simulation") {
             vbox(smallSpaces) {
                 hbox(smallSpaces) {
                     label("Status: ")
-                    label(mainController.appState)
+                    label(mainController.state)
                 }
                 button("Start/Pause") {
                     action { mainController.startPause() }
