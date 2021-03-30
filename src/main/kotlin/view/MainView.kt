@@ -162,7 +162,7 @@ class MainView : View("Vaccination Centre Simulation") {
                 }
             }
             vbox(smallSpaces) {
-                label("Waiting Queue") { addClass(Styles.smallHeading) }
+                label("Waiting Room") { addClass(Styles.smallHeading) }
                 hbox(smallSpaces) {
                     label("Actual waiting patients:")
                     label(mainController.waitRoomPatientsCount)

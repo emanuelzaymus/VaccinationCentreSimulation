@@ -19,6 +19,9 @@ import kotlin.concurrent.thread
 
 class MainController : Controller(), IAnimationActionListener {
 
+    // Working time starts at 8:00
+    private val startTime = 8 * 60
+
     private val avgBeforeRegistrationQueueLen = AverageQueueLengthStats()
     private val avgBeforeExaminationQueueLen = AverageQueueLengthStats()
     private val avgBeforeVaccinationQueueLen = AverageQueueLengthStats()
@@ -112,7 +115,8 @@ class MainController : Controller(), IAnimationActionListener {
 
     override fun handleOnTimeChanged(actualSimulationTime: Double) {
         Platform.runLater {
-            actualSimTime.value = "${actualSimulationTime.minutesToTime()} | (Minutes: $actualSimulationTime)"
+            actualSimTime.value =
+                "${(actualSimulationTime + startTime).minutesToTime()} | (Minutes: $actualSimulationTime)"
         }
     }
 
