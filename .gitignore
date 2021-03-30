@@ -54,10 +54,3 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
-
-
-# Arena - Input Analyzer
-Input1
-Input2
-*.OUT
-*.dft

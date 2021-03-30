@@ -60,6 +60,8 @@ class VaccinationCentreSimulation(
     override fun afterReplication() {
         super.afterReplication()
 
+        println("Replic: $currentReplicNumber")
+
         if (!isStopped()) {
             beforeRegistrationQueue.checkFinalState()
             registrationRoom.checkFinalState()
