@@ -47,7 +47,7 @@ class MainController : Controller(), IAnimationActionListener {
     val withAnimation = SimpleBooleanProperty(true).apply { onChange { b -> simulation.setAnimation(b) } }
     val delayEvery =
         SimpleIntegerProperty(60).apply { onChange { seconds -> simulation.setDelayEverySimMin(seconds) } }
-    val delayFor = SimpleIntegerProperty(1000).apply { onChange { millis -> simulation.setDelayForMillis(millis) } }
+    val delayFor = SimpleIntegerProperty(100).apply { onChange { millis -> simulation.setDelayForMillis(millis) } }
 
     private var appState = AppState.READY
         set(value) {
@@ -56,7 +56,7 @@ class MainController : Controller(), IAnimationActionListener {
         }
     val state = SimpleStringProperty(appState.name)
 
-    val actualSimTime = SimpleStringProperty("---")
+    val actualSimTime = SimpleStringProperty("-")
 
     private val initVal = 0.0.roundToString()
     val regQueueActualLength = SimpleIntegerProperty()

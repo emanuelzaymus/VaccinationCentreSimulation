@@ -2,6 +2,7 @@ package view
 
 import app.Styles
 import controller.MainController
+import javafx.scene.chart.NumberAxis
 import tornadofx.*
 
 class MainView : View("Vaccination Centre Simulation") {
@@ -49,21 +50,21 @@ class MainView : View("Vaccination Centre Simulation") {
                     label("Delay every (sim. seconds): ")
                     label(mainController.delayEvery)
                 }
-                slider(1..120) {
+                slider(1..180) {
                     bind(mainController.delayEvery)
                     prefWidth = preferredWidth
                     isShowTickLabels = true
-                    majorTickUnit = 59.0
+                    majorTickUnit = 89.0
                 }
                 hbox(smallSpaces) {
                     label("Delay for (milliseconds): ")
                     label(mainController.delayFor)
                 }
-                slider(100..3000) {
+                slider(10..3000) {
                     bind(mainController.delayFor)
                     prefWidth = preferredWidth
                     isShowTickLabels = true
-                    majorTickUnit = 1400.0
+                    majorTickUnit = 1490.0
                 }
             }
             vbox(smallSpaces) {
@@ -185,10 +186,10 @@ class MainView : View("Vaccination Centre Simulation") {
         }
         separator()
 
-
         hbox {
-            label(title) {
-                addClass(Styles.heading)
+            linechart("Chart", NumberAxis(), NumberAxis()) {
+            }
+            linechart("Chart", NumberAxis(), NumberAxis()) {
             }
         }
     }
