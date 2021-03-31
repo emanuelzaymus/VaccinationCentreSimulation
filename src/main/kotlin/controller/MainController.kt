@@ -36,7 +36,7 @@ class MainController : Controller(), IAnimationActionListener {
 
     private val averageWaitingPatientsCountStats = WaitingPatientsCountStats()
 
-    private var simulation = VaccinationCentreSimulation()
+    private var simulation = VaccinationCentreSimulation(1, 450, 6, 5, 3, true)
 
     private val isRunning = AtomicBoolean(false)
 

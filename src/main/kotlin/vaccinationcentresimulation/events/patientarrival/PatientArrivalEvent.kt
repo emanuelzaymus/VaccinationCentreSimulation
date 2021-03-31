@@ -6,12 +6,14 @@ import vaccinationcentresimulation.events.VaccinationCentreEvent
 import vaccinationcentresimulation.entities.Patient
 
 class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val numberOfPatients: Int) :
-        VaccinationCentreEvent(simulation) {
+    VaccinationCentreEvent(simulation) {
 
     companion object {
         /** Maximal simulation tim in minutes. (Working time is 9 hours = 540 minutes) */
         private const val MAX_TIME = 540.0
-        private val notArrivingPatientsRandom = DiscreteUniformDistribution(5, 25) // TODO: Should be set proportionally based on numberOfPatients (540 patients => 5-25 notArriving)
+
+        // TODO: Should be set proportionally based on numberOfPatients (540 patients => 5-25 notArriving)
+        private val notArrivingPatientsRandom = DiscreteUniformDistribution(5, 25)
     }
 
     override val toStringTitle = "ARRIVAL"

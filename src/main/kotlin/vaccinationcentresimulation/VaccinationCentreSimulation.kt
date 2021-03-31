@@ -12,12 +12,12 @@ import vaccinationcentresimulation.events.DelayEvent
 import vaccinationcentresimulation.events.patientarrival.PatientArrivalEvent
 
 class VaccinationCentreSimulation(
-    replicationsCount: Int = 1,
-    private val numberOfPatientsPerReplication: Int = 450,
-    numberOfAdminWorkers: Int = 5,
-    numberOfDoctors: Int = 6,
-    numberOfNurses: Int = 3,
-    withAnimation: Boolean = true
+    replicationsCount: Int,
+    private val numberOfPatientsPerReplication: Int,
+    numberOfAdminWorkers: Int,
+    numberOfDoctors: Int,
+    numberOfNurses: Int,
+    withAnimation: Boolean
 ) :
     EventBasedSimulation(replicationsCount, withAnimation = withAnimation) {
 
@@ -133,7 +133,6 @@ class VaccinationCentreSimulation(
     }
 
     private fun scheduleInitEvents() {
-        // TODO: Maybe can make an attribute from this (then I do not have to remember numberOfPatientsPerReplication)
         PatientArrivalEvent(this, numberOfPatientsPerReplication)
             .scheduleFirstEvent(acquirePatient(), actualSimulationTime)
 

@@ -7,9 +7,9 @@ import vaccinationcentresimulation.events.IOnWaitingStoppedActionListener
 import vaccinationcentresimulation.events.IBeforeWorkersStateChangedActionListener
 
 abstract class VaccinationCentreRoom<T : VaccinationCentreWorker>(
-        val simulation: VaccinationCentreSimulation,
-        numberOfWorkers: Int,
-        init: (Int) -> T
+    val simulation: VaccinationCentreSimulation,
+    numberOfWorkers: Int,
+    init: (Int) -> T
 ) : IReusable {
     private val workers = BusyList(numberOfWorkers, init)
 

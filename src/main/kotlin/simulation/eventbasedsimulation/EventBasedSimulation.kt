@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 abstract class EventBasedSimulation(
     replicationsCount: Int,
     private val maxSimulationTime: Double = Double.MAX_VALUE,
-    withAnimation: Boolean = true
+    withAnimation: Boolean
 ) :
     MonteCarlo(replicationsCount) {
 
