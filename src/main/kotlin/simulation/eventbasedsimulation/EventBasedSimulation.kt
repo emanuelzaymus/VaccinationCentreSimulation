@@ -30,7 +30,7 @@ abstract class EventBasedSimulation(
             if (value) scheduleDelayEvent() else removeDelayEvent()
         }
 
-    fun pause() {
+    open fun pause() {
         paused.set(true)
         state = SimulationState.PAUSED
     }
@@ -43,11 +43,6 @@ abstract class EventBasedSimulation(
     fun isPaused(): Boolean = paused.get()
 
     fun isRunning(): Boolean = state == SimulationState.RUNNING
-
-    override fun stop() {
-        super.stop()
-        state = SimulationState.STOPPED
-    }
 
     fun scheduleEvent(event: Event) {
         if (event.eventTime < actualSimulationTime)
@@ -80,7 +75,7 @@ abstract class EventBasedSimulation(
             if (withAnimation) {
                 println(currentEvent)
                 animate()
-                afterAnimation()
+                checkUnnecessaryDelayEvent()
             }
 
             while (isPaused() && !isStopped())
@@ -89,12 +84,12 @@ abstract class EventBasedSimulation(
     }
 
     override fun afterSimulation() {
-        state = SimulationState.READY
+        state = if (isStopped()) SimulationState.STOPPED else SimulationState.READY
     }
 
     protected open fun animate() {}
 
-    private fun afterAnimation() {
+    private fun checkUnnecessaryDelayEvent() {
         // If there is only one event planed in the futureEvents and this event is delayEvent -> simulation has ended
         if (futureEvents.count() == 1 && futureEvents.contains(delayEvent))
             removeDelayEvent()

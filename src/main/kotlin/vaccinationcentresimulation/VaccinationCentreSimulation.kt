@@ -39,6 +39,11 @@ class VaccinationCentreSimulation(
 
     fun releasePatient(patient: Patient) = patientPool.release(patient)
 
+    override fun pause() {
+        super.pause()
+        animate()
+    }
+
     override fun beforeSimulation() {
         super.beforeSimulation()
         Patient.restartPatientIds()
@@ -86,6 +91,7 @@ class VaccinationCentreSimulation(
             return
         }
         animationActionListener?.updateActualSimulationTime(actualSimulationTime)
+        animationActionListener?.updateSimulationState(state.name)
 
         animationActionListener?.updateRegistrationQueueLength(registrationQueue.count())
         animationActionListener?.updateExaminationQueueLength(examinationQueue.count())

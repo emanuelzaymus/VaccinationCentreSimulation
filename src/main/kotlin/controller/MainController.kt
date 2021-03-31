@@ -20,7 +20,7 @@ import kotlin.concurrent.thread
 class MainController : Controller(), IAnimationActionListener {
 
     // Working time starts at 8:00
-    private val startTime = 8 * 60
+    private val startTime = 8 * 60.0
 
     private val avgBeforeRegistrationQueueLen = QueueLengthStats()
     private val avgBeforeExaminationQueueLen = QueueLengthStats()
@@ -38,8 +38,6 @@ class MainController : Controller(), IAnimationActionListener {
 
     private var simulation = VaccinationCentreSimulation(1, 450, 6, 5, 3, true)
 
-    private val isRunning = AtomicBoolean(false)
-
     val replicationsCount = SimpleStringProperty("1")
     val skip = SimpleStringProperty("0.3")
     val numberOfPatients = SimpleStringProperty("450")
@@ -52,14 +50,8 @@ class MainController : Controller(), IAnimationActionListener {
         SimpleIntegerProperty(60).apply { onChange { seconds -> simulation.setDelayEverySimMin(seconds) } }
     val delayFor = SimpleIntegerProperty(100).apply { onChange { millis -> simulation.setDelayForMillis(millis) } }
 
-    private var appState = AppState.READY
-        set(value) {
-            Platform.runLater { state.value = value.name }
-            field = value
-        }
-    val state = SimpleStringProperty(appState.name)
-
-    val actualSimTime = SimpleStringProperty("-")
+    val state = SimpleStringProperty("READY")
+    val actualSimTime = SimpleStringProperty(startTime.minutesToTime())
 
     private val initVal = 0.0.roundToString()
     val regQueueActualLength = SimpleIntegerProperty()
@@ -84,40 +76,31 @@ class MainController : Controller(), IAnimationActionListener {
     val waitRoomAvgLength = SimpleStringProperty(initVal)
 
     fun startPause() {
-        if (!isRunning.get()) {
+        if (!simulation.isRunning())
             start()
-        } else if (!simulation.isPaused()) {
+        else if (!simulation.isPaused())
             simulation.pause()
-            appState = AppState.PAUSED
-        } else {
+        else
             simulation.restore()
-            appState = AppState.RESTORED
-        }
     }
 
     private fun start() {
         if (restart()) {
-            isRunning.set(true)
-            appState = AppState.STARTED
-            thread(isDaemon = true, name = "SIM_THREAD") {
-                simulation.simulate()
-                isRunning.set(false)
-                appState = AppState.READY
-            }
+            thread(isDaemon = true, name = "SIM_THREAD") { simulation.simulate() }
         }
     }
 
-    fun stop() {
-        simulation.stop()
-        isRunning.set(false)
-        appState = AppState.STOPPED
-    }
+    fun stop() = simulation.stop()
 
     override fun updateActualSimulationTime(actualSimulationTime: Double) {
         Platform.runLater {
             actualSimTime.value =
                 "${(actualSimulationTime + startTime).minutesToTime()} | (Minutes: $actualSimulationTime)"
         }
+    }
+
+    override fun updateSimulationState(simulationState: String) {
+        Platform.runLater { state.value = simulationState }
     }
 
     override fun updateRegistrationQueueLength(length: Int) {

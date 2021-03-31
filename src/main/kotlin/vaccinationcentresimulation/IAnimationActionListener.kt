@@ -2,6 +2,7 @@ package vaccinationcentresimulation
 
 interface IAnimationActionListener {
     fun updateActualSimulationTime(actualSimulationTime: Double)
+    fun updateSimulationState(simulationState: String)
 
     fun updateRegistrationQueueLength(length: Int)
     fun updateExaminationQueueLength(length: Int)

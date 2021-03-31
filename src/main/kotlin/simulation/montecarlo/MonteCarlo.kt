@@ -21,7 +21,7 @@ abstract class MonteCarlo(private val replicationsCount: Int) {
      * Stops execution of the simulation.
      */
     @Synchronized
-    open fun stop() {
+    fun stop() {
         stopped = true
     }
 
