@@ -8,7 +8,6 @@ import vaccinationcentresimulation.entities.examination.ExaminationRoom
 import vaccinationcentresimulation.entities.registration.RegistrationRoom
 import vaccinationcentresimulation.entities.vaccination.VaccinationRoom
 import vaccinationcentresimulation.entities.waiting.WaitingRoom
-import vaccinationcentresimulation.events.DelayEvent
 import vaccinationcentresimulation.events.patientarrival.PatientArrivalEvent
 
 class VaccinationCentreSimulation(
@@ -23,7 +22,6 @@ class VaccinationCentreSimulation(
 
     private var animationActionListener: IAnimationActionListener? = null
 
-    private val delayEvent = DelayEvent(this)
     private val patientPool = Pool { Patient() }
 
     val registrationQueue = StatisticsQueue<Patient>()
@@ -42,6 +40,7 @@ class VaccinationCentreSimulation(
     fun releasePatient(patient: Patient) = patientPool.release(patient)
 
     override fun beforeSimulation() {
+        super.beforeSimulation()
         Patient.restartPatientIds()
     }
 
@@ -54,7 +53,7 @@ class VaccinationCentreSimulation(
         vaccinationQueue.restart()
         vaccinationRoom.restart()
         waitingRoom.restart()
-        scheduleInitEvents()
+        scheduleInitEvent()
     }
 
     override fun afterReplication() {
@@ -82,10 +81,6 @@ class VaccinationCentreSimulation(
         animationActionListener = listener
     }
 
-    fun setDelayEverySimMin(seconds: Int) = delayEvent.setDelayEverySimMin(seconds)
-
-    fun setDelayForMillis(milliseconds: Int) = delayEvent.setDelayForMillis(milliseconds.toLong())
-
     override fun animate() {
         if (animationActionListener == null) {
             return
@@ -105,40 +100,9 @@ class VaccinationCentreSimulation(
         animationActionListener?.updateStatistics()
     }
 
-    // TODO: Should be in the ancestor
-    override fun afterAnimation() {
-        super.afterAnimation()
-
-        if (containsEvent(delayEvent) && eventsCount() == 1) {
-            removeEvent(delayEvent)
-        }
-    }
-
-    // TODO: Should be in the ancestor
-    fun setAnimation(animate: Boolean) {
-        if (animate)
-            startAnimation()
-        else
-            stopAnimation()
-    }
-
-    override fun startAnimation() {
-        super.startAnimation()
-        delayEvent.schedule(actualSimulationTime)
-    }
-
-    override fun stopAnimation() {
-        super.stopAnimation()
-        removeEvent(delayEvent)
-    }
-
-    private fun scheduleInitEvents() {
+    private fun scheduleInitEvent() {
         PatientArrivalEvent(this, numberOfPatientsPerReplication)
             .scheduleFirstEvent(acquirePatient(), actualSimulationTime)
-
-        if (isWithAnimation()) {
-            startAnimation()
-        }
     }
 
 }

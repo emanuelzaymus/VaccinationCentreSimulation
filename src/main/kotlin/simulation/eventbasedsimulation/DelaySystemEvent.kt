@@ -1,11 +1,8 @@
-package vaccinationcentresimulation.events
+package simulation.eventbasedsimulation
 
-import simulation.eventbasedsimulation.Event
 import utils.secToMin
-import vaccinationcentresimulation.VaccinationCentreSimulation
 
-// TODO: Put into abstract EventBasedSimulation class
-class DelayEvent(private val simulation: VaccinationCentreSimulation) : Event() {
+internal class DelaySystemEvent(simulation: EventBasedSimulation) : Event(simulation) {
 
     private var delayEverySimMin: Double = 1.0
     private var delayForMillis: Long = 1000
@@ -23,17 +20,12 @@ class DelayEvent(private val simulation: VaccinationCentreSimulation) : Event() 
     override fun execute() {
         Thread.sleep(delayForMillis)
 
-        if (simulation.isWithAnimation()) {
+        if (simulation.withAnimation) {
             schedule()
         }
     }
 
-    fun schedule(eventTime: Double) {
-        if (!simulation.containsEvent(this)) {
-            this.eventTime = eventTime
-            simulation.scheduleEvent(this)
-        }
-    }
+    public override fun schedule(eventTime: Double) = super.schedule(eventTime)
 
     private fun schedule() = schedule(eventTime + delayEverySimMin)
 

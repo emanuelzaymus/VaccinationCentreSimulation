@@ -47,7 +47,7 @@ class MainController : Controller(), IAnimationActionListener {
     val numberOfDoctors = SimpleStringProperty("5")
     val numberOfNurses = SimpleStringProperty("3")
 
-    val withAnimation = SimpleBooleanProperty(true).apply { onChange { b -> simulation.setAnimation(b) } }
+    val withAnimation = SimpleBooleanProperty(true).apply { onChange { b -> simulation.withAnimation = b } }
     val delayEvery =
         SimpleIntegerProperty(60).apply { onChange { seconds -> simulation.setDelayEverySimMin(seconds) } }
     val delayFor = SimpleIntegerProperty(100).apply { onChange { millis -> simulation.setDelayForMillis(millis) } }
@@ -87,10 +87,10 @@ class MainController : Controller(), IAnimationActionListener {
         if (!isRunning.get()) {
             start()
         } else if (!simulation.isPaused()) {
-            simulation.pauseSimulation()
+            simulation.pause()
             appState = AppState.PAUSED
         } else {
-            simulation.restoreSimulation()
+            simulation.restore()
             appState = AppState.RESTORED
         }
     }

@@ -1,9 +1,14 @@
 package simulation.eventbasedsimulation
 
-abstract class Event : Comparable<Event> {
+abstract class Event(protected open val simulation: EventBasedSimulation) : Comparable<Event> {
 
     var eventTime: Double = -1.0
-        protected set
+        private set
+
+    protected open fun schedule(eventTime: Double) {
+        this.eventTime = eventTime
+        simulation.scheduleEvent(this)
+    }
 
     abstract fun execute()
 
