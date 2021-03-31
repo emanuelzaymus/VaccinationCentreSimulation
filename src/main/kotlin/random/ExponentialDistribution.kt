@@ -8,6 +8,6 @@ import kotlin.math.ln
 class ExponentialDistribution(private val lambda: Double) : RandomDistribution(), IContinuousDistribution {
 
     // https://en.wikipedia.org/wiki/Exponential_distribution
-    override fun next(): Double = -ln(nextDouble()) / lambda
+    override fun next(): Double = -ln(1 - nextDouble()) / lambda
 
 }

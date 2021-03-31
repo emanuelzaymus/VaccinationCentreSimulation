@@ -10,14 +10,16 @@ object RandomDistributionsWriter {
         triangularDistribution()
     }
 
-    fun exponentialDistribution() {
-        writeDistribution(ExponentialDistribution(1 / 4.0), 10_000, "input_analyzer/expoDistLambda0.25.txt")
+    private fun exponentialDistribution() {
+        writeDistribution(
+            ExponentialDistribution(1 / 260.0), 1_000_000, "input_analyzer/expoDistLambda0.25.txt"
+        )
     }
 
-    fun triangularDistribution() {
+    private fun triangularDistribution() {
         writeDistribution(
             TriangularDistribution(20.0, 75.0, 100.0),
-            10_000,
+            1_000_000,
             "input_analyzer/triangularDist_20_75_100.txt"
         )
     }
@@ -29,6 +31,8 @@ object RandomDistributionsWriter {
             writer.appendln(distribution.next().toString())
 
         writer.flush()
+
+        println("done")
     }
 
 }
