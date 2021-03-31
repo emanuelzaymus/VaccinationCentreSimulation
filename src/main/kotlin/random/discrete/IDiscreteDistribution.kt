@@ -1,4 +1,4 @@
-package random
+package random.discrete
 
 interface IDiscreteDistribution {
     /**

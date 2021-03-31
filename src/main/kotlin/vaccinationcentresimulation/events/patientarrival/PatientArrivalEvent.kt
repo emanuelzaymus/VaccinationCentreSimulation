@@ -1,17 +1,17 @@
 package vaccinationcentresimulation.events.patientarrival
 
-import random.DiscreteUniformDistribution
+import random.discrete.DiscreteUniformDistribution
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.events.VaccinationCentreEvent
 import vaccinationcentresimulation.entities.Patient
 
 class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val numberOfPatients: Int) :
-    VaccinationCentreEvent(simulation) {
+        VaccinationCentreEvent(simulation) {
 
     companion object {
         /** Maximal simulation tim in minutes. (Working time is 9 hours = 540 minutes) */
         private const val MAX_TIME = 540.0
-        private val notArrivingPatientsRandom = DiscreteUniformDistribution(5, 25)
+        private val notArrivingPatientsRandom = DiscreteUniformDistribution(5, 25) // TODO: Should be set proportionally based on numberOfPatients (540 patients => 5-25 notArriving)
     }
 
     override val toStringTitle = "ARRIVAL"
@@ -47,7 +47,7 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val n
         if (simulation.registrationRoom.anyWorkerAvailable()) {
             simulation.registrationRoom.scheduleStart(patient, eventTime)
         } else {
-            simulation.beforeRegistrationQueue.enqueue(patient, eventTime)
+            simulation.registrationQueue.enqueue(patient, eventTime)
         }
         schedule(simulation.acquirePatient(), eventTime)
     }

@@ -1,5 +1,5 @@
 package utils.pool
 
-interface IPooledObject {
-    fun restart()
-}
+import utils.IRestartable
+
+interface IPooledObject : IRestartable

@@ -34,6 +34,7 @@ abstract class EventBasedSimulation(
 
     override fun doReplication() {
         while (actualSimulationTime <= maxSimulationTime && !isStopped() && futureEvents.isNotEmpty()) {
+
             val currentEvent = futureEvents.remove()
             actualSimulationTime = checkEventTime(currentEvent.eventTime)
             currentEvent.execute()

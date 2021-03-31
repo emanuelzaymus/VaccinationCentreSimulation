@@ -1,6 +1,6 @@
 package vaccinationcentresimulation.events.registration
 
-import random.ContinuousUniformDistribution
+import random.continuous.ContinuousUniformDistribution
 import utils.secToMin
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.registration.AdministrativeWorker
@@ -15,8 +15,8 @@ class RegistrationEndEvent(simulation: VaccinationCentreSimulation, worker: Admi
 
     override val toStringTitle = "REG_END"
 
-    override val previousQueue get() = simulation.beforeRegistrationQueue
-    override val nextQueue get() = simulation.beforeExaminationQueue
+    override val previousQueue get() = simulation.registrationQueue
+    override val nextQueue get() = simulation.examinationQueue
     override val nextRoom get() = simulation.examinationRoom
 
     override fun eventDuration(): Double = registrationDurationRandom.next()

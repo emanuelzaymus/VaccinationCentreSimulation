@@ -26,13 +26,13 @@ class VaccinationCentreSimulation(
     private val delayEvent = DelayEvent(this)
     private val patientPool = Pool { Patient() }
 
-    val beforeRegistrationQueue = StatisticsQueue<Patient>()
+    val registrationQueue = StatisticsQueue<Patient>()
     val registrationRoom = RegistrationRoom(numberOfAdminWorkers, this)
 
-    val beforeExaminationQueue = StatisticsQueue<Patient>()
+    val examinationQueue = StatisticsQueue<Patient>()
     val examinationRoom = ExaminationRoom(numberOfDoctors, this)
 
-    val beforeVaccinationQueue = StatisticsQueue<Patient>()
+    val vaccinationQueue = StatisticsQueue<Patient>()
     val vaccinationRoom = VaccinationRoom(numberOfNurses, this)
 
     val waitingRoom = WaitingRoom(this)
@@ -47,11 +47,11 @@ class VaccinationCentreSimulation(
 
     override fun beforeReplication() {
         super.beforeReplication()
-        beforeRegistrationQueue.restart()
+        registrationQueue.restart()
         registrationRoom.restart()
-        beforeExaminationQueue.restart()
+        examinationQueue.restart()
         examinationRoom.restart()
-        beforeVaccinationQueue.restart()
+        vaccinationQueue.restart()
         vaccinationRoom.restart()
         waitingRoom.restart()
         scheduleInitEvents()
@@ -63,11 +63,11 @@ class VaccinationCentreSimulation(
         println("Replic: $currentReplicNumber")
 
         if (!isStopped()) {
-            beforeRegistrationQueue.checkFinalState()
+            registrationQueue.checkFinalState()
             registrationRoom.checkFinalState()
-            beforeExaminationQueue.checkFinalState()
+            examinationQueue.checkFinalState()
             examinationRoom.checkFinalState()
-            beforeVaccinationQueue.checkFinalState()
+            vaccinationQueue.checkFinalState()
             vaccinationRoom.checkFinalState()
             waitingRoom.checkFinalState()
         }
@@ -90,11 +90,11 @@ class VaccinationCentreSimulation(
         if (animationActionListener == null) {
             return
         }
-        animationActionListener?.handleOnTimeChanged(actualSimulationTime)
+        animationActionListener?.updateActualSimulationTime(actualSimulationTime)
 
-        animationActionListener?.updateRegistrationQueueLength(beforeRegistrationQueue.count())
-        animationActionListener?.updateExaminationQueueLength(beforeExaminationQueue.count())
-        animationActionListener?.updateVaccinationQueueLength(beforeVaccinationQueue.count())
+        animationActionListener?.updateRegistrationQueueLength(registrationQueue.count())
+        animationActionListener?.updateExaminationQueueLength(examinationQueue.count())
+        animationActionListener?.updateVaccinationQueueLength(vaccinationQueue.count())
 
         animationActionListener?.updateRegistrationRoomBusyWorkersCount(registrationRoom.getBusyWorkersCount())
         animationActionListener?.updateExaminationRoomBusyDoctorsCount(examinationRoom.getBusyWorkersCount())
@@ -105,6 +105,7 @@ class VaccinationCentreSimulation(
         animationActionListener?.updateStatistics()
     }
 
+    // TODO: Should be in the ancestor
     override fun afterAnimation() {
         super.afterAnimation()
 
@@ -113,6 +114,7 @@ class VaccinationCentreSimulation(
         }
     }
 
+    // TODO: Should be in the ancestor
     fun setAnimation(animate: Boolean) {
         if (animate)
             startAnimation()
@@ -131,6 +133,7 @@ class VaccinationCentreSimulation(
     }
 
     private fun scheduleInitEvents() {
+        // TODO: Maybe can make an attribute from this (then I do not have to remember numberOfPatientsPerReplication)
         PatientArrivalEvent(this, numberOfPatientsPerReplication)
             .scheduleFirstEvent(acquirePatient(), actualSimulationTime)
 

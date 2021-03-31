@@ -1,12 +1,13 @@
 package vaccinationcentresimulation.entities.waiting
 
+import utils.IReusable
 import utils.pool.Pool
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.Patient
 import vaccinationcentresimulation.events.waiting.WaitingEndEvent
 import vaccinationcentresimulation.events.waiting.WaitingStartEvent
 
-class WaitingRoom(private val simulation: VaccinationCentreSimulation) {
+class WaitingRoom(private val simulation: VaccinationCentreSimulation) : IReusable {
 
     private val waitingStartEventPool = Pool { WaitingStartEvent(simulation, this) }
     private val waitingEndEventPool = Pool { WaitingEndEvent(simulation, this) }
@@ -50,18 +51,18 @@ class WaitingRoom(private val simulation: VaccinationCentreSimulation) {
         beforePatientsCountChangedActionListener = listener
     }
 
-    fun restart() {
+    override fun restart() {
         lastChange = .0
     }
 
-    fun checkFinalState() {
+    override fun checkFinalState() {
         if (waitingPatientsCount != 0) throw IllegalStateException("Some patients are still waiting in the waiting room.")
     }
 
     private fun beforePatientsCountChanged(eventTime: Double) {
         beforePatientsCountChangedActionListener?.handleBeforePatientsCountChanged(
-            waitingPatientsCount,
-            eventTime - lastChange
+                waitingPatientsCount,
+                eventTime - lastChange
         )
         lastChange = eventTime
     }

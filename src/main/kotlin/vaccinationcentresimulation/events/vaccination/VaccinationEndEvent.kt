@@ -1,6 +1,6 @@
 package vaccinationcentresimulation.events.vaccination
 
-import random.TriangularDistribution
+import random.continuous.TriangularDistribution
 import utils.secToMin
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.vaccination.Nurse
@@ -20,8 +20,8 @@ class VaccinationEndEvent(simulation: VaccinationCentreSimulation, private val n
 
         simulation.waitingRoom.scheduleStartWaiting(patient, eventTime)
 
-        if (!simulation.beforeVaccinationQueue.isEmpty()) {
-            nurse.scheduleStart(simulation.beforeVaccinationQueue.dequeue(eventTime), eventTime)
+        if (!simulation.vaccinationQueue.isEmpty()) {
+            nurse.scheduleStart(simulation.vaccinationQueue.dequeue(eventTime), eventTime)
         }
     }
 

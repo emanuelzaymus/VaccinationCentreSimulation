@@ -1,8 +1,9 @@
 package utils.statisticsqueue
 
+import utils.IReusable
 import java.util.*
 
-class StatisticsQueue<T> {
+class StatisticsQueue<T> : IReusable {
 
     private val queue: Queue<T> = LinkedList()
     private var beforeQueueLengthChangedActionListener: IBeforeQueueLengthChangedActionListener? = null
@@ -22,11 +23,11 @@ class StatisticsQueue<T> {
 
     fun count(): Int = queue.count()
 
-    fun restart() {
+    override fun restart() {
         lastChange = .0
     }
 
-    fun checkFinalState() {
+    override fun checkFinalState() {
         if (!queue.isEmpty()) throw IllegalStateException("Queue is not empty.")
     }
 

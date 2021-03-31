@@ -1,5 +1,8 @@
 package random
 
+import random.continuous.ExponentialDistribution
+import random.continuous.IContinuousDistribution
+import random.continuous.TriangularDistribution
 import java.io.BufferedWriter
 import java.io.File
 
@@ -12,19 +15,21 @@ object RandomDistributionsWriter {
 
     private fun exponentialDistribution() {
         writeDistribution(
-            ExponentialDistribution(1 / 260.0), 1_000_000, "input_analyzer/expoDistLambda0.25.txt"
+            ExponentialDistribution(1 / 260.0), fileName = "input_analyzer/expoDistLambda0.25.txt"
         )
     }
 
     private fun triangularDistribution() {
         writeDistribution(
-            TriangularDistribution(20.0, 75.0, 100.0),
-            1_000_000,
-            "input_analyzer/triangularDist_20_75_100.txt"
+            TriangularDistribution(20.0, 75.0, 100.0), fileName = "input_analyzer/triangularDist_20_75_100.txt"
         )
     }
 
-    private fun writeDistribution(distribution: IContinuousDistribution, valueCount: Int, fileName: String) {
+    private fun writeDistribution(
+            distribution: IContinuousDistribution,
+            valueCount: Int = 1_000_000,
+            fileName: String
+    ) {
         val writer: BufferedWriter = File(fileName).bufferedWriter()
 
         for (i in 1..valueCount)

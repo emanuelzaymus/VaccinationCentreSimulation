@@ -10,10 +10,10 @@ import tornadofx.alert
 import tornadofx.onChange
 import vaccinationcentresimulation.IAnimationActionListener
 import vaccinationcentresimulation.VaccinationCentreSimulation
-import vaccinationcentresimulation.statistics.AverageQueueLengthStats
-import vaccinationcentresimulation.statistics.AverageWaitingPatientsCountStats
-import vaccinationcentresimulation.statistics.AverageWaitingTimeStats
-import vaccinationcentresimulation.statistics.AverageWorkloadStats
+import vaccinationcentresimulation.statistics.QueueLengthStats
+import vaccinationcentresimulation.statistics.WaitingPatientsCountStats
+import vaccinationcentresimulation.statistics.WaitingTimeStats
+import vaccinationcentresimulation.statistics.WorkloadStats
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
 
@@ -22,19 +22,19 @@ class MainController : Controller(), IAnimationActionListener {
     // Working time starts at 8:00
     private val startTime = 8 * 60
 
-    private val avgBeforeRegistrationQueueLen = AverageQueueLengthStats()
-    private val avgBeforeExaminationQueueLen = AverageQueueLengthStats()
-    private val avgBeforeVaccinationQueueLen = AverageQueueLengthStats()
+    private val avgBeforeRegistrationQueueLen = QueueLengthStats()
+    private val avgBeforeExaminationQueueLen = QueueLengthStats()
+    private val avgBeforeVaccinationQueueLen = QueueLengthStats()
 
-    private val avgWaitingTimeRegistrationQueue = AverageWaitingTimeStats()
-    private val avgWaitingTimeExaminationQueue = AverageWaitingTimeStats()
-    private val avgWaitingTimeVaccinationQueue = AverageWaitingTimeStats()
+    private val avgWaitingTimeRegistrationQueue = WaitingTimeStats()
+    private val avgWaitingTimeExaminationQueue = WaitingTimeStats()
+    private val avgWaitingTimeVaccinationQueue = WaitingTimeStats()
 
-    private val averageWorkloadAdministrativeWorkerStats = AverageWorkloadStats()
-    private val averageWorkloadDoctorStats = AverageWorkloadStats()
-    private val averageWorkloadNurseStats = AverageWorkloadStats()
+    private val averageWorkloadAdministrativeWorkerStats = WorkloadStats()
+    private val averageWorkloadDoctorStats = WorkloadStats()
+    private val averageWorkloadNurseStats = WorkloadStats()
 
-    private val averageWaitingPatientsCountStats = AverageWaitingPatientsCountStats()
+    private val averageWaitingPatientsCountStats = WaitingPatientsCountStats()
 
     private var simulation = VaccinationCentreSimulation()
 
@@ -113,7 +113,7 @@ class MainController : Controller(), IAnimationActionListener {
         appState = AppState.STOPPED
     }
 
-    override fun handleOnTimeChanged(actualSimulationTime: Double) {
+    override fun updateActualSimulationTime(actualSimulationTime: Double) {
         Platform.runLater {
             actualSimTime.value =
                 "${(actualSimulationTime + startTime).minutesToTime()} | (Minutes: $actualSimulationTime)"
@@ -212,9 +212,9 @@ class MainController : Controller(), IAnimationActionListener {
 
     private fun setAllActionListeners() {
         with(simulation) {
-            beforeRegistrationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeRegistrationQueueLen)
-            beforeExaminationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeExaminationQueueLen)
-            beforeVaccinationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeVaccinationQueueLen)
+            registrationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeRegistrationQueueLen)
+            examinationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeExaminationQueueLen)
+            vaccinationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeVaccinationQueueLen)
 
             registrationRoom.setOnWaitingStoppedActionListener(avgWaitingTimeRegistrationQueue)
             examinationRoom.setOnWaitingStoppedActionListener(avgWaitingTimeExaminationQueue)

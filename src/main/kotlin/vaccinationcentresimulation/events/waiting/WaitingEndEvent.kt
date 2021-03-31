@@ -1,6 +1,6 @@
 package vaccinationcentresimulation.events.waiting
 
-import random.ContinuousUniformDistribution
+import random.continuous.ContinuousUniformDistribution
 import utils.pool.IPooledObject
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.waiting.WaitingRoom

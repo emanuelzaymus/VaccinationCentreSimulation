@@ -1,4 +1,4 @@
-package random
+package random.continuous
 
 interface IContinuousDistribution {
     /**

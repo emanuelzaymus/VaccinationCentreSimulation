@@ -1,4 +1,6 @@
-package random
+package random.continuous
+
+import random.RandomDistribution
 
 /**
  * Continuous random uniform distribution generator that generates numbers from (inclusive) to until (exclusive).

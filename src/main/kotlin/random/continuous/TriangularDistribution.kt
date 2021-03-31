@@ -1,5 +1,6 @@
-package random
+package random.continuous
 
+import random.RandomDistribution
 import kotlin.math.sqrt
 
 /**

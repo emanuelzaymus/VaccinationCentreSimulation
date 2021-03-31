@@ -4,6 +4,7 @@ import simulation.eventbasedsimulation.Event
 import utils.secToMin
 import vaccinationcentresimulation.VaccinationCentreSimulation
 
+// TODO: Put into abstract EventBasedSimulation class
 class DelayEvent(private val simulation: VaccinationCentreSimulation) : Event() {
 
     private var delayEverySimMin: Double = 1.0

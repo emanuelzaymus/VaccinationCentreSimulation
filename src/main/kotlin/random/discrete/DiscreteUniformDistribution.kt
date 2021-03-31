@@ -1,4 +1,6 @@
-package random
+package random.discrete
+
+import random.RandomDistribution
 
 /**
  * Discrete random uniform distribution generator that generates numbers from (inclusive) to until (exclusive).

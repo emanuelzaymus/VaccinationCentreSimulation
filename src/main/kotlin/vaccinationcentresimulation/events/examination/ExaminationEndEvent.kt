@@ -1,6 +1,6 @@
 package vaccinationcentresimulation.events.examination
 
-import random.ExponentialDistribution
+import random.continuous.ExponentialDistribution
 import utils.secToMin
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.examination.Doctor
@@ -15,8 +15,8 @@ class ExaminationEndEvent(simulation: VaccinationCentreSimulation, doctor: Docto
 
     override val toStringTitle = "EXA_END"
 
-    override val previousQueue get() = simulation.beforeExaminationQueue
-    override val nextQueue get() = simulation.beforeVaccinationQueue
+    override val previousQueue get() = simulation.examinationQueue
+    override val nextQueue get() = simulation.vaccinationQueue
     override val nextRoom get() = simulation.vaccinationRoom
 
     override fun eventDuration(): Double = examinationDurationRandom.next()

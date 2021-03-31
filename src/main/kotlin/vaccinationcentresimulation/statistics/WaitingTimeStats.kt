@@ -3,7 +3,7 @@ package vaccinationcentresimulation.statistics
 import simulation.statistics.DiscreteStatistics
 import vaccinationcentresimulation.events.IOnWaitingStoppedActionListener
 
-class AverageWaitingTimeStats : DiscreteStatistics(), IOnWaitingStoppedActionListener {
+class WaitingTimeStats : DiscreteStatistics(), IOnWaitingStoppedActionListener {
 
     override fun handleOnWaitingStopped(newWaitingElapsed: Double) {
         if (newWaitingElapsed >= 0)

@@ -1,8 +1,9 @@
 package utils.busylist
 
-import random.DiscreteUniformDistribution
+import random.discrete.DiscreteUniformDistribution
+import utils.IReusable
 
-class BusyList<T : IBusyObject>(numberOfBusyObjects: Int, init: (Int) -> T) : Iterable<T> {
+class BusyList<T : IBusyObject>(numberOfBusyObjects: Int, init: (Int) -> T) : Iterable<T>, IReusable {
 
     private val randoms = List(numberOfBusyObjects - 1) { DiscreteUniformDistribution(until = it + 2) }
     private val busyObjects = List(numberOfBusyObjects, init)
@@ -22,9 +23,9 @@ class BusyList<T : IBusyObject>(numberOfBusyObjects: Int, init: (Int) -> T) : It
         return freeObjects[sizeRandom.next()]
     }
 
-    fun restart() = busyObjects.forEach { it.restart() }
+    override fun restart() = busyObjects.forEach { it.restart() }
 
-    fun checkFinalState() = busyObjects.forEach { it.checkFinalState() }
+    override fun checkFinalState() = busyObjects.forEach { it.checkFinalState() }
 
     fun getBusyWorkersCount(): Int = busyObjects.count { it.isBusy() }
 
