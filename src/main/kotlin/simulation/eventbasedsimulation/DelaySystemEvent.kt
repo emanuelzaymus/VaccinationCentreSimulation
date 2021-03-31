@@ -1,33 +1,29 @@
 package simulation.eventbasedsimulation
 
-import utils.secToMin
-
 internal class DelaySystemEvent(simulation: EventBasedSimulation) : Event(simulation) {
 
-    private var delayEverySimMin: Double = 1.0
-    private var delayForMillis: Long = 1000
+    var delayForMillis: Long = 1000
+        @Synchronized get
+        @Synchronized set(value) {
+            if (value < 0) throw IllegalArgumentException("Attribute delayForMillis cannot be negative.")
+            field = value
+        }
 
-    @Synchronized
-    fun setDelayEverySimMin(seconds: Int) {
-        delayEverySimMin = secToMin(seconds)
-    }
-
-    @Synchronized
-    fun setDelayForMillis(milliseconds: Long) {
-        delayForMillis = milliseconds
-    }
+    var delayEverySimMin: Double = 1.0
+        @Synchronized get
+        @Synchronized set(value) {
+            if (value < 0) throw IllegalArgumentException("Attribute delayEverySimMin cannot be negative.")
+            field = value
+        }
 
     override fun execute() {
         Thread.sleep(delayForMillis)
 
-        if (simulation.withAnimation) {
-            schedule()
-        }
+        if (simulation.withAnimation)
+            schedule(eventTime + delayEverySimMin)
     }
 
     public override fun schedule(eventTime: Double) = super.schedule(eventTime)
-
-    private fun schedule() = schedule(eventTime + delayEverySimMin)
 
     override fun toString(): String = "DELAY for $delayForMillis ms - ${super.toString()}"
 

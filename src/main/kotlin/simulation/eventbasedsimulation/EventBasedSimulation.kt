@@ -1,6 +1,7 @@
 package simulation.eventbasedsimulation
 
 import simulation.montecarlo.MonteCarlo
+import utils.secToMin
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -101,10 +102,13 @@ abstract class EventBasedSimulation(
         return eventTime
     }
 
-    // TODO: Is called SimMin and the parameter is in seconds??????
-    fun setDelayEverySimMin(seconds: Int) = delayEvent.setDelayEverySimMin(seconds)
+    fun setDelayEverySimSeconds(seconds: Int) {
+        delayEvent.delayEverySimMin = secToMin(seconds)
+    }
 
-    fun setDelayForMillis(milliseconds: Int) = delayEvent.setDelayForMillis(milliseconds.toLong())
+    fun setDelayForMillis(millis: Long) {
+        delayEvent.delayForMillis = millis
+    }
 
     private fun scheduleDelayEvent() {
         if (!futureEvents.contains(delayEvent))

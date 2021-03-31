@@ -3,6 +3,7 @@ package controller
 import javafx.application.Platform
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
+import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.Alert
 import tornadofx.Controller
@@ -14,7 +15,6 @@ import vaccinationcentresimulation.statistics.QueueLengthStats
 import vaccinationcentresimulation.statistics.WaitingPatientsCountStats
 import vaccinationcentresimulation.statistics.WaitingTimeStats
 import vaccinationcentresimulation.statistics.WorkloadStats
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
 
 class MainController : Controller(), IAnimationActionListener {
@@ -45,10 +45,15 @@ class MainController : Controller(), IAnimationActionListener {
     val numberOfDoctors = SimpleStringProperty("5")
     val numberOfNurses = SimpleStringProperty("3")
 
-    val withAnimation = SimpleBooleanProperty(true).apply { onChange { b -> simulation.withAnimation = b } }
-    val delayEvery =
-        SimpleIntegerProperty(60).apply { onChange { seconds -> simulation.setDelayEverySimMin(seconds) } }
-    val delayFor = SimpleIntegerProperty(100).apply { onChange { millis -> simulation.setDelayForMillis(millis) } }
+    val withAnimation = SimpleBooleanProperty(true).apply {
+        onChange { b -> simulation.withAnimation = b }
+    }
+    val delayEvery = SimpleIntegerProperty(60).apply {
+        onChange { seconds -> simulation.setDelayEverySimSeconds(seconds) }
+    }
+    val delayFor = SimpleLongProperty(100).apply {
+        onChange { millis -> simulation.setDelayForMillis(millis) }
+    }
 
     val state = SimpleStringProperty("READY")
     val actualSimTime = SimpleStringProperty(startTime.minutesToTime())
@@ -99,54 +104,40 @@ class MainController : Controller(), IAnimationActionListener {
         }
     }
 
-    override fun updateSimulationState(simulationState: String) {
-        Platform.runLater { state.value = simulationState }
-    }
+    override fun updateSimulationState(simulationState: String) = Platform.runLater { state.value = simulationState }
 
-    override fun updateRegistrationQueueLength(length: Int) {
-        Platform.runLater { regQueueActualLength.value = length }
-    }
+    override fun updateRegistrationQueueLength(length: Int) = Platform.runLater { regQueueActualLength.value = length }
 
-    override fun updateExaminationQueueLength(length: Int) {
-        Platform.runLater { examQueueActualLength.value = length }
-    }
+    override fun updateExaminationQueueLength(length: Int) = Platform.runLater { examQueueActualLength.value = length }
 
-    override fun updateVaccinationQueueLength(length: Int) {
-        Platform.runLater { vacQueueActualLength.value = length }
-    }
+    override fun updateVaccinationQueueLength(length: Int) = Platform.runLater { vacQueueActualLength.value = length }
 
-    override fun updateRegistrationRoomBusyWorkersCount(busyWorkers: Int) {
+    override fun updateRegistrationRoomBusyWorkersCount(busyWorkers: Int) =
         Platform.runLater { regRoomBusyWorkers.value = busyWorkers }
-    }
 
-    override fun updateExaminationRoomBusyDoctorsCount(busyDoctors: Int) {
+    override fun updateExaminationRoomBusyDoctorsCount(busyDoctors: Int) =
         Platform.runLater { examRoomBusyWorkers.value = busyDoctors }
-    }
 
-    override fun updateVaccinationRoomBusyNursesCount(busyNurses: Int) {
+    override fun updateVaccinationRoomBusyNursesCount(busyNurses: Int) =
         Platform.runLater { vacRoomBusyWorkers.value = busyNurses }
-    }
 
-    override fun updateWaitingRoomPatientsCount(patients: Int) {
+    override fun updateWaitingRoomPatientsCount(patients: Int) =
         Platform.runLater { waitRoomPatientsCount.value = patients }
-    }
 
-    override fun updateStatistics() {
-        Platform.runLater {
-            regQueueAvgLength.value = avgBeforeRegistrationQueueLen.getAverage().roundToString()
-            regQueueAvgWaitingTime.value = avgWaitingTimeRegistrationQueue.getAverage().roundToString()
-            regRoomWorkload.value = averageWorkloadAdministrativeWorkerStats.getAverage().roundToString()
+    override fun updateStatistics() = Platform.runLater {
+        regQueueAvgLength.value = avgBeforeRegistrationQueueLen.getAverage().roundToString()
+        regQueueAvgWaitingTime.value = avgWaitingTimeRegistrationQueue.getAverage().roundToString()
+        regRoomWorkload.value = averageWorkloadAdministrativeWorkerStats.getAverage().roundToString()
 
-            examQueueAvgLength.value = avgBeforeExaminationQueueLen.getAverage().roundToString()
-            examQueueAvgWaitingTime.value = avgWaitingTimeExaminationQueue.getAverage().roundToString()
-            examRoomWorkload.value = averageWorkloadDoctorStats.getAverage().roundToString()
+        examQueueAvgLength.value = avgBeforeExaminationQueueLen.getAverage().roundToString()
+        examQueueAvgWaitingTime.value = avgWaitingTimeExaminationQueue.getAverage().roundToString()
+        examRoomWorkload.value = averageWorkloadDoctorStats.getAverage().roundToString()
 
-            vacQueueAvgLength.value = avgBeforeVaccinationQueueLen.getAverage().roundToString()
-            vacQueueAvgWaitingTime.value = avgWaitingTimeVaccinationQueue.getAverage().roundToString()
-            vacRoomWorkload.value = averageWorkloadNurseStats.getAverage().roundToString()
+        vacQueueAvgLength.value = avgBeforeVaccinationQueueLen.getAverage().roundToString()
+        vacQueueAvgWaitingTime.value = avgWaitingTimeVaccinationQueue.getAverage().roundToString()
+        vacRoomWorkload.value = averageWorkloadNurseStats.getAverage().roundToString()
 
-            waitRoomAvgLength.value = averageWaitingPatientsCountStats.getAverage().roundToString()
-        }
+        waitRoomAvgLength.value = averageWaitingPatientsCountStats.getAverage().roundToString()
     }
 
     private fun restart(): Boolean {
@@ -159,7 +150,7 @@ class MainController : Controller(), IAnimationActionListener {
             val withAnimation: Boolean = withAnimation.value
 
             simulation = VaccinationCentreSimulation(replicCount, patients, workers, doctors, nurses, withAnimation)
-            simulation.setDelayEverySimMin(delayEvery.value)
+            simulation.setDelayEverySimSeconds(delayEvery.value)
             simulation.setDelayForMillis(delayFor.value)
 
             restartStatistics()
