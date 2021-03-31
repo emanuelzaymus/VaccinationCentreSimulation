@@ -7,6 +7,7 @@ import tornadofx.cssclass
 import tornadofx.px
 
 class Styles : Stylesheet() {
+
     companion object {
         val heading by cssclass()
         val biggerPadding by cssclass()
@@ -32,6 +33,6 @@ class Styles : Stylesheet() {
         smallHeading {
             fontWeight = FontWeight.BOLD
         }
-
     }
+
 }

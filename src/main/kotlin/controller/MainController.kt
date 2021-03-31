@@ -36,11 +36,11 @@ class MainController : Controller(), IAnimationActionListener {
 
     private val averageWaitingPatientsCountStats = WaitingPatientsCountStats()
 
-    private var simulation = VaccinationCentreSimulation(1, 450, 6, 5, 3, true)
+    private var simulation = VaccinationCentreSimulation(1, 540, 6, 5, 3, true)
 
     val replicationsCount = SimpleStringProperty("1")
     val skip = SimpleStringProperty("0.3")
-    val numberOfPatients = SimpleStringProperty("450")
+    val numberOfPatients = SimpleStringProperty("540")
     val numberOfAdminWorkers = SimpleStringProperty("6")
     val numberOfDoctors = SimpleStringProperty("5")
     val numberOfNurses = SimpleStringProperty("3")
@@ -97,11 +97,8 @@ class MainController : Controller(), IAnimationActionListener {
 
     fun stop() = simulation.stop()
 
-    override fun updateActualSimulationTime(actualSimulationTime: Double) {
-        Platform.runLater {
-            actualSimTime.value =
-                "${(actualSimulationTime + startTime).minutesToTime()} | (Minutes: $actualSimulationTime)"
-        }
+    override fun updateActualSimulationTime(actualSimulationTime: Double) = Platform.runLater {
+        actualSimTime.value = "${(actualSimulationTime + startTime).minutesToTime()} | (Minutes: $actualSimulationTime)"
     }
 
     override fun updateSimulationState(simulationState: String) = Platform.runLater { state.value = simulationState }
