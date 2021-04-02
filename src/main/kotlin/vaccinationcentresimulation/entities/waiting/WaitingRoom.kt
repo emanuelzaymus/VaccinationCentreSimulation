@@ -61,8 +61,7 @@ class WaitingRoom(private val simulation: VaccinationCentreSimulation) : IReusab
 
     private fun beforePatientsCountChanged(eventTime: Double) {
         beforePatientsCountChangedActionListener?.handleBeforePatientsCountChanged(
-                waitingPatientsCount,
-                eventTime - lastChange
+            waitingPatientsCount, eventTime - lastChange, simulation.actualSimulationTime
         )
         lastChange = eventTime
     }

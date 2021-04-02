@@ -16,7 +16,7 @@ abstract class EventBasedSimulation(
     private val delayEvent by lazy { DelaySystemEvent(this) }
 
     private val futureEvents: PriorityQueue<Event> = PriorityQueue()
-    protected var actualSimulationTime: Double = .0
+    var actualSimulationTime: Double = .0
         private set
 
     var state = SimulationState.READY

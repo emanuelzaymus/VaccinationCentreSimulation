@@ -2,12 +2,15 @@ package controller
 
 import javafx.application.Platform
 import javafx.beans.property.*
+import javafx.collections.ObservableList
 import javafx.scene.control.Alert
 import tornadofx.Controller
 import tornadofx.alert
+import tornadofx.observableList
 import tornadofx.onChange
 import vaccinationcentresimulation.IAnimationActionListener
-import vaccinationcentresimulation.VaccinationCentreExperiment
+import vaccinationcentresimulation.experiment.VaccinationCentreExperiment
+import vaccinationcentresimulation.statistics.WorkloadStats
 import kotlin.concurrent.thread
 
 class MainController : Controller(), IAnimationActionListener {
@@ -58,7 +61,7 @@ class MainController : Controller(), IAnimationActionListener {
     val regQueueAvgWaitingTime = SimpleStringProperty(initVal)
     val regRoomBusyWorkers = SimpleIntegerProperty()
     val regRoomWorkload = SimpleStringProperty(initVal)
-    val regRoomPersonalWorkload = SimpleListProperty<Unit>()
+    val regRoomPersonalWorkloads = observableList<Worker>()
 
     val examQueueActualLength = SimpleIntegerProperty()
     val examQueueAvgLength = SimpleStringProperty(initVal)
@@ -66,6 +69,7 @@ class MainController : Controller(), IAnimationActionListener {
     val examQueueAvgWaitingTime = SimpleStringProperty(initVal)
     val examRoomBusyWorkers = SimpleIntegerProperty()
     val examRoomWorkload = SimpleStringProperty(initVal)
+    val examRoomPersonalWorkloads = observableList<Worker>()
 
     val vacQueueActualLength = SimpleIntegerProperty()
     val vacQueueAvgLength = SimpleStringProperty(initVal)
@@ -73,9 +77,27 @@ class MainController : Controller(), IAnimationActionListener {
     val vacQueueAvgWaitingTime = SimpleStringProperty(initVal)
     val vacRoomBusyWorkers = SimpleIntegerProperty()
     val vacRoomWorkload = SimpleStringProperty(initVal)
+    val vacRoomPersonalWorkloads = observableList<Worker>()
 
     val waitRoomPatientsCount = SimpleIntegerProperty()
     val waitRoomAvgLength = SimpleStringProperty(initVal)
+
+    //////////
+
+    val allRegQueueAvgLength = SimpleStringProperty(initVal)
+    val allRegQueueAvgWaitingTimeInHours = SimpleStringProperty(initVal)
+    val allRegQueueAvgWaitingTime = SimpleStringProperty(initVal)
+    val allRegRoomWorkload = SimpleStringProperty(initVal)
+
+    val allExamQueueAvgLength = SimpleStringProperty(initVal)
+    val allExamQueueAvgWaitingTimeInHours = SimpleStringProperty(initVal)
+    val allExamQueueAvgWaitingTime = SimpleStringProperty(initVal)
+    val allExamRoomWorkload = SimpleStringProperty(initVal)
+
+    val allVacQueueAvgLength = SimpleStringProperty(initVal)
+    val allVacQueueAvgWaitingTimeInHours = SimpleStringProperty(initVal)
+    val allVacQueueAvgWaitingTime = SimpleStringProperty(initVal)
+    val allVacRoomWorkload = SimpleStringProperty(initVal)
 
     fun startPause() {
         if (!experiment.simulation.wasStarted())
@@ -123,21 +145,54 @@ class MainController : Controller(), IAnimationActionListener {
             regQueueAvgLength.value = registrationQueueLength.getAverage().roundToString()
             regQueueAvgWaitingTimeInHours.value = registrationWaitingTime.getAverage().secondsToTime()
             regQueueAvgWaitingTime.value = registrationWaitingTime.getAverage().roundToString()
-            regRoomWorkload.value = adminWorkersWorkload.getAverage().roundToString()
-//        adminWorkersPersonalWorkload
+            regRoomWorkload.value = averageAdminWorkersWorkload.roundToString()
+            updateWorkers(
+                regRoomPersonalWorkloads, adminWorkersPersonalWorkloads, simulation.registrationRoom.getWorkersState()
+            )
 
             examQueueAvgLength.value = examinationQueueLength.getAverage().roundToString()
             examQueueAvgWaitingTimeInHours.value = examinationWaitingTime.getAverage().secondsToTime()
             examQueueAvgWaitingTime.value = examinationWaitingTime.getAverage().roundToString()
-            examRoomWorkload.value = doctorsWorkload.getAverage().roundToString()
+            examRoomWorkload.value = averageDoctorsWorkload.roundToString()
+            updateWorkers(
+                examRoomPersonalWorkloads, doctorsPersonalWorkloads, simulation.examinationRoom.getWorkersState()
+            )
 
             vacQueueAvgLength.value = vaccinationQueueLength.getAverage().roundToString()
             vacQueueAvgWaitingTimeInHours.value = vaccinationWaitingTime.getAverage().secondsToTime()
             vacQueueAvgWaitingTime.value = vaccinationWaitingTime.getAverage().roundToString()
-            vacRoomWorkload.value = nursesWorkload.getAverage().roundToString()
+            vacRoomWorkload.value = averageNursesWorkload.roundToString()
+            updateWorkers(
+                vacRoomPersonalWorkloads, nursesPersonalWorkloads, simulation.vaccinationRoom.getWorkersState()
+            )
 
             waitRoomAvgLength.value = waitingPatientsCount.getAverage().roundToString()
+
+            //////////
+
+            allRegQueueAvgLength.value = allRegistrationQueueLengths.getAverage().roundToString()
+            allRegQueueAvgWaitingTimeInHours.value = allRegistrationWaitingTimes.getAverage().secondsToTime()
+            allRegQueueAvgWaitingTime.value = allRegistrationWaitingTimes.getAverage().roundToString()
+            allRegRoomWorkload.value = allAdminWorkersWorkloads.getAverage().roundToString()
+
+            allExamQueueAvgLength.value = allExaminationQueueLengths.getAverage().roundToString()
+            allExamQueueAvgWaitingTimeInHours.value = allExaminationWaitingTimes.getAverage().secondsToTime()
+            allExamQueueAvgWaitingTime.value = allExaminationWaitingTimes.getAverage().roundToString()
+            allExamRoomWorkload.value = allDoctorsWorkloads.getAverage().roundToString()
+
+            allVacQueueAvgLength.value = allVaccinationQueueLengths.getAverage().roundToString()
+            allVacQueueAvgWaitingTimeInHours.value = allVaccinationWaitingTimes.getAverage().secondsToTime()
+            allVacQueueAvgWaitingTime.value = allVaccinationWaitingTimes.getAverage().roundToString()
+            allVacRoomWorkload.value = allNursesWorkloads.getAverage().roundToString()
         }
+    }
+
+    private fun updateWorkers(
+        obsList: ObservableList<Worker>, workloadStats: List<WorkloadStats>, workersState: List<Boolean>
+    ) {
+        obsList.clear()
+        val list = workloadStats.zip(workersState).mapIndexed { i, x -> Worker(i + 1, x.second, x.first.getAverage()) }
+        obsList.addAll(list)
     }
 
     private fun restart(): Boolean {

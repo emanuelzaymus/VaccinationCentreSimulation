@@ -53,7 +53,7 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val n
         if (simulation.registrationRoom.anyWorkerAvailable()) {
             simulation.registrationRoom.scheduleStart(patient, eventTime)
         } else {
-            simulation.registrationQueue.enqueue(patient, eventTime)
+            simulation.registrationQueue.enqueue(patient, eventTime, simulation.actualSimulationTime)
         }
         schedule(simulation.acquirePatient(), eventTime)
     }

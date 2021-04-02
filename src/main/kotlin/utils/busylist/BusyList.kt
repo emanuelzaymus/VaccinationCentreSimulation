@@ -29,8 +29,6 @@ class BusyList<T : IBusyObject>(numberOfBusyObjects: Int, init: (Int) -> T) : It
 
     override fun checkFinalState() = busyObjects.forEach { it.checkFinalState() }
 
-    fun getBusyWorkersCount(): Int = busyObjects.count { it.isBusy() }
-
     private fun getRandomForSize(size: Int) = randoms[size - 2]
 
     override fun iterator(): Iterator<T> = busyObjects.iterator()

@@ -9,6 +9,7 @@ import vaccinationcentresimulation.entities.registration.RegistrationRoom
 import vaccinationcentresimulation.entities.vaccination.VaccinationRoom
 import vaccinationcentresimulation.entities.waiting.WaitingRoom
 import vaccinationcentresimulation.events.patientarrival.PatientArrivalEvent
+import vaccinationcentresimulation.experiment.IExperimentActionListener
 
 class VaccinationCentreSimulation(
     replicationsCount: Int,
@@ -21,6 +22,7 @@ class VaccinationCentreSimulation(
     EventBasedSimulation(replicationsCount, withAnimation = withAnimation) {
 
     private var animationActionListener: IAnimationActionListener? = null
+    private var experimentActionListener: IExperimentActionListener? = null
 
     private val patientPool = Pool { Patient() }
 
@@ -59,12 +61,15 @@ class VaccinationCentreSimulation(
         vaccinationRoom.restart()
         waitingRoom.restart()
         scheduleInitEvent()
+
+        experimentActionListener?.onBeforeReplication()
     }
 
     override fun afterReplication() {
         super.afterReplication()
 
         println("Replic: $currentReplicNumber")
+// TODO:       animationActionListener?.updateCurrentReplicNumber(currentReplicNumber)
 
         if (!isStopped()) {
             registrationQueue.checkFinalState()
@@ -75,6 +80,8 @@ class VaccinationCentreSimulation(
             vaccinationRoom.checkFinalState()
             waitingRoom.checkFinalState()
         }
+
+        experimentActionListener?.onAfterReplication()
     }
 
     override fun afterSimulation() {
@@ -104,6 +111,10 @@ class VaccinationCentreSimulation(
         animationActionListener?.updateWaitingRoomPatientsCount(waitingRoom.waitingPatientsCount)
 
         animationActionListener?.updateStatistics()
+    }
+
+    fun setExperimentActionListener(listener: IExperimentActionListener) {
+        experimentActionListener = listener
     }
 
     private fun scheduleInitEvent() {

@@ -13,6 +13,8 @@ class Styles : Stylesheet() {
         val biggerPadding by cssclass()
         val smallPadding by cssclass()
         val smallHeading by cssclass()
+        val bigHeading by cssclass()
+        val biggerPaddingHeading by cssclass()
     }
 
     init {
@@ -32,6 +34,15 @@ class Styles : Stylesheet() {
 
         smallHeading {
             fontWeight = FontWeight.BOLD
+        }
+
+        bigHeading {
+            fontWeight = FontWeight.BOLD
+            fontSize = 15.px
+        }
+
+        biggerPaddingHeading {
+            padding = box(20.px, 20.px, 0.px, 20.px)
         }
     }
 

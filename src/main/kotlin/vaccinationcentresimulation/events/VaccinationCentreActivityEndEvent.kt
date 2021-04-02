@@ -17,18 +17,18 @@ abstract class VaccinationCentreActivityEndEvent(
     protected abstract val nextRoom: VaccinationCentreRoom<*>
 
     override fun execute() {
-        worker.setBusy(false, eventTime)
+        worker.setBusy(false, eventTime, simulation.actualSimulationTime)
 
         patient.startWaiting(eventTime)
 
         if (nextRoom.anyWorkerAvailable()) {
             nextRoom.scheduleStart(patient, eventTime)
         } else {
-            nextQueue.enqueue(patient, eventTime)
+            nextQueue.enqueue(patient, eventTime, simulation.actualSimulationTime)
         }
 
         if (!previousQueue.isEmpty()) {
-            worker.scheduleStart(previousQueue.dequeue(eventTime), eventTime)
+            worker.scheduleStart(previousQueue.dequeue(eventTime, simulation.actualSimulationTime), eventTime)
         }
     }
 

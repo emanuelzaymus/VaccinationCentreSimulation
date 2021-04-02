@@ -31,10 +31,10 @@ abstract class VaccinationCentreWorker : IBusyObject {
 
     override fun isBusy() = busy
 
-    override fun setBusy(busy: Boolean, eventTime: Double) {
+    override fun setBusy(busy: Boolean, eventTime: Double, commonTotalTime: Double) {
 //        beforeWorkersStateChangedActionListener?.handleBeforeWorkersStateChanged(this.busy, eventTime - lastChange)
         beforeWorkersStateChangedActionListeners.forEach {
-            it.handleBeforeWorkersStateChanged(this.busy, eventTime - lastChange)
+            it.handleBeforeWorkersStateChanged(this.busy, eventTime - lastChange, commonTotalTime)
         }
         this.busy = busy
         lastChange = eventTime

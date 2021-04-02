@@ -12,7 +12,7 @@ abstract class VaccinationCentreActivityStartEvent(
     private var waitingStoppedActionListener: IOnWaitingStoppedActionListener? = null
 
     override fun execute() {
-        worker.setBusy(true, eventTime)
+        worker.setBusy(true, eventTime, simulation.actualSimulationTime)
         stopPatientWaiting()
         worker.scheduleEnd(patient, eventTime)
     }

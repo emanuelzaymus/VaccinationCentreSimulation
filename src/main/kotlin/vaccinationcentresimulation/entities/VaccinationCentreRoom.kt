@@ -3,8 +3,8 @@ package vaccinationcentresimulation.entities
 import utils.IReusable
 import utils.busylist.BusyList
 import vaccinationcentresimulation.VaccinationCentreSimulation
-import vaccinationcentresimulation.events.IOnWaitingStoppedActionListener
 import vaccinationcentresimulation.events.IBeforeWorkersStateChangedActionListener
+import vaccinationcentresimulation.events.IOnWaitingStoppedActionListener
 
 abstract class VaccinationCentreRoom<T : VaccinationCentreWorker>(
     val simulation: VaccinationCentreSimulation,
@@ -36,7 +36,9 @@ abstract class VaccinationCentreRoom<T : VaccinationCentreWorker>(
 //        workers.forEach { it.setBeforeWorkersStateChangedActionListener(listener) }
     }
 
-    fun getBusyWorkersCount(): Int = workers.getBusyWorkersCount()
+    fun getBusyWorkersCount(): Int = workers.count { it.isBusy() }
+
+    fun getWorkersState(): List<Boolean> = workers.map { it.isBusy() }
 
     override fun restart() = workers.restart()
 

@@ -3,7 +3,8 @@ package simulation.statistics
 open class DiscreteStatistics : IStatistics {
 
     private var average: Double = .0
-    private var sampleCount: Int = 0
+    var sampleCount: Int = 0
+        private set
 
     fun addSample(newValue: Double) {
         average = (average * sampleCount + newValue) / ++sampleCount

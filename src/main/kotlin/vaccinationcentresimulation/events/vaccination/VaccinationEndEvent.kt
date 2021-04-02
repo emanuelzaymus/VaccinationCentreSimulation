@@ -20,12 +20,14 @@ class VaccinationEndEvent(simulation: VaccinationCentreSimulation, private val n
     override val toStringTitle = "VAC_END"
 
     override fun execute() {
-        nurse.setBusy(false, eventTime)
+        nurse.setBusy(false, eventTime, simulation.actualSimulationTime)
 
         simulation.waitingRoom.scheduleStartWaiting(patient, eventTime)
 
         if (!simulation.vaccinationQueue.isEmpty()) {
-            nurse.scheduleStart(simulation.vaccinationQueue.dequeue(eventTime), eventTime)
+            nurse.scheduleStart(
+                simulation.vaccinationQueue.dequeue(eventTime, simulation.actualSimulationTime), eventTime
+            )
         }
     }
 
