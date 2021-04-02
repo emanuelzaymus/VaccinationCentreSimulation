@@ -78,7 +78,7 @@ class MainController : Controller(), IAnimationActionListener {
     val waitRoomAvgLength = SimpleStringProperty(initVal)
 
     fun startPause() {
-        if (!experiment.simulation.isRunning())
+        if (!experiment.simulation.wasStarted())
             start()
         else if (!experiment.simulation.isPaused())
             experiment.simulation.pause()

@@ -42,7 +42,7 @@ abstract class EventBasedSimulation(
 
     fun isPaused(): Boolean = paused.get()
 
-    fun isRunning(): Boolean = state == SimulationState.RUNNING
+    fun wasStarted(): Boolean = state == SimulationState.RUNNING || state == SimulationState.PAUSED
 
     fun scheduleEvent(event: Event) {
         if (event.eventTime < actualSimulationTime)
