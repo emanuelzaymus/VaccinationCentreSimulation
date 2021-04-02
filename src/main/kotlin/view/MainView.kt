@@ -96,10 +96,14 @@ class MainView : View("Vaccination Centre Simulation") {
                     label("Average length:")
                     label(mainController.regQueueAvgLength)
                 }
+                label("Average waiting time")
                 hbox(smallSpaces) {
-                    label("Average waiting time:")
+                    label("In hours:")
+                    label(mainController.regQueueAvgWaitingTimeInHours)
+                }
+                hbox(smallSpaces) {
+                    label("In seconds:")
                     label(mainController.regQueueAvgWaitingTime)
-                    label("s")
                 }
                 label("Registration Room") { addClass(Styles.smallHeading) }
                 hbox(smallSpaces) {
@@ -151,10 +155,14 @@ class MainView : View("Vaccination Centre Simulation") {
                     label("Average length:")
                     label(mainController.examQueueAvgLength)
                 }
+                label("Average waiting time")
                 hbox(smallSpaces) {
-                    label("Average waiting time:")
+                    label("In hours:")
+                    label(mainController.examQueueAvgWaitingTimeInHours)
+                }
+                hbox(smallSpaces) {
+                    label("In seconds:")
                     label(mainController.examQueueAvgWaitingTime)
-                    label("s")
                 }
                 label("Examination Room") { addClass(Styles.smallHeading) }
                 hbox(smallSpaces) {
@@ -176,10 +184,14 @@ class MainView : View("Vaccination Centre Simulation") {
                     label("Average length:")
                     label(mainController.vacQueueAvgLength)
                 }
+                label("Average waiting time")
                 hbox(smallSpaces) {
-                    label("Average waiting time:")
+                    label("In hours:")
+                    label(mainController.vacQueueAvgWaitingTimeInHours)
+                }
+                hbox(smallSpaces) {
+                    label("In seconds:")
                     label(mainController.vacQueueAvgWaitingTime)
-                    label("s")
                 }
                 label("Vaccination Room") { addClass(Styles.smallHeading) }
                 hbox(smallSpaces) {

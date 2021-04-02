@@ -76,6 +76,7 @@ class MainController : Controller(), IAnimationActionListener {
     private val initVal = 0.0.roundToString()
     val regQueueActualLength = SimpleIntegerProperty()
     val regQueueAvgLength = SimpleStringProperty(initVal)
+    val regQueueAvgWaitingTimeInHours = SimpleStringProperty(initVal)
     val regQueueAvgWaitingTime = SimpleStringProperty(initVal)
     val regRoomBusyWorkers = SimpleIntegerProperty()
     val regRoomWorkload = SimpleStringProperty(initVal)
@@ -83,12 +84,14 @@ class MainController : Controller(), IAnimationActionListener {
 
     val examQueueActualLength = SimpleIntegerProperty()
     val examQueueAvgLength = SimpleStringProperty(initVal)
+    val examQueueAvgWaitingTimeInHours = SimpleStringProperty(initVal)
     val examQueueAvgWaitingTime = SimpleStringProperty(initVal)
     val examRoomBusyWorkers = SimpleIntegerProperty()
     val examRoomWorkload = SimpleStringProperty(initVal)
 
     val vacQueueActualLength = SimpleIntegerProperty()
     val vacQueueAvgLength = SimpleStringProperty(initVal)
+    val vacQueueAvgWaitingTimeInHours = SimpleStringProperty(initVal)
     val vacQueueAvgWaitingTime = SimpleStringProperty(initVal)
     val vacRoomBusyWorkers = SimpleIntegerProperty()
     val vacRoomWorkload = SimpleStringProperty(initVal)
@@ -139,15 +142,18 @@ class MainController : Controller(), IAnimationActionListener {
 
     override fun updateStatistics() = Platform.runLater {
         regQueueAvgLength.value = registrationQueueLength.getAverage().roundToString()
+        regQueueAvgWaitingTimeInHours.value = registrationWaitingTime.getAverage().secondsToTime()
         regQueueAvgWaitingTime.value = registrationWaitingTime.getAverage().roundToString()
         regRoomWorkload.value = adminWorkersWorkload.getAverage().roundToString()
 //        adminWorkersPersonalWorkload
 
         examQueueAvgLength.value = examinationQueueLength.getAverage().roundToString()
+        examQueueAvgWaitingTimeInHours.value = examinationWaitingTime.getAverage().secondsToTime()
         examQueueAvgWaitingTime.value = examinationWaitingTime.getAverage().roundToString()
         examRoomWorkload.value = doctorsWorkload.getAverage().roundToString()
 
         vacQueueAvgLength.value = vaccinationQueueLength.getAverage().roundToString()
+        vacQueueAvgWaitingTimeInHours.value = vaccinationWaitingTime.getAverage().secondsToTime()
         vacQueueAvgWaitingTime.value = vaccinationWaitingTime.getAverage().roundToString()
         vacRoomWorkload.value = nursesWorkload.getAverage().roundToString()
 
