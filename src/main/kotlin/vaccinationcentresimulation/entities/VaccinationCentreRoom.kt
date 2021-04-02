@@ -24,8 +24,16 @@ abstract class VaccinationCentreRoom<T : VaccinationCentreWorker>(
         workers.forEach { it.setOnWaitingStoppedActionListener(listener) }
     }
 
-    fun setBeforeWorkersStateChangedActionListener(listener: IBeforeWorkersStateChangedActionListener) {
+    fun setBeforeEachWorkersStateChangedActionListener(listener: IBeforeWorkersStateChangedActionListener) {
         workers.forEach { it.setBeforeWorkersStateChangedActionListener(listener) }
+    }
+
+    fun setBeforeWorkersStateChangedActionListeners(listeners: List<IBeforeWorkersStateChangedActionListener>) {
+        if (workers.size != listeners.size)
+            throw IllegalArgumentException("Number of listeners is not equal with number of workers.")
+
+        workers.zip(listeners).forEach { pair -> pair.first.setBeforeWorkersStateChangedActionListener(pair.second) }
+//        workers.forEach { it.setBeforeWorkersStateChangedActionListener(listener) }
     }
 
     fun getBusyWorkersCount(): Int = workers.getBusyWorkersCount()

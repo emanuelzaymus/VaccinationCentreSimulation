@@ -111,6 +111,36 @@ class MainView : View("Vaccination Centre Simulation") {
                     label(mainController.regRoomWorkload)
                 }
             }
+//            vbox(smallSpaces) {
+////                tableview() {
+////                    readonlyColumn("Admin Worker")
+////                }
+//
+//
+//                label("Registration Queue") { addClass(Styles.smallHeading) }
+//                hbox(smallSpaces) {
+//                    label("Actual length:")
+//                    label(mainController.regQueueActualLength)
+//                }
+//                hbox(smallSpaces) {
+//                    label("Average length:")
+//                    label(mainController.regQueueAvgLength)
+//                }
+//                hbox(smallSpaces) {
+//                    label("Average waiting time:")
+//                    label(mainController.regQueueAvgWaitingTime)
+//                    label("min")
+//                }
+//                label("Registration Room") { addClass(Styles.smallHeading) }
+//                hbox(smallSpaces) {
+//                    label("Busy workers:")
+//                    label(mainController.regRoomBusyWorkers)
+//                }
+//                hbox(smallSpaces) {
+//                    label("Average workload:")
+//                    label(mainController.regRoomWorkload)
+//                }
+//            }
             vbox(smallSpaces) {
                 label("Examination Queue") { addClass(Styles.smallHeading) }
                 hbox(smallSpaces) {

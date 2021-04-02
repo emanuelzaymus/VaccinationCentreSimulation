@@ -1,10 +1,7 @@
 package controller
 
 import javafx.application.Platform
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleIntegerProperty
-import javafx.beans.property.SimpleLongProperty
-import javafx.beans.property.SimpleStringProperty
+import javafx.beans.property.*
 import javafx.scene.control.Alert
 import tornadofx.Controller
 import tornadofx.alert
@@ -19,33 +16,51 @@ import kotlin.concurrent.thread
 
 class MainController : Controller(), IAnimationActionListener {
 
+    private val initReplicationsCount = 1
+    private val initNumberOfPatients = 540
+    private val initNumberOfAdminWorkers = 6
+    private val initNumberOfDoctors = 5
+    private val initNumberOfNurses = 3
+    private val initWithAnimation = true
+
     // Working time starts at 8:00
     private val startTime = 8 * 60.0
 
-    private val avgBeforeRegistrationQueueLen = QueueLengthStats()
-    private val avgBeforeExaminationQueueLen = QueueLengthStats()
-    private val avgBeforeVaccinationQueueLen = QueueLengthStats()
+    private val registrationQueueLength = QueueLengthStats()
+    private val examinationQueueLength = QueueLengthStats()
+    private val vaccinationQueueLength = QueueLengthStats()
 
-    private val avgWaitingTimeRegistrationQueue = WaitingTimeStats()
-    private val avgWaitingTimeExaminationQueue = WaitingTimeStats()
-    private val avgWaitingTimeVaccinationQueue = WaitingTimeStats()
+    private val registrationWaitingTime = WaitingTimeStats()
+    private val examinationWaitingTime = WaitingTimeStats()
+    private val vaccinationWaitingTime = WaitingTimeStats()
 
-    private val averageWorkloadAdministrativeWorkerStats = WorkloadStats()
-    private val averageWorkloadDoctorStats = WorkloadStats()
-    private val averageWorkloadNurseStats = WorkloadStats()
+    private val adminWorkersWorkload = WorkloadStats()
+    private val doctorsWorkload = WorkloadStats()
+    private val nursesWorkload = WorkloadStats()
 
-    private val averageWaitingPatientsCountStats = WaitingPatientsCountStats()
+    private var adminWorkersPersonalWorkload = List(initNumberOfAdminWorkers) { WorkloadStats() }
+    private var doctorsPersonalWorkload = List(initNumberOfDoctors) { WorkloadStats() }
+    private var nursesPersonalWorkload = List(initNumberOfNurses) { WorkloadStats() }
 
-    private var simulation = VaccinationCentreSimulation(1, 540, 6, 5, 3, true)
+    private val waitingPatientsCount = WaitingPatientsCountStats()
 
-    val replicationsCount = SimpleStringProperty("1")
+    private var simulation = VaccinationCentreSimulation(
+        initReplicationsCount,
+        initNumberOfPatients,
+        initNumberOfAdminWorkers,
+        initNumberOfDoctors,
+        initNumberOfNurses,
+        initWithAnimation
+    )
+
+    val replicationsCount = SimpleStringProperty(initReplicationsCount.toString())
     val skip = SimpleStringProperty("0.3")
-    val numberOfPatients = SimpleStringProperty("540")
-    val numberOfAdminWorkers = SimpleStringProperty("6")
-    val numberOfDoctors = SimpleStringProperty("5")
-    val numberOfNurses = SimpleStringProperty("3")
+    val numberOfPatients = SimpleStringProperty(initNumberOfPatients.toString())
+    val numberOfAdminWorkers = SimpleStringProperty(initNumberOfAdminWorkers.toString())
+    val numberOfDoctors = SimpleStringProperty(initNumberOfDoctors.toString())
+    val numberOfNurses = SimpleStringProperty(initNumberOfNurses.toString())
 
-    val withAnimation = SimpleBooleanProperty(true).apply {
+    val withAnimation = SimpleBooleanProperty(initWithAnimation).apply {
         onChange { b -> simulation.withAnimation = b }
     }
     val delayEvery = SimpleIntegerProperty(60).apply {
@@ -64,6 +79,7 @@ class MainController : Controller(), IAnimationActionListener {
     val regQueueAvgWaitingTime = SimpleStringProperty(initVal)
     val regRoomBusyWorkers = SimpleIntegerProperty()
     val regRoomWorkload = SimpleStringProperty(initVal)
+    val regRoomPersonalWorkload = SimpleListProperty<Unit>()
 
     val examQueueActualLength = SimpleIntegerProperty()
     val examQueueAvgLength = SimpleStringProperty(initVal)
@@ -122,19 +138,20 @@ class MainController : Controller(), IAnimationActionListener {
         Platform.runLater { waitRoomPatientsCount.value = patients }
 
     override fun updateStatistics() = Platform.runLater {
-        regQueueAvgLength.value = avgBeforeRegistrationQueueLen.getAverage().roundToString()
-        regQueueAvgWaitingTime.value = avgWaitingTimeRegistrationQueue.getAverage().roundToString()
-        regRoomWorkload.value = averageWorkloadAdministrativeWorkerStats.getAverage().roundToString()
+        regQueueAvgLength.value = registrationQueueLength.getAverage().roundToString()
+        regQueueAvgWaitingTime.value = registrationWaitingTime.getAverage().roundToString()
+        regRoomWorkload.value = adminWorkersWorkload.getAverage().roundToString()
+//        adminWorkersPersonalWorkload
 
-        examQueueAvgLength.value = avgBeforeExaminationQueueLen.getAverage().roundToString()
-        examQueueAvgWaitingTime.value = avgWaitingTimeExaminationQueue.getAverage().roundToString()
-        examRoomWorkload.value = averageWorkloadDoctorStats.getAverage().roundToString()
+        examQueueAvgLength.value = examinationQueueLength.getAverage().roundToString()
+        examQueueAvgWaitingTime.value = examinationWaitingTime.getAverage().roundToString()
+        examRoomWorkload.value = doctorsWorkload.getAverage().roundToString()
 
-        vacQueueAvgLength.value = avgBeforeVaccinationQueueLen.getAverage().roundToString()
-        vacQueueAvgWaitingTime.value = avgWaitingTimeVaccinationQueue.getAverage().roundToString()
-        vacRoomWorkload.value = averageWorkloadNurseStats.getAverage().roundToString()
+        vacQueueAvgLength.value = vaccinationQueueLength.getAverage().roundToString()
+        vacQueueAvgWaitingTime.value = vaccinationWaitingTime.getAverage().roundToString()
+        vacRoomWorkload.value = nursesWorkload.getAverage().roundToString()
 
-        waitRoomAvgLength.value = averageWaitingPatientsCountStats.getAverage().roundToString()
+        waitRoomAvgLength.value = waitingPatientsCount.getAverage().roundToString()
     }
 
     private fun restart(): Boolean {
@@ -150,7 +167,7 @@ class MainController : Controller(), IAnimationActionListener {
             simulation.setDelayEverySimSeconds(delayEvery.value)
             simulation.setDelayForMillis(delayFor.value)
 
-            restartStatistics()
+            restartStatistics(workers, doctors, nurses)
             setAllActionListeners()
 
             return true
@@ -165,37 +182,45 @@ class MainController : Controller(), IAnimationActionListener {
         return false
     }
 
-    private fun restartStatistics() {
-        avgBeforeRegistrationQueueLen.restart()
-        avgBeforeExaminationQueueLen.restart()
-        avgBeforeVaccinationQueueLen.restart()
+    private fun restartStatistics(numOfWorkers: Int, numOfDoctors: Int, numOfNurses: Int) {
+        registrationQueueLength.restart()
+        examinationQueueLength.restart()
+        vaccinationQueueLength.restart()
 
-        avgWaitingTimeRegistrationQueue.restart()
-        avgWaitingTimeExaminationQueue.restart()
-        avgWaitingTimeVaccinationQueue.restart()
+        registrationWaitingTime.restart()
+        examinationWaitingTime.restart()
+        vaccinationWaitingTime.restart()
 
-        averageWorkloadAdministrativeWorkerStats.restart()
-        averageWorkloadDoctorStats.restart()
-        averageWorkloadNurseStats.restart()
+        adminWorkersWorkload.restart()
+        doctorsWorkload.restart()
+        nursesWorkload.restart()
 
-        averageWaitingPatientsCountStats.restart()
+        adminWorkersPersonalWorkload = List(numOfWorkers) { WorkloadStats() }
+        doctorsPersonalWorkload = List(numOfDoctors) { WorkloadStats() }
+        nursesPersonalWorkload = List(numOfNurses) { WorkloadStats() }
+
+        waitingPatientsCount.restart()
     }
 
     private fun setAllActionListeners() {
         with(simulation) {
-            registrationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeRegistrationQueueLen)
-            examinationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeExaminationQueueLen)
-            vaccinationQueue.setBeforeQueueLengthChangedActionListener(avgBeforeVaccinationQueueLen)
+            registrationQueue.setBeforeQueueLengthChangedActionListener(registrationQueueLength)
+            examinationQueue.setBeforeQueueLengthChangedActionListener(examinationQueueLength)
+            vaccinationQueue.setBeforeQueueLengthChangedActionListener(vaccinationQueueLength)
 
-            registrationRoom.setOnWaitingStoppedActionListener(avgWaitingTimeRegistrationQueue)
-            examinationRoom.setOnWaitingStoppedActionListener(avgWaitingTimeExaminationQueue)
-            vaccinationRoom.setOnWaitingStoppedActionListener(avgWaitingTimeVaccinationQueue)
+            registrationRoom.setOnWaitingStoppedActionListener(registrationWaitingTime)
+            examinationRoom.setOnWaitingStoppedActionListener(examinationWaitingTime)
+            vaccinationRoom.setOnWaitingStoppedActionListener(vaccinationWaitingTime)
 
-            registrationRoom.setBeforeWorkersStateChangedActionListener(averageWorkloadAdministrativeWorkerStats)
-            examinationRoom.setBeforeWorkersStateChangedActionListener(averageWorkloadDoctorStats)
-            vaccinationRoom.setBeforeWorkersStateChangedActionListener(averageWorkloadNurseStats)
+            registrationRoom.setBeforeEachWorkersStateChangedActionListener(adminWorkersWorkload)
+            examinationRoom.setBeforeEachWorkersStateChangedActionListener(doctorsWorkload)
+            vaccinationRoom.setBeforeEachWorkersStateChangedActionListener(nursesWorkload)
 
-            waitingRoom.setBeforePatientsCountChangedActionListener(averageWaitingPatientsCountStats)
+            registrationRoom.setBeforeWorkersStateChangedActionListeners(adminWorkersPersonalWorkload)
+            examinationRoom.setBeforeWorkersStateChangedActionListeners(doctorsPersonalWorkload)
+            vaccinationRoom.setBeforeWorkersStateChangedActionListeners(nursesPersonalWorkload)
+
+            waitingRoom.setBeforePatientsCountChangedActionListener(waitingPatientsCount)
         }
         simulation.setAnimationActionListener(this)
     }

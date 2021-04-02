@@ -8,7 +8,8 @@ import vaccinationcentresimulation.events.VaccinationCentreEvent
 
 abstract class VaccinationCentreWorker : IBusyObject {
 
-    private var beforeWorkersStateChangedActionListener: IBeforeWorkersStateChangedActionListener? = null
+    //    private var beforeWorkersStateChangedActionListener: IBeforeWorkersStateChangedActionListener? = null
+    private var beforeWorkersStateChangedActionListeners = mutableListOf<IBeforeWorkersStateChangedActionListener>()
     private var lastChange = .0
 
     protected abstract val startEvent: VaccinationCentreActivityStartEvent
@@ -16,8 +17,7 @@ abstract class VaccinationCentreWorker : IBusyObject {
 
     private var busy: Boolean = false
         set(value) {
-            if (field == value)
-                throw IllegalArgumentException("You cannot reassigned this property with the same value: $value.")
+            if (field == value) throw IllegalArgumentException("You cannot reassigned this property with the same value: $value.")
             field = value
         }
 
@@ -32,7 +32,10 @@ abstract class VaccinationCentreWorker : IBusyObject {
     override fun isBusy() = busy
 
     override fun setBusy(busy: Boolean, eventTime: Double) {
-        beforeWorkersStateChangedActionListener?.handleBeforeWorkersStateChanged(this.busy, eventTime - lastChange)
+//        beforeWorkersStateChangedActionListener?.handleBeforeWorkersStateChanged(this.busy, eventTime - lastChange)
+        beforeWorkersStateChangedActionListeners.forEach {
+            it.handleBeforeWorkersStateChanged(this.busy, eventTime - lastChange)
+        }
         this.busy = busy
         lastChange = eventTime
     }
@@ -50,7 +53,8 @@ abstract class VaccinationCentreWorker : IBusyObject {
     }
 
     fun setBeforeWorkersStateChangedActionListener(listener: IBeforeWorkersStateChangedActionListener) {
-        beforeWorkersStateChangedActionListener = listener
+//        beforeWorkersStateChangedActionListener = listener
+        beforeWorkersStateChangedActionListeners.add(listener)
     }
 
 }
