@@ -99,7 +99,7 @@ class MainView : View("Vaccination Centre Simulation") {
                 hbox(smallSpaces) {
                     label("Average waiting time:")
                     label(mainController.regQueueAvgWaitingTime)
-                    label("min")
+                    label("s")
                 }
                 label("Registration Room") { addClass(Styles.smallHeading) }
                 hbox(smallSpaces) {
@@ -129,7 +129,7 @@ class MainView : View("Vaccination Centre Simulation") {
 //                hbox(smallSpaces) {
 //                    label("Average waiting time:")
 //                    label(mainController.regQueueAvgWaitingTime)
-//                    label("min")
+//                    label("s")
 //                }
 //                label("Registration Room") { addClass(Styles.smallHeading) }
 //                hbox(smallSpaces) {
@@ -154,7 +154,7 @@ class MainView : View("Vaccination Centre Simulation") {
                 hbox(smallSpaces) {
                     label("Average waiting time:")
                     label(mainController.examQueueAvgWaitingTime)
-                    label("min")
+                    label("s")
                 }
                 label("Examination Room") { addClass(Styles.smallHeading) }
                 hbox(smallSpaces) {
@@ -179,7 +179,7 @@ class MainView : View("Vaccination Centre Simulation") {
                 hbox(smallSpaces) {
                     label("Average waiting time:")
                     label(mainController.vacQueueAvgWaitingTime)
-                    label("min")
+                    label("s")
                 }
                 label("Vaccination Room") { addClass(Styles.smallHeading) }
                 hbox(smallSpaces) {

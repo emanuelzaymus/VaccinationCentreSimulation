@@ -1,7 +1,6 @@
 package simulation.eventbasedsimulation
 
 import simulation.montecarlo.MonteCarlo
-import utils.secToMin
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -102,8 +101,8 @@ abstract class EventBasedSimulation(
         return eventTime
     }
 
-    fun setDelayEverySimSeconds(seconds: Int) {
-        delayEvent.delayEverySimMin = secToMin(seconds)
+    fun setDelayEverySimUnits(simulationUnits: Double) {
+        delayEvent.delayEverySimUnits = simulationUnits
     }
 
     fun setDelayForMillis(millis: Long) {

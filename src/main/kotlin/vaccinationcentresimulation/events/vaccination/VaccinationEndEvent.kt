@@ -1,7 +1,9 @@
 package vaccinationcentresimulation.events.vaccination
 
 import random.continuous.TriangularDistribution
-import utils.secToMin
+import vaccinationcentresimulation.constants.VACCINATION_EVENT_DURATION_MAX
+import vaccinationcentresimulation.constants.VACCINATION_EVENT_DURATION_MIN
+import vaccinationcentresimulation.constants.VACCINATION_EVENT_DURATION_MODE
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.vaccination.Nurse
 import vaccinationcentresimulation.events.VaccinationCentreEvent
@@ -10,7 +12,9 @@ class VaccinationEndEvent(simulation: VaccinationCentreSimulation, private val n
     VaccinationCentreEvent(simulation) {
 
     companion object {
-        private val vaccinationDurationRandom = TriangularDistribution(secToMin(20), secToMin(75), secToMin(100))
+        private val vaccinationDurationRandom = TriangularDistribution(
+            VACCINATION_EVENT_DURATION_MIN, VACCINATION_EVENT_DURATION_MODE, VACCINATION_EVENT_DURATION_MAX
+        )
     }
 
     override val toStringTitle = "VAC_END"

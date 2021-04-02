@@ -10,3 +10,12 @@ fun Double.minutesToTime(): String {
 
     return "%d:%02d:%02d,%s".format(hours, minutes, seconds, fraction)
 }
+
+fun Double.secondsToTime(): String {
+    val hours: Int = toInt() / (60 * 60)
+    val minutes: Int = toInt() / 60
+    val seconds: Int = toInt() % 60
+    val fraction: String = toString().substringAfter('.')
+
+    return "%d:%02d:%02d,%s".format(hours, minutes, seconds, fraction)
+}

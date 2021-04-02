@@ -3,6 +3,9 @@ package vaccinationcentresimulation.events.waiting
 import random.continuous.ContinuousUniformDistribution
 import utils.pool.IPooledObject
 import vaccinationcentresimulation.VaccinationCentreSimulation
+import vaccinationcentresimulation.constants.WAITING_EVENT_DURATION_LESS
+import vaccinationcentresimulation.constants.WAITING_EVENT_DURATION_MORE
+import vaccinationcentresimulation.constants.WAITING_EVENT_LESS_PROBABILITY
 import vaccinationcentresimulation.entities.waiting.WaitingRoom
 import vaccinationcentresimulation.events.VaccinationCentreEvent
 
@@ -21,6 +24,8 @@ class WaitingEndEvent(simulation: VaccinationCentreSimulation, private val waiti
         waitingRoom.releaseWaitingEndEvent(this)
     }
 
-    override fun eventDuration(): Double = if (waitingRandom.next() < 0.95) 15.0 else 30.0
+    override fun eventDuration(): Double =
+        if (waitingRandom.next() < WAITING_EVENT_LESS_PROBABILITY) WAITING_EVENT_DURATION_LESS
+        else WAITING_EVENT_DURATION_MORE
 
 }

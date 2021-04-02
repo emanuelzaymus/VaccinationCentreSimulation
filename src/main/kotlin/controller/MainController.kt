@@ -23,8 +23,8 @@ class MainController : Controller(), IAnimationActionListener {
     private val initNumberOfNurses = 3
     private val initWithAnimation = true
 
-    // Working time starts at 8:00
-    private val startTime = 8 * 60.0
+    // Working time starts at 8:00:00
+    private val startTime = 8 * 60 * 60.0
 
     private val registrationQueueLength = QueueLengthStats()
     private val examinationQueueLength = QueueLengthStats()
@@ -64,14 +64,14 @@ class MainController : Controller(), IAnimationActionListener {
         onChange { b -> simulation.withAnimation = b }
     }
     val delayEvery = SimpleIntegerProperty(60).apply {
-        onChange { seconds -> simulation.setDelayEverySimSeconds(seconds) }
+        onChange { seconds -> simulation.setDelayEverySimUnits(seconds.toDouble()) }
     }
     val delayFor = SimpleLongProperty(100).apply {
         onChange { millis -> simulation.setDelayForMillis(millis) }
     }
 
     val state = SimpleStringProperty("READY")
-    val actualSimTime = SimpleStringProperty(startTime.minutesToTime())
+    val actualSimTime = SimpleStringProperty(startTime.secondsToTime())
 
     private val initVal = 0.0.roundToString()
     val regQueueActualLength = SimpleIntegerProperty()
@@ -114,7 +114,7 @@ class MainController : Controller(), IAnimationActionListener {
     fun stop() = simulation.stop()
 
     override fun updateActualSimulationTime(actualSimulationTime: Double) = Platform.runLater {
-        actualSimTime.value = "${(actualSimulationTime + startTime).minutesToTime()} | (Minutes: $actualSimulationTime)"
+        actualSimTime.value = "${(actualSimulationTime + startTime).secondsToTime()} | (Seconds: $actualSimulationTime)"
     }
 
     override fun updateSimulationState(simulationState: String) = Platform.runLater { state.value = simulationState }
@@ -164,7 +164,7 @@ class MainController : Controller(), IAnimationActionListener {
             val withAnimation: Boolean = withAnimation.value
 
             simulation = VaccinationCentreSimulation(replicCount, patients, workers, doctors, nurses, withAnimation)
-            simulation.setDelayEverySimSeconds(delayEvery.value)
+            simulation.setDelayEverySimUnits(delayEvery.value.toDouble())
             simulation.setDelayForMillis(delayFor.value)
 
             restartStatistics(workers, doctors, nurses)

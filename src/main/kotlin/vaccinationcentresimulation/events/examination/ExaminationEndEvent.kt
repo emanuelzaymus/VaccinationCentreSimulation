@@ -1,7 +1,7 @@
 package vaccinationcentresimulation.events.examination
 
 import random.continuous.ExponentialDistribution
-import utils.secToMin
+import vaccinationcentresimulation.constants.EXAMINATION_EVENT_DURATION_LAMBDA
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.examination.Doctor
 import vaccinationcentresimulation.events.VaccinationCentreActivityEndEvent
@@ -10,7 +10,7 @@ class ExaminationEndEvent(simulation: VaccinationCentreSimulation, doctor: Docto
     VaccinationCentreActivityEndEvent(simulation, doctor) {
 
     companion object {
-        private val examinationDurationRandom = ExponentialDistribution(1 / secToMin(260))
+        private val examinationDurationRandom = ExponentialDistribution(EXAMINATION_EVENT_DURATION_LAMBDA)
     }
 
     override val toStringTitle = "EXA_END"

@@ -9,10 +9,10 @@ internal class DelaySystemEvent(simulation: EventBasedSimulation) : Event(simula
             field = value
         }
 
-    var delayEverySimMin: Double = 1.0
+    var delayEverySimUnits: Double = 1.0
         @Synchronized get
         @Synchronized set(value) {
-            if (value < 0) throw IllegalArgumentException("Attribute delayEverySimMin cannot be negative.")
+            if (value < 0) throw IllegalArgumentException("Attribute delayEverySimUnits cannot be negative.")
             field = value
         }
 
@@ -20,7 +20,7 @@ internal class DelaySystemEvent(simulation: EventBasedSimulation) : Event(simula
         Thread.sleep(delayForMillis)
 
         if (simulation.withAnimation)
-            schedule(eventTime + delayEverySimMin)
+            schedule(eventTime + delayEverySimUnits)
     }
 
     public override fun schedule(eventTime: Double) = super.schedule(eventTime)
