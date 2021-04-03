@@ -50,6 +50,8 @@ class MainController : Controller(), IAnimationActionListener {
 
     val state = SimpleStringProperty("READY")
     val actualSimTime = SimpleStringProperty(startTime.secondsToTime())
+    val actualSimSeconds = SimpleDoubleProperty(.0)
+    val currentReplicNumber = SimpleIntegerProperty(1)
 
     private val initVal = 0.0.roundToString()
     val regQueueActualLength = SimpleIntegerProperty()
@@ -116,7 +118,8 @@ class MainController : Controller(), IAnimationActionListener {
     fun stop() = experiment.simulation.stop()
 
     override fun updateActualSimulationTime(actualSimulationTime: Double) = Platform.runLater {
-        actualSimTime.value = "${(actualSimulationTime + startTime).secondsToTime()} | (Seconds: $actualSimulationTime)"
+        actualSimTime.value = (actualSimulationTime + startTime).secondsToTime()
+        actualSimSeconds.value = actualSimulationTime
     }
 
     override fun updateSimulationState(simulationState: String) = Platform.runLater { state.value = simulationState }
@@ -186,6 +189,10 @@ class MainController : Controller(), IAnimationActionListener {
 
             allWaitRoomAvgLength.value = allWaitingPatientsCounts.getAverage().roundToString()
         }
+    }
+
+    override fun updateCurrentReplicNumber(currentReplicNumber: Int) = Platform.runLater {
+        this.currentReplicNumber.value = currentReplicNumber + 1
     }
 
     private fun updateWorkers(

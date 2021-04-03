@@ -93,6 +93,7 @@ class MainView : View("Vaccination Centre Simulation") {
             hbox(largeSpaces) {
                 addClass(Styles.biggerPadding)
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Registration Queue") { addClass(Styles.smallHeading) }
                     hbox(smallSpaces) {
                         label("Actual length:")
@@ -122,16 +123,18 @@ class MainView : View("Vaccination Centre Simulation") {
                     }
                 }
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Administrative workers") { addClass(Styles.smallHeading) }
                     tableview(mainController.regRoomPersonalWorkloads) {
                         prefWidth = 170.0
                         readonlyColumn("Num", Worker::id).prefWidth = 40.0
                         readonlyColumn("Working", Worker::working).prefWidth = 60.0
-                        readonlyColumn("Workload", Worker::avgWorkload).prefWidth = 70.0
+                        readonlyColumn("Workload", Worker::avgWorkload).prefWidth = 77.0
                     }
                 }
 
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Examination Queue") { addClass(Styles.smallHeading) }
                     hbox(smallSpaces) {
                         label("Actual length:")
@@ -161,16 +164,18 @@ class MainView : View("Vaccination Centre Simulation") {
                     }
                 }
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Doctors") { addClass(Styles.smallHeading) }
                     tableview(mainController.examRoomPersonalWorkloads) {
                         prefWidth = 170.0
                         readonlyColumn("Num", Worker::id).prefWidth = 40.0
                         readonlyColumn("Working", Worker::working).prefWidth = 60.0
-                        readonlyColumn("Workload", Worker::avgWorkload).prefWidth = 70.0
+                        readonlyColumn("Workload", Worker::avgWorkload).prefWidth = 77.0
                     }
                 }
 
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Vaccination Queue") { addClass(Styles.smallHeading) }
                     hbox(smallSpaces) {
                         label("Actual length:")
@@ -200,22 +205,24 @@ class MainView : View("Vaccination Centre Simulation") {
                     }
                 }
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Nurses") { addClass(Styles.smallHeading) }
                     tableview(mainController.vacRoomPersonalWorkloads) {
                         prefWidth = 170.0
                         readonlyColumn("Num", Worker::id).prefWidth = 40.0
                         readonlyColumn("Working", Worker::working).prefWidth = 60.0
-                        readonlyColumn("Workload", Worker::avgWorkload).prefWidth = 70.0
+                        readonlyColumn("Workload", Worker::avgWorkload).prefWidth = 77.0
                     }
                 }
 
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Waiting Room") { addClass(Styles.smallHeading) }
-                    hbox(smallSpaces) {
+                    vbox(smallSpaces) {
                         label("Actual waiting patients:")
                         label(mainController.waitRoomPatientsCount)
                     }
-                    hbox(smallSpaces) {
+                    vbox(smallSpaces) {
                         label("Average waiting patients:")
                         label(mainController.waitRoomAvgLength)
                     }
@@ -228,10 +235,25 @@ class MainView : View("Vaccination Centre Simulation") {
         }
         separator()
 
-        hbox(smallSpaces) {
-            addClass(Styles.smallPadding)
-            label("Actual Simulation Time:") { addClass(Styles.smallHeading) }
-            label(mainController.actualSimTime)
+        hbox(largeSpaces) {
+            hbox(smallSpaces) {
+                prefWidth = preferredWidth * 2 + largeSpaces
+                addClass(Styles.smallPadding)
+                label("Actual Simulation Time:") { addClass(Styles.smallHeading) }
+                label(mainController.actualSimTime)
+            }
+            hbox(smallSpaces) {
+                prefWidth = preferredWidth * 2 + largeSpaces
+                addClass(Styles.smallPadding)
+                label("Simulation seconds:") { addClass(Styles.smallHeading) }
+                label(mainController.actualSimSeconds)
+            }
+            hbox(smallSpaces) {
+                prefWidth = preferredWidth * 2 + largeSpaces
+                addClass(Styles.smallPadding)
+                label("Replication number:") { addClass(Styles.smallHeading) }
+                label(mainController.currentReplicNumber)
+            }
         }
         separator()
 
@@ -244,6 +266,7 @@ class MainView : View("Vaccination Centre Simulation") {
             hbox(largeSpaces) {
                 addClass(Styles.biggerPadding)
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Registration Queue") { addClass(Styles.smallHeading) }
                     hbox(smallSpaces) {
                         label("Average length:")
@@ -260,6 +283,7 @@ class MainView : View("Vaccination Centre Simulation") {
                     }
                 }
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Administrative Workers") { addClass(Styles.smallHeading) }
                     hbox(smallSpaces) {
                         label("Average workload:")
@@ -268,6 +292,7 @@ class MainView : View("Vaccination Centre Simulation") {
                 }
 
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Examination Queue") { addClass(Styles.smallHeading) }
                     hbox(smallSpaces) {
                         label("Average length:")
@@ -284,6 +309,7 @@ class MainView : View("Vaccination Centre Simulation") {
                     }
                 }
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Doctors") { addClass(Styles.smallHeading) }
                     hbox(smallSpaces) {
                         label("Average workload:")
@@ -291,6 +317,7 @@ class MainView : View("Vaccination Centre Simulation") {
                     }
                 }
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Vaccination Queue") { addClass(Styles.smallHeading) }
                     hbox(smallSpaces) {
                         label("Average length:")
@@ -307,6 +334,7 @@ class MainView : View("Vaccination Centre Simulation") {
                     }
                 }
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Nurses") { addClass(Styles.smallHeading) }
                     hbox(smallSpaces) {
                         label("Average workload:")
@@ -314,8 +342,9 @@ class MainView : View("Vaccination Centre Simulation") {
                     }
                 }
                 vbox(smallSpaces) {
+                    prefWidth = preferredWidth
                     label("Waiting Room") { addClass(Styles.smallHeading) }
-                    hbox(smallSpaces) {
+                    vbox(smallSpaces) {
                         label("Average waiting patients:")
                         label(mainController.allWaitRoomAvgLength)
                     }

@@ -62,14 +62,12 @@ class VaccinationCentreSimulation(
         waitingRoom.restart()
         scheduleInitEvent()
 
+        animationActionListener?.updateCurrentReplicNumber(currentReplicNumber)
         experimentActionListener?.onBeforeReplication()
     }
 
     override fun afterReplication() {
         super.afterReplication()
-
-        println("Replic: $currentReplicNumber")
-// TODO:       animationActionListener?.updateCurrentReplicNumber(currentReplicNumber)
 
         if (!isStopped()) {
             registrationQueue.checkFinalState()

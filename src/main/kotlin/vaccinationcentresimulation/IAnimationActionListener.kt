@@ -15,4 +15,6 @@ interface IAnimationActionListener {
     fun updateWaitingRoomPatientsCount(patients: Int)
 
     fun updateStatistics()
+
+    fun updateCurrentReplicNumber(currentReplicNumber: Int)
 }
