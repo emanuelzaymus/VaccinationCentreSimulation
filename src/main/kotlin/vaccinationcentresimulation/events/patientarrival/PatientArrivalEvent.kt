@@ -23,7 +23,7 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val n
 
     private val arrivingPatientNumbers = DiscreteUniformDistribution(until = numberOfPatients)
     private val numberOfNotArrivingPatients =
-        (notArrivingPatientsRandom.next() * (numberOfPatients / WORKING_TIME)).toInt()
+        (notArrivingPatientsRandom.next() * (numberOfPatients / 540)).toInt() // TODO: zaokruhlovanie?????
     private val eventDuration = WORKING_TIME / numberOfPatients
     private var executedArrivals = 0
 

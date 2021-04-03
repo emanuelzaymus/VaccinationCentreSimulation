@@ -1,8 +1,7 @@
 package simulation.statistics
 
-import kotlin.IllegalArgumentException
-
-open class ContinuousStatistics : IStatistics {
+open class ContinuousStatistics(calculateConfidenceInterval: Boolean = false) :
+    Statistics(calculateConfidenceInterval) {
 
     private var average: Double = .0
     private var totalWeight: Double = .0
@@ -13,6 +12,8 @@ open class ContinuousStatistics : IStatistics {
             totalWeight += weight
         } else if (weight < 0)
             throw IllegalArgumentException("Elapsed time cannot be negative.")
+
+        addToConfidenceIntervalStatistics(value * weight)
     }
 
     fun addSample(value: Double, weight: Int) = addSample(value, weight.toDouble())
@@ -20,6 +21,7 @@ open class ContinuousStatistics : IStatistics {
     override fun getAverage(): Double = average
 
     override fun restart() {
+        super.restart()
         average = .0
         totalWeight = .0
     }

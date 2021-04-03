@@ -2,6 +2,7 @@ package vaccinationcentresimulation.experiment
 
 import simulation.statistics.CommonTotalTime
 import simulation.statistics.ContinuousStatistics
+import simulation.statistics.DiscreteStatistics
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.statistics.QueueLengthStats
 import vaccinationcentresimulation.statistics.WaitingPatientsCountStats
@@ -50,7 +51,7 @@ class VaccinationCentreExperiment(
     val allNursesWorkloads = ContinuousStatistics()
 
     val waitingPatientsCount = WaitingPatientsCountStats(commonTotalTime)
-    val allWaitingPatientsCounts = ContinuousStatistics()
+    val allWaitingPatientsCounts = DiscreteStatistics(calculateConfidenceInterval = true)
 
     val averageAdminWorkersWorkload: Double get() = adminWorkersPersonalWorkloads.map { it.getAverage() }.average()
     val averageDoctorsWorkload: Double get() = doctorsPersonalWorkloads.map { it.getAverage() }.average()
@@ -91,7 +92,7 @@ class VaccinationCentreExperiment(
         doctorsPersonalWorkloads.forEach { allDoctorsWorkloads.addSample(it.getAverage(), it.totalTime) }
         nursesPersonalWorkloads.forEach { allNursesWorkloads.addSample(it.getAverage(), it.totalTime) }
 
-        allWaitingPatientsCounts.addSample(waitingPatientsCount.getAverage(), waitingPatientsCount.totalTime)
+        allWaitingPatientsCounts.addSample(waitingPatientsCount.getAverage())//, waitingPatientsCount.totalTime)
     }
 
     private fun restart() {

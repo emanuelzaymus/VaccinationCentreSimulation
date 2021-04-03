@@ -99,6 +99,8 @@ class MainController : Controller(), IAnimationActionListener {
     val allVacRoomWorkload = SimpleStringProperty(initVal)
 
     val allWaitRoomAvgLength = SimpleStringProperty(initVal)
+    val lowerBoundConfInterval = SimpleStringProperty(initVal)
+    val upperBoundConfInterval = SimpleStringProperty(initVal)
 
     fun startPause() {
         if (!experiment.simulation.wasStarted())
@@ -188,6 +190,8 @@ class MainController : Controller(), IAnimationActionListener {
             allVacRoomWorkload.value = allNursesWorkloads.getAverage().roundToString()
 
             allWaitRoomAvgLength.value = allWaitingPatientsCounts.getAverage().roundToString()
+            lowerBoundConfInterval.value = allWaitingPatientsCounts.lowerBoundOfConfidenceInterval().roundToString()
+            upperBoundConfInterval.value = allWaitingPatientsCounts.upperBoundOfConfidenceInterval().roundToString()
         }
     }
 

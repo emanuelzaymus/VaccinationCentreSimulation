@@ -348,10 +348,15 @@ class MainView : View("Vaccination Centre Simulation") {
                         label("Average waiting patients:")
                         label(mainController.allWaitRoomAvgLength)
                     }
-//                hbox(smallSpaces) {
-//                    label("+ / -:")
-//                    label(mainController)
-//                }
+                    label("95 % Confidence Interval") { addClass(Styles.smallHeading) }
+                    hbox(smallSpaces) {
+                        label("Lower bound:")
+                        label(mainController.lowerBoundConfInterval)
+                    }
+                    hbox(smallSpaces) {
+                        label("Upper bound:")
+                        label(mainController.upperBoundConfInterval)
+                    }
                 }
             }
         }
