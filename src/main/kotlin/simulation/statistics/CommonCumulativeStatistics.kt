@@ -14,7 +14,12 @@ open class CommonCumulativeStatistics(private val commonTotalTime: CommonTotalTi
             throw IllegalArgumentException("Elapsed time cannot be negative.")
     }
 
-    override fun getAverage(): Double = sum / commonTotalTime.totalTime
+    override fun getAverage(): Double {
+        if (totalTime == .0) {
+            return .0
+        }
+        return sum / totalTime
+    }
 
     override fun restart() {
         sum = .0

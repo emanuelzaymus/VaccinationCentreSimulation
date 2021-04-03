@@ -8,8 +8,7 @@ import vaccinationcentresimulation.events.VaccinationCentreEvent
 
 abstract class VaccinationCentreWorker : IBusyObject {
 
-    //    private var beforeWorkersStateChangedActionListener: IBeforeWorkersStateChangedActionListener? = null
-    private var beforeWorkersStateChangedActionListeners = mutableListOf<IBeforeWorkersStateChangedActionListener>()
+    private var beforeWorkersStateChangedActionListener: IBeforeWorkersStateChangedActionListener? = null
     private var lastChange = .0
 
     protected abstract val startEvent: VaccinationCentreActivityStartEvent
@@ -32,10 +31,9 @@ abstract class VaccinationCentreWorker : IBusyObject {
     override fun isBusy() = busy
 
     override fun setBusy(busy: Boolean, eventTime: Double, commonTotalTime: Double) {
-//        beforeWorkersStateChangedActionListener?.handleBeforeWorkersStateChanged(this.busy, eventTime - lastChange)
-        beforeWorkersStateChangedActionListeners.forEach {
-            it.handleBeforeWorkersStateChanged(this.busy, eventTime - lastChange, commonTotalTime)
-        }
+        beforeWorkersStateChangedActionListener
+            ?.handleBeforeWorkersStateChanged(this.busy, eventTime - lastChange, commonTotalTime)
+
         this.busy = busy
         lastChange = eventTime
     }
@@ -53,8 +51,7 @@ abstract class VaccinationCentreWorker : IBusyObject {
     }
 
     fun setBeforeWorkersStateChangedActionListener(listener: IBeforeWorkersStateChangedActionListener) {
-//        beforeWorkersStateChangedActionListener = listener
-        beforeWorkersStateChangedActionListeners.add(listener)
+        beforeWorkersStateChangedActionListener = listener
     }
 
 }

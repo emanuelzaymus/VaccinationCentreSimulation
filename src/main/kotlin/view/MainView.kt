@@ -316,12 +316,8 @@ class MainView : View("Vaccination Centre Simulation") {
                 vbox(smallSpaces) {
                     label("Waiting Room") { addClass(Styles.smallHeading) }
                     hbox(smallSpaces) {
-                        label("Actual waiting patients:")
-                        label(mainController.waitRoomPatientsCount)
-                    }
-                    hbox(smallSpaces) {
                         label("Average waiting patients:")
-                        label(mainController.waitRoomAvgLength)
+                        label(mainController.allWaitRoomAvgLength)
                     }
 //                hbox(smallSpaces) {
 //                    label("+ / -:")

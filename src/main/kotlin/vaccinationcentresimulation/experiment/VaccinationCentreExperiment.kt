@@ -50,6 +50,7 @@ class VaccinationCentreExperiment(
     val allNursesWorkloads = ContinuousStatistics()
 
     val waitingPatientsCount = WaitingPatientsCountStats(commonTotalTime)
+    val allWaitingPatientsCounts = ContinuousStatistics()
 
     val averageAdminWorkersWorkload: Double get() = adminWorkersPersonalWorkloads.map { it.getAverage() }.average()
     val averageDoctorsWorkload: Double get() = doctorsPersonalWorkloads.map { it.getAverage() }.average()
@@ -64,10 +65,6 @@ class VaccinationCentreExperiment(
             registrationRoom.setOnWaitingStoppedActionListener(registrationWaitingTime)
             examinationRoom.setOnWaitingStoppedActionListener(examinationWaitingTime)
             vaccinationRoom.setOnWaitingStoppedActionListener(vaccinationWaitingTime)
-
-//            registrationRoom.setBeforeEachWorkersStateChangedActionListener(adminWorkersWorkload)
-//            examinationRoom.setBeforeEachWorkersStateChangedActionListener(doctorsWorkload)
-//            vaccinationRoom.setBeforeEachWorkersStateChangedActionListener(nursesWorkload)
 
             registrationRoom.setBeforeWorkersStateChangedActionListeners(adminWorkersPersonalWorkloads)
             examinationRoom.setBeforeWorkersStateChangedActionListeners(doctorsPersonalWorkloads)
@@ -93,6 +90,8 @@ class VaccinationCentreExperiment(
         adminWorkersPersonalWorkloads.forEach { allAdminWorkersWorkloads.addSample(it.getAverage(), it.totalTime) }
         doctorsPersonalWorkloads.forEach { allDoctorsWorkloads.addSample(it.getAverage(), it.totalTime) }
         nursesPersonalWorkloads.forEach { allNursesWorkloads.addSample(it.getAverage(), it.totalTime) }
+
+        allWaitingPatientsCounts.addSample(waitingPatientsCount.getAverage(), waitingPatientsCount.totalTime)
     }
 
     private fun restart() {
@@ -109,6 +108,8 @@ class VaccinationCentreExperiment(
         adminWorkersPersonalWorkloads.forEach { it.restart() }
         doctorsPersonalWorkloads.forEach { it.restart() }
         nursesPersonalWorkloads.forEach { it.restart() }
+
+        waitingPatientsCount.restart()
     }
 
 }

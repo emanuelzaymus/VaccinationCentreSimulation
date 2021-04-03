@@ -41,15 +41,12 @@ class MainController : Controller(), IAnimationActionListener {
     val numberOfDoctors = SimpleStringProperty(initNumberOfDoctors.toString())
     val numberOfNurses = SimpleStringProperty(initNumberOfNurses.toString())
 
-    val withAnimation = SimpleBooleanProperty(initWithAnimation).apply {
-        onChange { b -> experiment.simulation.withAnimation = b }
-    }
-    val delayEvery = SimpleIntegerProperty(60).apply {
-        onChange { seconds -> experiment.simulation.setDelayEverySimUnits(seconds.toDouble()) }
-    }
-    val delayFor = SimpleLongProperty(100).apply {
-        onChange { millis -> experiment.simulation.setDelayForMillis(millis) }
-    }
+    val withAnimation = SimpleBooleanProperty(initWithAnimation)
+        .apply { onChange { b -> experiment.simulation.withAnimation = b } }
+    val delayEvery = SimpleIntegerProperty(60)
+        .apply { onChange { seconds -> experiment.simulation.setDelayEverySimUnits(seconds.toDouble()) } }
+    val delayFor = SimpleLongProperty(100)
+        .apply { onChange { millis -> experiment.simulation.setDelayForMillis(millis) } }
 
     val state = SimpleStringProperty("READY")
     val actualSimTime = SimpleStringProperty(startTime.secondsToTime())
@@ -98,6 +95,8 @@ class MainController : Controller(), IAnimationActionListener {
     val allVacQueueAvgWaitingTimeInHours = SimpleStringProperty(initVal)
     val allVacQueueAvgWaitingTime = SimpleStringProperty(initVal)
     val allVacRoomWorkload = SimpleStringProperty(initVal)
+
+    val allWaitRoomAvgLength = SimpleStringProperty(initVal)
 
     fun startPause() {
         if (!experiment.simulation.wasStarted())
@@ -184,6 +183,8 @@ class MainController : Controller(), IAnimationActionListener {
             allVacQueueAvgWaitingTimeInHours.value = allVaccinationWaitingTimes.getAverage().secondsToTime()
             allVacQueueAvgWaitingTime.value = allVaccinationWaitingTimes.getAverage().roundToString()
             allVacRoomWorkload.value = allNursesWorkloads.getAverage().roundToString()
+
+            allWaitRoomAvgLength.value = allWaitingPatientsCounts.getAverage().roundToString()
         }
     }
 
