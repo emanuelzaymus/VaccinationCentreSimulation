@@ -110,6 +110,24 @@ class MainView : View("Vaccination Centre Simulation") {
                     prefWidth = preferredWidth
                 }
             }
+//            vbox(smallSpaces) {
+//                button("Minimize Doctors Experiment") {
+//                    action {
+//                        thread(isDaemon = true, name = "MIN_DOC_EXPERIMENT") {
+//                            MinimizeDoctorsExperiment.start()
+//                        }
+//                    }
+//                    prefWidth = preferredWidth
+//                }
+//                button("Write Distributions") {
+//                    action {
+//                        thread(isDaemon = true, name = "WRITE_DISTRIBUTIONS") {
+//                            RandomDistributionsWriter.writeAll()
+//                        }
+//                    }
+//                    prefWidth = preferredWidth
+//                }
+//            }
         }
         separator()
 

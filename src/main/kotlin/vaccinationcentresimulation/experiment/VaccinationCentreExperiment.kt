@@ -8,7 +8,7 @@ import vaccinationcentresimulation.statistics.WaitingPatientsCountStats
 import vaccinationcentresimulation.statistics.WaitingTimeStats
 import vaccinationcentresimulation.statistics.WorkloadStats
 
-class VaccinationCentreExperiment(
+open class VaccinationCentreExperiment(
     replicationsCount: Int, numberOfPatientsPerReplication: Int, numberOfAdminWorkers: Int,
     numberOfDoctors: Int, numberOfNurses: Int, withAnimation: Boolean
 ) : Experiment(
