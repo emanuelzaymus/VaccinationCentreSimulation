@@ -10,22 +10,20 @@ import vaccinationcentresimulation.statistics.WaitingTimeStats
 import vaccinationcentresimulation.statistics.WorkloadStats
 
 class VaccinationCentreExperiment(
-    replicationsCount: Int,
-    numberOfPatientsPerReplication: Int,
-    numberOfAdminWorkers: Int,
-    numberOfDoctors: Int,
-    numberOfNurses: Int,
-    withAnimation: Boolean
-) : IExperimentActionListener {
+    replicationsCount: Int, numberOfPatientsPerReplication: Int, numberOfAdminWorkers: Int,
+    numberOfDoctors: Int, numberOfNurses: Int, withAnimation: Boolean
+) : Experiment(
+    replicationsCount, numberOfPatientsPerReplication, numberOfAdminWorkers,
+    numberOfDoctors, numberOfNurses, withAnimation
+) {
 
-    val simulation = VaccinationCentreSimulation(
-        replicationsCount,
-        numberOfPatientsPerReplication,
-        numberOfAdminWorkers,
-        numberOfDoctors,
-        numberOfNurses,
-        withAnimation
-    )
+    private var experimentActionListener: IVaccinationCentreExperimentActionListener? = null
+
+    public override var simulation: VaccinationCentreSimulation
+        get() = super.simulation
+        protected set(value) {
+            super.simulation = value
+        }
 
     val commonTotalTime = CommonTotalTime()
 
@@ -52,6 +50,7 @@ class VaccinationCentreExperiment(
 
     val waitingPatientsCount = WaitingPatientsCountStats(commonTotalTime)
     val allWaitingPatientsCounts = DiscreteStatistics(calculateConfidenceInterval = true)
+    //  TODO: make others DiscreteStatistics as well
 
     val averageAdminWorkersWorkload: Double get() = adminWorkersPersonalWorkloads.map { it.getAverage() }.average()
     val averageDoctorsWorkload: Double get() = doctorsPersonalWorkloads.map { it.getAverage() }.average()
@@ -73,8 +72,6 @@ class VaccinationCentreExperiment(
 
             waitingRoom.setBeforePatientsCountChangedActionListener(waitingPatientsCount)
         }
-
-        simulation.setExperimentActionListener(this)
     }
 
     override fun onBeforeReplication() = restart()
@@ -92,7 +89,7 @@ class VaccinationCentreExperiment(
         doctorsPersonalWorkloads.forEach { allDoctorsWorkloads.addSample(it.getAverage(), it.totalTime) }
         nursesPersonalWorkloads.forEach { allNursesWorkloads.addSample(it.getAverage(), it.totalTime) }
 
-        allWaitingPatientsCounts.addSample(waitingPatientsCount.getAverage())//, waitingPatientsCount.totalTime)
+        allWaitingPatientsCounts.addSample(waitingPatientsCount.getAverage()) //, waitingPatientsCount.totalTime)
     }
 
     private fun restart() {
@@ -111,6 +108,54 @@ class VaccinationCentreExperiment(
         nursesPersonalWorkloads.forEach { it.restart() }
 
         waitingPatientsCount.restart()
+    }
+
+    fun setVaccinationCentreExperimentActionListener(listener: IVaccinationCentreExperimentActionListener) {
+        experimentActionListener = listener
+    }
+
+    override fun updateActualSimulationTime(actualSimulationTime: Double) {
+        experimentActionListener?.updateActualSimulationTime(actualSimulationTime)
+    }
+
+    override fun updateSimulationState(simulationState: String) {
+        experimentActionListener?.updateSimulationState(simulationState)
+    }
+
+    override fun updateRegistrationQueueLength(length: Int) {
+        experimentActionListener?.updateRegistrationQueueLength(length)
+    }
+
+    override fun updateExaminationQueueLength(length: Int) {
+        experimentActionListener?.updateExaminationQueueLength(length)
+    }
+
+    override fun updateVaccinationQueueLength(length: Int) {
+        experimentActionListener?.updateVaccinationQueueLength(length)
+    }
+
+    override fun updateRegistrationRoomBusyWorkersCount(busyWorkers: Int) {
+        experimentActionListener?.updateRegistrationRoomBusyWorkersCount(busyWorkers)
+    }
+
+    override fun updateExaminationRoomBusyDoctorsCount(busyDoctors: Int) {
+        experimentActionListener?.updateExaminationRoomBusyDoctorsCount(busyDoctors)
+    }
+
+    override fun updateVaccinationRoomBusyNursesCount(busyNurses: Int) {
+        experimentActionListener?.updateVaccinationRoomBusyNursesCount(busyNurses)
+    }
+
+    override fun updateWaitingRoomPatientsCount(patients: Int) {
+        experimentActionListener?.updateWaitingRoomPatientsCount(patients)
+    }
+
+    override fun updateStatistics() {
+        experimentActionListener?.updateStatistics()
+    }
+
+    override fun updateCurrentReplicNumber(currentReplicNumber: Int) {
+        experimentActionListener?.updateCurrentReplicNumber(currentReplicNumber)
     }
 
 }

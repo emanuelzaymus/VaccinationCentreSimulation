@@ -26,10 +26,7 @@ class Stopwatch {
         if (end < 0) throw IllegalStateException("The stopwatch was not stopped yet.")
         if (end < beginning) throw IllegalStateException("Beginning is less than end.")
 
-        val ret = end - beginning
-
-        restart()
-        return ret
+        return end - beginning
     }
 
     fun restart() {

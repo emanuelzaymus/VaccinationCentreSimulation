@@ -22,6 +22,8 @@ class Patient : IPooledObject {
 
     fun getWaitingTime(): Double = waitingStopwatch.getElapsedTime()
 
+    fun restartStopwatch() = waitingStopwatch.restart()
+
     override fun restart() {
         id = nextId++
         waitingStopwatch.restart()

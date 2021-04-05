@@ -15,7 +15,7 @@ class ExaminationQueueChart : View("Examination Queue Chart") {
         val xAxis = NumberAxis()
         xAxis.label = "Time"
         val yAxis = NumberAxis()
-        yAxis.label = "Examination Queue Length"
+        yAxis.label = "Queue Length"
         linechart("Examination Queue", xAxis, yAxis) {
             series("Patient counts", mainController.examinationQueueChartData)
             createSymbols = false

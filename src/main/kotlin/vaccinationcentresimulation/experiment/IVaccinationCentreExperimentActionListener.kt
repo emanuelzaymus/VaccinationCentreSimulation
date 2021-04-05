@@ -1,0 +1,5 @@
+package vaccinationcentresimulation.experiment
+
+import vaccinationcentresimulation.IAnimationActionListener
+
+interface IVaccinationCentreExperimentActionListener : IAnimationActionListener

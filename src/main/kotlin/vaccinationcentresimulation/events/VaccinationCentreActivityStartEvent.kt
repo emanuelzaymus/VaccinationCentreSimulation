@@ -24,6 +24,7 @@ abstract class VaccinationCentreActivityStartEvent(
     private fun stopPatientWaiting() {
         patient.stopWaiting(eventTime)
         waitingStoppedActionListener?.handleOnWaitingStopped(patient.getWaitingTime())
+        patient.restartStopwatch()
     }
 
 }

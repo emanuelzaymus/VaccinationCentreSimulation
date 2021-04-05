@@ -3,6 +3,7 @@ package view
 import app.Styles
 import controller.MainController
 import controller.Worker
+import javafx.scene.control.CheckBox
 import tornadofx.*
 
 class MainView : View("Vaccination Centre Simulation") {
@@ -12,6 +13,8 @@ class MainView : View("Vaccination Centre Simulation") {
     private val preferredWidth = 180.0
 
     private val mainController: MainController by inject()
+
+    private lateinit var withAnimationCheckBox: CheckBox
 
     override val root = vbox {
         hbox(largeSpaces) {
@@ -23,10 +26,6 @@ class MainView : View("Vaccination Centre Simulation") {
                     label("Replications count:")
                     textfield(mainController.replicationsCount)
                 }
-//                row {
-//                    label("Skip (%):")
-//                    textfield(mainController.skip)
-//                }
                 row {
                     label("Number of patients per replication:")
                     textfield(mainController.numberOfPatients)
@@ -45,7 +44,37 @@ class MainView : View("Vaccination Centre Simulation") {
                 }
             }
             vbox(smallSpaces) {
-                checkbox("With animation", mainController.withAnimation)
+                checkbox("Doctors Experiment", mainController.useDoctorsExperiment) {
+                    setOnAction {
+                        if (mainController.useDoctorsExperiment.value) {
+                            mainController.withAnimation.value = false
+                        }
+                        withAnimationCheckBox.isDisable = mainController.useDoctorsExperiment.value
+                    }
+                }
+                gridpane {
+                    vgap = smallSpaces.toDouble()
+                    hgap = smallSpaces.toDouble()
+                    row {
+                        label("From Doctors Count:")
+                        textfield(mainController.fromDoctors)
+                    }
+                    row {
+                        label("To Doctors count:")
+                        textfield(mainController.toDoctors)
+                    }
+                    row {
+                        label("Replications per Experiment:")
+                        textfield(mainController.numReplicPerExperiment)
+                    }
+                }
+                button("Show Chart") {
+                    prefWidth = 150.0
+                    action { DoctorsExperimentChart().openWindow(owner = null) }
+                }
+            }
+            vbox(smallSpaces) {
+                withAnimationCheckBox = checkbox("With animation", mainController.withAnimation)
                 hbox(smallSpaces) {
                     label("Delay every (sim. seconds): ")
                     label(mainController.delayEvery)
@@ -306,9 +335,8 @@ class MainView : View("Vaccination Centre Simulation") {
                         label(mainController.allExamQueueAvgWaitingTime)
                     }
                     button("Show Chart") {
-                        action {
-                            ExaminationQueueChart().openWindow(owner = null)
-                        }
+                        prefWidth = preferredWidth
+                        action { ExaminationQueueChart().openWindow(owner = null) }
                     }
                 }
                 vbox(smallSpaces) {

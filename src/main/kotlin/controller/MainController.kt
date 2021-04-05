@@ -9,12 +9,15 @@ import tornadofx.Controller
 import tornadofx.alert
 import tornadofx.observableList
 import tornadofx.onChange
-import vaccinationcentresimulation.IAnimationActionListener
+import vaccinationcentresimulation.experiment.Experiment
+import vaccinationcentresimulation.experiment.IVaccinationCentreExperimentActionListener
 import vaccinationcentresimulation.experiment.VaccinationCentreExperiment
+import vaccinationcentresimulation.experiment.doctorexperiment.DoctorsExperiment
+import vaccinationcentresimulation.experiment.doctorexperiment.IDoctorExperimentActionListener
 import vaccinationcentresimulation.statistics.WorkloadStats
 import kotlin.concurrent.thread
 
-class MainController : Controller(), IAnimationActionListener {
+class MainController : Controller(), IVaccinationCentreExperimentActionListener, IDoctorExperimentActionListener {
 
     private val initReplicationsCount = 1
     private val initNumberOfPatients = 540
@@ -26,7 +29,7 @@ class MainController : Controller(), IAnimationActionListener {
     // Working time starts at 8:00:00
     private val startTime = 8 * 60 * 60.0
 
-    private var experiment = VaccinationCentreExperiment(
+    private var experiment: Experiment = VaccinationCentreExperiment(
         initReplicationsCount,
         initNumberOfPatients,
         initNumberOfAdminWorkers,
@@ -36,18 +39,22 @@ class MainController : Controller(), IAnimationActionListener {
     )
 
     val replicationsCount = SimpleStringProperty(initReplicationsCount.toString())
-    val skip = SimpleStringProperty("0.3")
     val numberOfPatients = SimpleStringProperty(initNumberOfPatients.toString())
     val numberOfAdminWorkers = SimpleStringProperty(initNumberOfAdminWorkers.toString())
     val numberOfDoctors = SimpleStringProperty(initNumberOfDoctors.toString())
     val numberOfNurses = SimpleStringProperty(initNumberOfNurses.toString())
 
+    val useDoctorsExperiment = SimpleBooleanProperty(false)
+    val fromDoctors = SimpleStringProperty("1")
+    val toDoctors = SimpleStringProperty("20")
+    val numReplicPerExperiment = SimpleStringProperty("1000")
+
     val withAnimation = SimpleBooleanProperty(initWithAnimation)
-        .apply { onChange { b -> experiment.simulation.withAnimation = b } }
+        .apply { onChange { b -> experiment.withAnimation = b } }
     val delayEvery = SimpleIntegerProperty(60)
-        .apply { onChange { seconds -> experiment.simulation.setDelayEverySimUnits(seconds.toDouble()) } }
+        .apply { onChange { seconds -> experiment.setDelayEverySimUnits(seconds.toDouble()) } }
     val delayFor = SimpleLongProperty(100)
-        .apply { onChange { millis -> experiment.simulation.setDelayForMillis(millis) } }
+        .apply { onChange { millis -> experiment.setDelayForMillis(millis) } }
 
     val state = SimpleStringProperty("READY")
     val actualSimTime = SimpleStringProperty(startTime.secondsToTime())
@@ -107,23 +114,30 @@ class MainController : Controller(), IAnimationActionListener {
     //////////
 
     val examinationQueueChartData = observableList<XYChart.Data<Number, Number>>() @Synchronized get
+    val doctorsExamQueueChartData = observableList<XYChart.Data<Number, Number>>() @Synchronized get
 
     fun startPause() {
-        if (!experiment.simulation.wasStarted())
+        if (!experiment.wasStarted())
             start()
-        else if (!experiment.simulation.isPaused())
-            experiment.simulation.pause()
+        else if (!experiment.isPaused())
+            experiment.pause()
         else
-            experiment.simulation.restore()
+            experiment.restore()
     }
 
     private fun start() {
         if (restart()) {
-            thread(isDaemon = true, name = "SIM_THREAD") { experiment.simulation.simulate() }
+            restartCharts()
+            thread(isDaemon = true, name = "SIM_THREAD") { experiment.start() }
         }
     }
 
-    fun stop() = experiment.simulation.stop()
+    private fun restartCharts() {
+        examinationQueueChartData.clear()
+        doctorsExamQueueChartData.clear()
+    }
+
+    fun stop() = experiment.stop()
 
     override fun updateActualSimulationTime(actualSimulationTime: Double) = Platform.runLater {
         actualSimTime.value = (actualSimulationTime + startTime).secondsToTime()
@@ -151,72 +165,88 @@ class MainController : Controller(), IAnimationActionListener {
         Platform.runLater { waitRoomPatientsCount.value = patients }
 
     override fun updateStatistics() = Platform.runLater {
-        with(experiment) {
-            regQueueAvgLength.value = registrationQueueLength.getAverage().roundToString()
-            regQueueAvgWaitingTimeInHours.value = registrationWaitingTime.getAverage().secondsToTime()
-            regQueueAvgWaitingTime.value = registrationWaitingTime.getAverage().roundToString()
-            regRoomWorkload.value = averageAdminWorkersWorkload.roundToString()
-            updateWorkers(
-                regRoomPersonalWorkloads, adminWorkersPersonalWorkloads, simulation.registrationRoom.getWorkersState()
-            )
+        if (experiment is VaccinationCentreExperiment) {
+            val vaccinationCentreExperiment = experiment as VaccinationCentreExperiment
 
-            examQueueAvgLength.value = examinationQueueLength.getAverage().roundToString()
-            examQueueAvgWaitingTimeInHours.value = examinationWaitingTime.getAverage().secondsToTime()
-            examQueueAvgWaitingTime.value = examinationWaitingTime.getAverage().roundToString()
-            examRoomWorkload.value = averageDoctorsWorkload.roundToString()
-            updateWorkers(
-                examRoomPersonalWorkloads, doctorsPersonalWorkloads, simulation.examinationRoom.getWorkersState()
-            )
+            with(vaccinationCentreExperiment) {
+                regQueueAvgLength.value = registrationQueueLength.getAverage().roundToString()
+                regQueueAvgWaitingTimeInHours.value = registrationWaitingTime.getAverage().secondsToTime()
+                regQueueAvgWaitingTime.value = registrationWaitingTime.getAverage().roundToString()
+                regRoomWorkload.value = averageAdminWorkersWorkload.roundToString()
+                updateWorkers(
+                    regRoomPersonalWorkloads,
+                    adminWorkersPersonalWorkloads,
+                    simulation.registrationRoom.getWorkersState()
+                )
 
-            vacQueueAvgLength.value = vaccinationQueueLength.getAverage().roundToString()
-            vacQueueAvgWaitingTimeInHours.value = vaccinationWaitingTime.getAverage().secondsToTime()
-            vacQueueAvgWaitingTime.value = vaccinationWaitingTime.getAverage().roundToString()
-            vacRoomWorkload.value = averageNursesWorkload.roundToString()
-            updateWorkers(
-                vacRoomPersonalWorkloads, nursesPersonalWorkloads, simulation.vaccinationRoom.getWorkersState()
-            )
+                examQueueAvgLength.value = examinationQueueLength.getAverage().roundToString()
+                examQueueAvgWaitingTimeInHours.value = examinationWaitingTime.getAverage().secondsToTime()
+                examQueueAvgWaitingTime.value = examinationWaitingTime.getAverage().roundToString()
+                examRoomWorkload.value = averageDoctorsWorkload.roundToString()
+                updateWorkers(
+                    examRoomPersonalWorkloads, doctorsPersonalWorkloads, simulation.examinationRoom.getWorkersState()
+                )
 
-            waitRoomAvgLength.value = waitingPatientsCount.getAverage().roundToString()
+                vacQueueAvgLength.value = vaccinationQueueLength.getAverage().roundToString()
+                vacQueueAvgWaitingTimeInHours.value = vaccinationWaitingTime.getAverage().secondsToTime()
+                vacQueueAvgWaitingTime.value = vaccinationWaitingTime.getAverage().roundToString()
+                vacRoomWorkload.value = averageNursesWorkload.roundToString()
+                updateWorkers(
+                    vacRoomPersonalWorkloads, nursesPersonalWorkloads, simulation.vaccinationRoom.getWorkersState()
+                )
 
-            //////////
+                waitRoomAvgLength.value = waitingPatientsCount.getAverage().roundToString()
 
-            allRegQueueAvgLength.value = allRegistrationQueueLengths.getAverage().roundToString()
-            allRegQueueAvgWaitingTimeInHours.value = allRegistrationWaitingTimes.getAverage().secondsToTime()
-            allRegQueueAvgWaitingTime.value = allRegistrationWaitingTimes.getAverage().roundToString()
-            allRegRoomWorkload.value = allAdminWorkersWorkloads.getAverage().roundToString()
+                //////////
 
-            allExamQueueAvgLength.value = allExaminationQueueLengths.getAverage().roundToString()
-            allExamQueueAvgWaitingTimeInHours.value = allExaminationWaitingTimes.getAverage().secondsToTime()
-            allExamQueueAvgWaitingTime.value = allExaminationWaitingTimes.getAverage().roundToString()
-            allExamRoomWorkload.value = allDoctorsWorkloads.getAverage().roundToString()
+                allRegQueueAvgLength.value = allRegistrationQueueLengths.getAverage().roundToString()
+                allRegQueueAvgWaitingTimeInHours.value = allRegistrationWaitingTimes.getAverage().secondsToTime()
+                allRegQueueAvgWaitingTime.value = allRegistrationWaitingTimes.getAverage().roundToString()
+                allRegRoomWorkload.value = allAdminWorkersWorkloads.getAverage().roundToString()
 
-            allVacQueueAvgLength.value = allVaccinationQueueLengths.getAverage().roundToString()
-            allVacQueueAvgWaitingTimeInHours.value = allVaccinationWaitingTimes.getAverage().secondsToTime()
-            allVacQueueAvgWaitingTime.value = allVaccinationWaitingTimes.getAverage().roundToString()
-            allVacRoomWorkload.value = allNursesWorkloads.getAverage().roundToString()
+                allExamQueueAvgLength.value = allExaminationQueueLengths.getAverage().roundToString()
+                allExamQueueAvgWaitingTimeInHours.value = allExaminationWaitingTimes.getAverage().secondsToTime()
+                allExamQueueAvgWaitingTime.value = allExaminationWaitingTimes.getAverage().roundToString()
+                allExamRoomWorkload.value = allDoctorsWorkloads.getAverage().roundToString()
 
-            allWaitRoomAvgLength.value = allWaitingPatientsCounts.getAverage().roundToString()
+                allVacQueueAvgLength.value = allVaccinationQueueLengths.getAverage().roundToString()
+                allVacQueueAvgWaitingTimeInHours.value = allVaccinationWaitingTimes.getAverage().secondsToTime()
+                allVacQueueAvgWaitingTime.value = allVaccinationWaitingTimes.getAverage().roundToString()
+                allVacRoomWorkload.value = allNursesWorkloads.getAverage().roundToString()
 
-            val lowerBound: Double = allWaitingPatientsCounts.lowerBoundOfConfidenceInterval()
-            val upperBound: Double = allWaitingPatientsCounts.upperBoundOfConfidenceInterval()
-            if (!lowerBound.isNaN() && !upperBound.isNaN()) {
-                lowerBoundConfInterval.value = lowerBound.roundToString()
-                upperBoundConfInterval.value = upperBound.roundToString()
-            } else {
-                lowerBoundConfInterval.value = dash
-                upperBoundConfInterval.value = dash
+                allWaitRoomAvgLength.value = allWaitingPatientsCounts.getAverage().roundToString()
+
+                val lowerBound: Double = allWaitingPatientsCounts.lowerBoundOfConfidenceInterval()
+                val upperBound: Double = allWaitingPatientsCounts.upperBoundOfConfidenceInterval()
+                if (!lowerBound.isNaN() && !upperBound.isNaN()) {
+                    lowerBoundConfInterval.value = lowerBound.roundToString()
+                    upperBoundConfInterval.value = upperBound.roundToString()
+                } else {
+                    lowerBoundConfInterval.value = dash
+                    upperBoundConfInterval.value = dash
+                }
+
+                ///////////
+
+                if (examinationQueueLength.wasRestarted) {
+                    examinationQueueChartData.clear()
+                }
+                if (examinationQueueLength.chartData.isNotEmpty()) {
+                    examinationQueueChartData.addAll(examinationQueueLength.chartData.map {
+                        XYChart.Data<Number, Number>(it.first, it.second)
+                    })
+                    examinationQueueLength.chartData.clear()
+                }
             }
-
-            ///////////
-
-            if (examinationQueueLength.wasRestarted) {
-                examinationQueueChartData.clear()
-            }
-            if (examinationQueueLength.chartData.isNotEmpty()) {
-                examinationQueueChartData.addAll(examinationQueueLength.chartData.map {
-                    XYChart.Data<Number, Number>(it.first, it.second)
-                })
-                examinationQueueLength.chartData.clear()
+        } else if (experiment is DoctorsExperiment) {
+            val doctorsExperiment = experiment as DoctorsExperiment
+            with(doctorsExperiment) {
+                if (overallDoctorsExamQueueChartData.isNotEmpty()) {
+                    doctorsExamQueueChartData.addAll(overallDoctorsExamQueueChartData.map {
+                        XYChart.Data<Number, Number>(it.first, it.second)
+                    })
+                    overallDoctorsExamQueueChartData.clear()
+                }
             }
         }
     }
@@ -233,7 +263,10 @@ class MainController : Controller(), IAnimationActionListener {
         obsList.addAll(list)
     }
 
-    private fun restart(): Boolean {
+    private fun restart(): Boolean =
+        if (!useDoctorsExperiment.value) restartNormalSimulation() else restartExperiment()
+
+    private fun restartNormalSimulation(): Boolean {
         try {
             val replicCount = replicationsCount.value.toInt()
             val patients = numberOfPatients.value.toInt()
@@ -243,20 +276,47 @@ class MainController : Controller(), IAnimationActionListener {
             val withAnimation: Boolean = withAnimation.value
 
             experiment = VaccinationCentreExperiment(replicCount, patients, workers, doctors, nurses, withAnimation)
-            experiment.simulation.setDelayEverySimUnits(delayEvery.value.toDouble())
-            experiment.simulation.setDelayForMillis(delayFor.value)
-            experiment.simulation.setAnimationActionListener(this)
+                .also {
+                    it.setVaccinationCentreExperimentActionListener(this)
+                    it.setDelayEverySimUnits(delayEvery.doubleValue())
+                    it.setDelayForMillis(delayFor.value)
+                }
 
             return true
         } catch (e: NumberFormatException) {
-            alert(
-                Alert.AlertType.ERROR,
-                "Invalid Inputs",
-                "Make sure you put valid inputs, please.",
-                title = "Attention"
-            )
+            showInvalidInputsAlert()
         }
         return false
+    }
+
+    private fun restartExperiment(): Boolean {
+        try {
+            val replicPerExperiment = numReplicPerExperiment.value.toInt()
+            val patients = numberOfPatients.value.toInt()
+            val workers = numberOfAdminWorkers.value.toInt()
+            val fromDoctors = fromDoctors.value.toInt()
+            val toDoctors = toDoctors.value.toInt()
+            val nurses = numberOfNurses.value.toInt()
+
+            experiment = DoctorsExperiment(replicPerExperiment, patients, workers, fromDoctors, toDoctors, nurses)
+                .also {
+                    it.setDoctorExperimentActionListener(this)
+                }
+
+            return true
+        } catch (e: NumberFormatException) {
+            showInvalidInputsAlert()
+        }
+        return false
+    }
+
+    private fun showInvalidInputsAlert() {
+        alert(
+            Alert.AlertType.ERROR,
+            "Invalid Inputs",
+            "Make sure you put valid inputs, please.",
+            title = "Attention"
+        )
     }
 
 }
