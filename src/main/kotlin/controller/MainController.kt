@@ -21,8 +21,8 @@ class MainController : Controller(), IVaccinationCentreExperimentActionListener,
 
     private val initReplicationsCount = 1
     private val initNumberOfPatients = 540
-    private val initNumberOfAdminWorkers = 6
-    private val initNumberOfDoctors = 5
+    private val initNumberOfAdminWorkers = 5
+    private val initNumberOfDoctors = 6
     private val initNumberOfNurses = 3
     private val initWithAnimation = true
 
