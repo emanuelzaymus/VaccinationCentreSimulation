@@ -1,7 +1,6 @@
 package vaccinationcentresimulation.experiment.doctorexperiment
 
 import simulation.statistics.CommonTotalTime
-import simulation.statistics.ContinuousStatistics
 import simulation.statistics.DiscreteStatistics
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.experiment.Experiment
@@ -32,6 +31,8 @@ class DoctorsExperiment(
         isStopped.set(false)
 
         for (doctors in fromDoctors..toDoctors) {
+
+            allExaminationQueueLengths.restart()
 
             simulation = VaccinationCentreSimulation(
                 replicationsCountPerExperiment,
@@ -67,7 +68,7 @@ class DoctorsExperiment(
     override fun onBeforeReplication() = restart()
 
     override fun onAfterReplication() {
-        allExaminationQueueLengths.addSample(examinationQueueLength.getAverage()) //, examinationQueueLength.totalTime)
+        allExaminationQueueLengths.addSample(examinationQueueLength.getAverage())
     }
 
     private fun restart() {

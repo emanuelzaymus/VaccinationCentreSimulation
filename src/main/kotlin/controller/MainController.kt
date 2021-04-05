@@ -114,7 +114,22 @@ class MainController : Controller(), IVaccinationCentreExperimentActionListener,
     //////////
 
     val examinationQueueChartData = observableList<XYChart.Data<Number, Number>>() @Synchronized get
+
+    @Synchronized
+    fun examinationQueueChartDataClear() = examinationQueueChartData.clear()
+
+    @Synchronized
+    fun examinationQueueChartDataAddAll(collection: Collection<XYChart.Data<Number, Number>>) =
+        examinationQueueChartData.addAll(collection)
+
     val doctorsExamQueueChartData = observableList<XYChart.Data<Number, Number>>() @Synchronized get
+
+    @Synchronized
+    fun doctorsExamQueueChartDataClear() = doctorsExamQueueChartData.clear()
+
+    @Synchronized
+    fun doctorsExamQueueChartDataAddAll(collection: Collection<XYChart.Data<Number, Number>>) =
+        doctorsExamQueueChartData.addAll(collection)
 
     fun startPause() {
         if (!experiment.wasStarted())
@@ -133,8 +148,8 @@ class MainController : Controller(), IVaccinationCentreExperimentActionListener,
     }
 
     private fun restartCharts() {
-        examinationQueueChartData.clear()
-        doctorsExamQueueChartData.clear()
+        examinationQueueChartDataClear()
+        doctorsExamQueueChartDataClear()
     }
 
     fun stop() = experiment.stop()
@@ -229,10 +244,10 @@ class MainController : Controller(), IVaccinationCentreExperimentActionListener,
                 ///////////
 
                 if (examinationQueueLength.wasRestarted) {
-                    examinationQueueChartData.clear()
+                    examinationQueueChartDataClear()
                 }
                 if (examinationQueueLength.chartData.isNotEmpty()) {
-                    examinationQueueChartData.addAll(examinationQueueLength.chartData.map {
+                    examinationQueueChartDataAddAll(examinationQueueLength.chartData.map {
                         XYChart.Data<Number, Number>(it.first, it.second)
                     })
                     examinationQueueLength.chartData.clear()
@@ -242,7 +257,7 @@ class MainController : Controller(), IVaccinationCentreExperimentActionListener,
             val doctorsExperiment = experiment as DoctorsExperiment
             with(doctorsExperiment) {
                 if (overallDoctorsExamQueueChartData.isNotEmpty()) {
-                    doctorsExamQueueChartData.addAll(overallDoctorsExamQueueChartData.map {
+                    doctorsExamQueueChartDataAddAll(overallDoctorsExamQueueChartData.map {
                         XYChart.Data<Number, Number>(it.first, it.second)
                     })
                     overallDoctorsExamQueueChartData.clear()
