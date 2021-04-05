@@ -8,6 +8,8 @@ open class DiscreteStatistics(calculateConfidenceInterval: Boolean = false) : St
 
     fun addSample(newValue: Double) {
         average = (average * sampleCount + newValue) / ++sampleCount
+
+        addToConfidenceIntervalStatistics(newValue)
     }
 
     override fun getAverage(): Double = average

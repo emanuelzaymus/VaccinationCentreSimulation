@@ -1,5 +1,6 @@
 package simulation.statistics
 
+import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -51,7 +52,7 @@ abstract class Statistics(private val calculateConfidenceInterval: Boolean) : IS
         (calculateStandardDeviation() * T_ALPHA_95) / sqrt(numberOfSamples)
 
     private fun calculateStandardDeviation(): Double = sqrt(
-        (1 / (numberOfSamples - 1) * sumSquared) - (1 / (numberOfSamples - 1) * sum).pow(2)
+        abs((1 / (numberOfSamples - 1) * sumSquared) - (1 / (numberOfSamples - 1) * sum).pow(2))
     )
 
 }

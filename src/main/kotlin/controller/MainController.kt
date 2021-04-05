@@ -98,9 +98,10 @@ class MainController : Controller(), IAnimationActionListener {
     val allVacQueueAvgWaitingTime = SimpleStringProperty(initVal)
     val allVacRoomWorkload = SimpleStringProperty(initVal)
 
+    private val dash = "-"
     val allWaitRoomAvgLength = SimpleStringProperty(initVal)
-    val lowerBoundConfInterval = SimpleStringProperty(initVal)
-    val upperBoundConfInterval = SimpleStringProperty(initVal)
+    val lowerBoundConfInterval = SimpleStringProperty(dash)
+    val upperBoundConfInterval = SimpleStringProperty(dash)
 
     fun startPause() {
         if (!experiment.simulation.wasStarted())
@@ -190,8 +191,16 @@ class MainController : Controller(), IAnimationActionListener {
             allVacRoomWorkload.value = allNursesWorkloads.getAverage().roundToString()
 
             allWaitRoomAvgLength.value = allWaitingPatientsCounts.getAverage().roundToString()
-            lowerBoundConfInterval.value = allWaitingPatientsCounts.lowerBoundOfConfidenceInterval().roundToString()
-            upperBoundConfInterval.value = allWaitingPatientsCounts.upperBoundOfConfidenceInterval().roundToString()
+
+            val lowerBound: Double = allWaitingPatientsCounts.lowerBoundOfConfidenceInterval()
+            val upperBound: Double = allWaitingPatientsCounts.upperBoundOfConfidenceInterval()
+            if (!lowerBound.isNaN() && !upperBound.isNaN()) {
+                lowerBoundConfInterval.value = lowerBound.roundToString()
+                upperBoundConfInterval.value = upperBound.roundToString()
+            } else {
+                lowerBoundConfInterval.value = dash
+                upperBoundConfInterval.value = dash
+            }
         }
     }
 
