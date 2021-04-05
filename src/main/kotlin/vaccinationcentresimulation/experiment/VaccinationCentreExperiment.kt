@@ -31,7 +31,7 @@ class VaccinationCentreExperiment(
 
     val registrationQueueLength = QueueLengthStats(commonTotalTime)
     val allRegistrationQueueLengths = ContinuousStatistics()
-    val examinationQueueLength = QueueLengthStats(commonTotalTime)
+    val examinationQueueLength = QueueLengthStats(commonTotalTime, collectChartData = true)
     val allExaminationQueueLengths = ContinuousStatistics()
     val vaccinationQueueLength = QueueLengthStats(commonTotalTime)
     val allVaccinationQueueLengths = ContinuousStatistics()

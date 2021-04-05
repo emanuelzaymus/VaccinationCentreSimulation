@@ -3,6 +3,7 @@ package controller
 import javafx.application.Platform
 import javafx.beans.property.*
 import javafx.collections.ObservableList
+import javafx.scene.chart.XYChart
 import javafx.scene.control.Alert
 import tornadofx.Controller
 import tornadofx.alert
@@ -103,6 +104,10 @@ class MainController : Controller(), IAnimationActionListener {
     val lowerBoundConfInterval = SimpleStringProperty(dash)
     val upperBoundConfInterval = SimpleStringProperty(dash)
 
+    //////////
+
+    val examinationQueueChartData = observableList<XYChart.Data<Number, Number>>() @Synchronized get
+
     fun startPause() {
         if (!experiment.simulation.wasStarted())
             start()
@@ -200,6 +205,18 @@ class MainController : Controller(), IAnimationActionListener {
             } else {
                 lowerBoundConfInterval.value = dash
                 upperBoundConfInterval.value = dash
+            }
+
+            ///////////
+
+            if (examinationQueueLength.wasRestarted) {
+                examinationQueueChartData.clear()
+            }
+            if (examinationQueueLength.chartData.isNotEmpty()) {
+                examinationQueueChartData.addAll(examinationQueueLength.chartData.map {
+                    XYChart.Data<Number, Number>(it.first, it.second)
+                })
+                examinationQueueLength.chartData.clear()
             }
         }
     }

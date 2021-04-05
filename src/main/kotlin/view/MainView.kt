@@ -3,7 +3,6 @@ package view
 import app.Styles
 import controller.MainController
 import controller.Worker
-import javafx.scene.chart.NumberAxis
 import tornadofx.*
 
 class MainView : View("Vaccination Centre Simulation") {
@@ -127,6 +126,7 @@ class MainView : View("Vaccination Centre Simulation") {
                     label("Administrative workers") { addClass(Styles.smallHeading) }
                     tableview(mainController.regRoomPersonalWorkloads) {
                         prefWidth = 170.0
+                        prefHeight = 210.0
                         readonlyColumn("Num", Worker::id).prefWidth = 40.0
                         readonlyColumn("Working", Worker::working).prefWidth = 60.0
                         readonlyColumn("Workload", Worker::avgWorkload).prefWidth = 77.0
@@ -168,6 +168,7 @@ class MainView : View("Vaccination Centre Simulation") {
                     label("Doctors") { addClass(Styles.smallHeading) }
                     tableview(mainController.examRoomPersonalWorkloads) {
                         prefWidth = 170.0
+                        prefHeight = 210.0
                         readonlyColumn("Num", Worker::id).prefWidth = 40.0
                         readonlyColumn("Working", Worker::working).prefWidth = 60.0
                         readonlyColumn("Workload", Worker::avgWorkload).prefWidth = 77.0
@@ -209,6 +210,7 @@ class MainView : View("Vaccination Centre Simulation") {
                     label("Nurses") { addClass(Styles.smallHeading) }
                     tableview(mainController.vacRoomPersonalWorkloads) {
                         prefWidth = 170.0
+                        prefHeight = 210.0
                         readonlyColumn("Num", Worker::id).prefWidth = 40.0
                         readonlyColumn("Working", Worker::working).prefWidth = 60.0
                         readonlyColumn("Workload", Worker::avgWorkload).prefWidth = 77.0
@@ -226,10 +228,6 @@ class MainView : View("Vaccination Centre Simulation") {
                         label("Average waiting patients:")
                         label(mainController.waitRoomAvgLength)
                     }
-//                hbox(smallSpaces) {
-//                    label("+ / -:")
-//                    label(mainController)
-//                }
                 }
             }
         }
@@ -307,6 +305,11 @@ class MainView : View("Vaccination Centre Simulation") {
                         label("In seconds:")
                         label(mainController.allExamQueueAvgWaitingTime)
                     }
+                    button("Show Chart") {
+                        action {
+                            ExaminationQueueChart().openWindow(owner = null)
+                        }
+                    }
                 }
                 vbox(smallSpaces) {
                     prefWidth = preferredWidth
@@ -358,15 +361,6 @@ class MainView : View("Vaccination Centre Simulation") {
                         label(mainController.upperBoundConfInterval)
                     }
                 }
-            }
-        }
-        separator()
-
-
-        hbox {
-            linechart("Chart", NumberAxis(), NumberAxis()) {
-            }
-            linechart("Chart", NumberAxis(), NumberAxis()) {
             }
         }
     }
