@@ -1,7 +1,6 @@
 package vaccinationcentresimulation.experiment
 
 import simulation.statistics.CommonTotalTime
-import simulation.statistics.ContinuousStatistics
 import simulation.statistics.DiscreteStatistics
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.statistics.QueueLengthStats
@@ -28,29 +27,28 @@ class VaccinationCentreExperiment(
     val commonTotalTime = CommonTotalTime()
 
     val registrationQueueLength = QueueLengthStats(commonTotalTime)
-    val allRegistrationQueueLengths = ContinuousStatistics()
+    val allRegistrationQueueLengths = DiscreteStatistics()
     val examinationQueueLength = QueueLengthStats(commonTotalTime, collectChartData = true)
-    val allExaminationQueueLengths = ContinuousStatistics()
+    val allExaminationQueueLengths = DiscreteStatistics()
     val vaccinationQueueLength = QueueLengthStats(commonTotalTime)
-    val allVaccinationQueueLengths = ContinuousStatistics()
+    val allVaccinationQueueLengths = DiscreteStatistics()
 
     val registrationWaitingTime = WaitingTimeStats()
-    val allRegistrationWaitingTimes = ContinuousStatistics()
+    val allRegistrationWaitingTimes = DiscreteStatistics()
     val examinationWaitingTime = WaitingTimeStats()
-    val allExaminationWaitingTimes = ContinuousStatistics()
+    val allExaminationWaitingTimes = DiscreteStatistics()
     val vaccinationWaitingTime = WaitingTimeStats()
-    val allVaccinationWaitingTimes = ContinuousStatistics()
+    val allVaccinationWaitingTimes = DiscreteStatistics()
 
     val adminWorkersPersonalWorkloads = List(numberOfAdminWorkers) { WorkloadStats(commonTotalTime) }
-    val allAdminWorkersWorkloads = ContinuousStatistics()
+    val allAdminWorkersWorkloads = DiscreteStatistics()
     val doctorsPersonalWorkloads = List(numberOfDoctors) { WorkloadStats(commonTotalTime) }
-    val allDoctorsWorkloads = ContinuousStatistics()
+    val allDoctorsWorkloads = DiscreteStatistics()
     val nursesPersonalWorkloads = List(numberOfNurses) { WorkloadStats(commonTotalTime) }
-    val allNursesWorkloads = ContinuousStatistics()
+    val allNursesWorkloads = DiscreteStatistics()
 
     val waitingPatientsCount = WaitingPatientsCountStats(commonTotalTime)
     val allWaitingPatientsCounts = DiscreteStatistics(calculateConfidenceInterval = true)
-    //  TODO: make others DiscreteStatistics as well
 
     val averageAdminWorkersWorkload: Double get() = adminWorkersPersonalWorkloads.map { it.getAverage() }.average()
     val averageDoctorsWorkload: Double get() = doctorsPersonalWorkloads.map { it.getAverage() }.average()
@@ -77,19 +75,19 @@ class VaccinationCentreExperiment(
     override fun onBeforeReplication() = restart()
 
     override fun onAfterReplication() {
-        allRegistrationQueueLengths.addSample(registrationQueueLength.getAverage(), registrationQueueLength.totalTime)
-        allExaminationQueueLengths.addSample(examinationQueueLength.getAverage(), examinationQueueLength.totalTime)
-        allVaccinationQueueLengths.addSample(vaccinationQueueLength.getAverage(), vaccinationQueueLength.totalTime)
+        allRegistrationQueueLengths.addSample(registrationQueueLength.getAverage())
+        allExaminationQueueLengths.addSample(examinationQueueLength.getAverage())
+        allVaccinationQueueLengths.addSample(vaccinationQueueLength.getAverage())
 
-        allRegistrationWaitingTimes.addSample(registrationWaitingTime.getAverage(), registrationWaitingTime.sampleCount)
-        allExaminationWaitingTimes.addSample(examinationWaitingTime.getAverage(), examinationWaitingTime.sampleCount)
-        allVaccinationWaitingTimes.addSample(vaccinationWaitingTime.getAverage(), vaccinationWaitingTime.sampleCount)
+        allRegistrationWaitingTimes.addSample(registrationWaitingTime.getAverage())
+        allExaminationWaitingTimes.addSample(examinationWaitingTime.getAverage())
+        allVaccinationWaitingTimes.addSample(vaccinationWaitingTime.getAverage())
 
-        adminWorkersPersonalWorkloads.forEach { allAdminWorkersWorkloads.addSample(it.getAverage(), it.totalTime) }
-        doctorsPersonalWorkloads.forEach { allDoctorsWorkloads.addSample(it.getAverage(), it.totalTime) }
-        nursesPersonalWorkloads.forEach { allNursesWorkloads.addSample(it.getAverage(), it.totalTime) }
+        adminWorkersPersonalWorkloads.forEach { allAdminWorkersWorkloads.addSample(it.getAverage()) }
+        doctorsPersonalWorkloads.forEach { allDoctorsWorkloads.addSample(it.getAverage()) }
+        nursesPersonalWorkloads.forEach { allNursesWorkloads.addSample(it.getAverage()) }
 
-        allWaitingPatientsCounts.addSample(waitingPatientsCount.getAverage()) //, waitingPatientsCount.totalTime)
+        allWaitingPatientsCounts.addSample(waitingPatientsCount.getAverage())
     }
 
     private fun restart() {

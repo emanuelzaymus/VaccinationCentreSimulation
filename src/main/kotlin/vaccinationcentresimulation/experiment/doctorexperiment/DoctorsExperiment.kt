@@ -2,6 +2,7 @@ package vaccinationcentresimulation.experiment.doctorexperiment
 
 import simulation.statistics.CommonTotalTime
 import simulation.statistics.ContinuousStatistics
+import simulation.statistics.DiscreteStatistics
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.experiment.Experiment
 import vaccinationcentresimulation.statistics.QueueLengthStats
@@ -24,7 +25,7 @@ class DoctorsExperiment(
 
     private val commonTotalTime = CommonTotalTime()
     private val examinationQueueLength = QueueLengthStats(commonTotalTime, collectChartData = true)
-    private val allExaminationQueueLengths = ContinuousStatistics()
+    private val allExaminationQueueLengths = DiscreteStatistics()
     val overallDoctorsExamQueueChartData = mutableListOf<Pair<Int, Double>>()
 
     override fun start() {
@@ -66,7 +67,7 @@ class DoctorsExperiment(
     override fun onBeforeReplication() = restart()
 
     override fun onAfterReplication() {
-        allExaminationQueueLengths.addSample(examinationQueueLength.getAverage(), examinationQueueLength.totalTime)
+        allExaminationQueueLengths.addSample(examinationQueueLength.getAverage()) //, examinationQueueLength.totalTime)
     }
 
     private fun restart() {
