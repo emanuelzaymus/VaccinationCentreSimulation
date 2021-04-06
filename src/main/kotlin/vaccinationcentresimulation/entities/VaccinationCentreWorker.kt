@@ -6,6 +6,9 @@ import vaccinationcentresimulation.events.IOnWaitingStoppedActionListener
 import vaccinationcentresimulation.events.VaccinationCentreActivityStartEvent
 import vaccinationcentresimulation.events.VaccinationCentreEvent
 
+/**
+ * Common abstract worker base for Vaccination Centre.
+ */
 abstract class VaccinationCentreWorker : IBusyObject {
 
     private var beforeWorkersStateChangedActionListener: IBeforeWorkersStateChangedActionListener? = null

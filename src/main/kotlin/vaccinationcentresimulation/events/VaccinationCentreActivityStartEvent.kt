@@ -3,6 +3,9 @@ package vaccinationcentresimulation.events
 import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.VaccinationCentreWorker
 
+/**
+ * Start of an activity event.
+ */
 abstract class VaccinationCentreActivityStartEvent(
     simulation: VaccinationCentreSimulation,
     private val worker: VaccinationCentreWorker

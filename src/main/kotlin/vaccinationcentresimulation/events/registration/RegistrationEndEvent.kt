@@ -7,6 +7,9 @@ import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.registration.AdministrativeWorker
 import vaccinationcentresimulation.events.VaccinationCentreActivityEndEvent
 
+/**
+ * Start of registration.
+ */
 class RegistrationEndEvent(simulation: VaccinationCentreSimulation, worker: AdministrativeWorker) :
     VaccinationCentreActivityEndEvent(simulation, worker) {
 

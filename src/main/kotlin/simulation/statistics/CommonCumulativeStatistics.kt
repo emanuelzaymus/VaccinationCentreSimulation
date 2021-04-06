@@ -1,11 +1,20 @@
 package simulation.statistics
 
+/**
+ * Statistics with common total time.
+ */
 open class CommonCumulativeStatistics(private val commonTotalTime: CommonTotalTime) : IStatistics {
 
     private var sum: Double = .0
 
     val totalTime: Double get() = commonTotalTime.totalTime
 
+    /**
+     * Adds new sample to the statistics.
+     * @param newValue Value
+     * @param elapsedTime Weight - time
+     * @param updatedCommonTotalTime Actual common total time for all CommonCumulativeStatistics.
+     */
     fun addSample(newValue: Int, elapsedTime: Double, updatedCommonTotalTime: Double) {
         if (elapsedTime >= 0) {
             sum += newValue * elapsedTime

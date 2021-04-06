@@ -6,6 +6,9 @@ import vaccinationcentresimulation.entities.Patient
 import vaccinationcentresimulation.entities.VaccinationCentreRoom
 import vaccinationcentresimulation.entities.VaccinationCentreWorker
 
+/**
+ * End of an activity event.
+ */
 abstract class VaccinationCentreActivityEndEvent(
     simulation: VaccinationCentreSimulation,
     private val worker: VaccinationCentreWorker

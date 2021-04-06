@@ -9,6 +9,9 @@ import vaccinationcentresimulation.constants.WAITING_EVENT_LESS_PROBABILITY
 import vaccinationcentresimulation.entities.waiting.WaitingRoom
 import vaccinationcentresimulation.events.VaccinationCentreEvent
 
+/**
+ * End of waiting after vaccination.
+ */
 class WaitingEndEvent(simulation: VaccinationCentreSimulation, private val waitingRoom: WaitingRoom) :
     VaccinationCentreEvent(simulation), IPooledObject {
 

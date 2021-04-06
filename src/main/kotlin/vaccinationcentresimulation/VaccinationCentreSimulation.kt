@@ -11,6 +11,9 @@ import vaccinationcentresimulation.entities.waiting.WaitingRoom
 import vaccinationcentresimulation.events.patientarrival.PatientArrivalEvent
 import vaccinationcentresimulation.experiment.IExperimentActionListener
 
+/**
+ * Simulation of Vaccination Centre.
+ */
 class VaccinationCentreSimulation(
     replicationsCount: Int,
     private val numberOfPatientsPerReplication: Int,
@@ -37,8 +40,10 @@ class VaccinationCentreSimulation(
 
     val waitingRoom = WaitingRoom(this)
 
+    /** @return New Patient from pool. */
     fun acquirePatient(): Patient = patientPool.acquire()
 
+    /** Returns patient into pool. */
     fun releasePatient(patient: Patient) = patientPool.release(patient)
 
     override fun pause() {
@@ -87,6 +92,7 @@ class VaccinationCentreSimulation(
         animate()
     }
 
+    /** Sets animation action listener. */
     fun setAnimationActionListener(listener: IAnimationActionListener) {
         animationActionListener = listener
     }
@@ -111,10 +117,12 @@ class VaccinationCentreSimulation(
         animationActionListener?.updateStatistics()
     }
 
+    /** Sets experiment action listener. */
     fun setExperimentActionListener(listener: IExperimentActionListener) {
         experimentActionListener = listener
     }
 
+    /** Schedules initial event. */
     private fun scheduleInitEvent() {
         PatientArrivalEvent(this, numberOfPatientsPerReplication)
             .scheduleFirstEvent(acquirePatient(), actualSimulationTime)

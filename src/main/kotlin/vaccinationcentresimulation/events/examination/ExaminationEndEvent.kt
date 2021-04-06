@@ -6,6 +6,9 @@ import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.examination.Doctor
 import vaccinationcentresimulation.events.VaccinationCentreActivityEndEvent
 
+/**
+ * End of patient examination.
+ */
 class ExaminationEndEvent(simulation: VaccinationCentreSimulation, doctor: Doctor) :
     VaccinationCentreActivityEndEvent(simulation, doctor) {
 

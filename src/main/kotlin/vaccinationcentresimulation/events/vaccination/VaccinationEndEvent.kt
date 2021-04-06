@@ -8,6 +8,9 @@ import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.entities.vaccination.Nurse
 import vaccinationcentresimulation.events.VaccinationCentreEvent
 
+/**
+ * End of vaccination.
+ */
 class VaccinationEndEvent(simulation: VaccinationCentreSimulation, private val nurse: Nurse) :
     VaccinationCentreEvent(simulation) {
 

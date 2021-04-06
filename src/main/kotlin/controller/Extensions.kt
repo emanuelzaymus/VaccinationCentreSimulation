@@ -1,7 +1,13 @@
 package controller
 
+/**
+ * Rounds this Double n decimals and converts to String.
+ */
 fun Double.roundToString(decimals: Int = 6): String = String.format("%.${decimals}f", this)
 
+/**
+ * Converts this Double into time format - returns String.
+ */
 fun Double.secondsToTime(): String {
     val int = toInt()
     val hours: Int = int / 3600 // 60 * 60

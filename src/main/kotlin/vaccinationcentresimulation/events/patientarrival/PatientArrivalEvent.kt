@@ -9,6 +9,9 @@ import vaccinationcentresimulation.constants.WORKING_TIME
 import vaccinationcentresimulation.events.VaccinationCentreEvent
 import vaccinationcentresimulation.entities.Patient
 
+/**
+ * Arrival of new patient.
+ */
 class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val numberOfPatients: Int) :
     VaccinationCentreEvent(simulation) {
 
@@ -27,6 +30,7 @@ class PatientArrivalEvent(simulation: VaccinationCentreSimulation, private val n
     private val eventDuration = WORKING_TIME / numberOfPatients
     private var executedArrivals = 0
 
+    /** Schedules initial event. */
     fun scheduleFirstEvent(patient: Patient, lastEventTime: Double) {
         schedule(patient, lastEventTime - eventDuration())
     }

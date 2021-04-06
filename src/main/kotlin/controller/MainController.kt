@@ -17,6 +17,9 @@ import vaccinationcentresimulation.experiment.doctorexperiment.IDoctorExperiment
 import vaccinationcentresimulation.statistics.WorkloadStats
 import kotlin.concurrent.thread
 
+/**
+ * Main controller for app GUI.
+ */
 class MainController : Controller(), IVaccinationCentreExperimentActionListener, IDoctorExperimentActionListener {
 
     private val initReplicationsCount = 1

@@ -6,6 +6,9 @@ import vaccinationcentresimulation.VaccinationCentreSimulation
 import vaccinationcentresimulation.events.IBeforeWorkersStateChangedActionListener
 import vaccinationcentresimulation.events.IOnWaitingStoppedActionListener
 
+/**
+ * Common abstract room base for Vaccination Centre.
+ */
 abstract class VaccinationCentreRoom<T : VaccinationCentreWorker>(
     val simulation: VaccinationCentreSimulation, numberOfWorkers: Int, init: (Int) -> T
 ) : IReusable {

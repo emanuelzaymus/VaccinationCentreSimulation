@@ -4,6 +4,9 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+/**
+ * Abstract statistics which can collect data for calculation 95% confidence interval when calculateConfidenceInterval == true.
+ */
 abstract class Statistics(private val calculateConfidenceInterval: Boolean) : IStatistics {
 
     companion object {
@@ -20,6 +23,7 @@ abstract class Statistics(private val calculateConfidenceInterval: Boolean) : IS
         numberOfSamples = .0
     }
 
+    /** Adds parameter value into statistics for calculation 95% confidence interval. */
     protected fun addToConfidenceIntervalStatistics(value: Double) {
         if (calculateConfidenceInterval) {
             sum += value
@@ -28,6 +32,7 @@ abstract class Statistics(private val calculateConfidenceInterval: Boolean) : IS
         }
     }
 
+    /** @return Calculated lower bound of 95% confidence interval */
     fun lowerBoundOfConfidenceInterval(): Double {
         if (!calculateConfidenceInterval)
             throw Exception("Calculation of confidence interval was not set in the constructor.")
@@ -38,6 +43,7 @@ abstract class Statistics(private val calculateConfidenceInterval: Boolean) : IS
         return getAverage() - calculateHalfInterval()
     }
 
+    /** @return Calculated upper bound of 95% confidence interval */
     fun upperBoundOfConfidenceInterval(): Double {
         if (!calculateConfidenceInterval)
             throw Exception("Calculation of confidence interval was not set in the constructor.")

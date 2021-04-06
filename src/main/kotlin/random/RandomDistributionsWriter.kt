@@ -10,8 +10,14 @@ import vaccinationcentresimulation.constants.VACCINATION_EVENT_DURATION_MODE
 import java.io.BufferedWriter
 import java.io.File
 
+/**
+ * Writes test samples from random number generators.
+ */
 object RandomDistributionsWriter {
 
+    /**
+     * Writes test samples from exponential and triangular random distributions.
+     */
     fun writeAll() {
         exponentialDistribution()
         triangularDistribution()
@@ -35,9 +41,7 @@ object RandomDistributionsWriter {
     }
 
     private fun writeDistribution(
-        distribution: IContinuousDistribution,
-        valueCount: Int = 1_000_000,
-        fileName: String
+        distribution: IContinuousDistribution, valueCount: Int = 1_000_000, fileName: String
     ) {
         val writer: BufferedWriter = File(fileName).bufferedWriter()
 
